@@ -9,12 +9,12 @@ from .schemas import SCHEMAS
 logger = logging.getLogger('IIF File Genrator')
 
 
-class QBOIIFGenerator:
+class QBDIIFGenerator:
     """
     Generates IIF File for QBD
     """
     def __init__(self, file_path):
-        self.filepath = file_path
+        self.file_path = file_path
     
     @staticmethod
     def __get_header(header_tuple: Tuple):
@@ -25,7 +25,7 @@ class QBOIIFGenerator:
         header_copy[0] = header_tuple[0][1:]
         return header_copy
     
-    def __write_list_of_tuples_to_iif(self, data: List(Tuple)):
+    def __write_list_of_tuples_to_iif(self, data: List[Tuple]):
         """
         Write list of tuples to csv file
         :param data: list of tuples
@@ -71,4 +71,4 @@ class QBOIIFGenerator:
         
         transactions = self.__write_list_of_tuples_to_iif(txns)
 
-        return self.filepath
+        return self.file_path
