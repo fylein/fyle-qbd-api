@@ -1,6 +1,6 @@
 SCHEMAS = {
-    'BILL': [
-        [
+    'BILL': (
+        (
             '!TRNS', 
             'TRNSID', 
             'TRNSTYPE', 
@@ -16,8 +16,8 @@ SCHEMAS = {
             'ADDR5', 
             'DUEDATE', 
             'TERMS'
-        ],
-        [
+        ),
+        (
             '!SPL', 
             'SPLID', 
             'TRNSTYPE', 
@@ -33,13 +33,13 @@ SCHEMAS = {
             'REIMBEXP', 
             'SERVICEDATE', 
             'OTHER2'
-        ],
-        [
-            '!ENDTRNS'
-        ]											
-    ],
-    'CREDIT_CARD_PURCHASE': [
-        [
+        ),
+        (
+            '!ENDTRNS',
+        )											
+    ),
+    'CREDIT_CARD_PURCHASE': (
+        (
             '!TRNS', 
             'TRNSID', 
             'TRNSTYPE', 
@@ -65,8 +65,8 @@ SCHEMAS = {
             'SHIPDATE', 
             'YEARTODATE', 
             'WAGEBASE'
-        ],
-        [
+        ),
+        (
             '!SPL', 
             'SPLID', 
             'TRNSTYPE', 
@@ -90,13 +90,13 @@ SCHEMAS = {
             'OTHER3', 
             'YEARTODATE', 
             'WAGEBASE'
-        ],
-        [
+        ),
+        (
             '!ENDTRNS'
-        ]									
-    ],
-    'JOURNAL_ENTRY': [
-        [
+        )									
+    ),
+    'JOURNAL_ENTRY': (
+        (
             '!TRNS', 
             'TRNSID', 
             'TRNSTYPE', 
@@ -107,8 +107,8 @@ SCHEMAS = {
             'AMOUNT', 
             'DOCNUM', 
             'MEMO' 
-        ],
-        [
+        ),
+        (
             '!SPL', 
             'SPLID', 
             'TRNSTYPE', 
@@ -120,9 +120,9 @@ SCHEMAS = {
             'DOCNUM', 
             'MEMO' 
 
-        ],
-        [
+        ),
+        (
             '!ENDTRNS'
-        ]					
-    ]
+        )					
+    )
 }
