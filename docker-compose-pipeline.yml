@@ -19,7 +19,7 @@ services:
       ALLOWED_HOSTS: "*"
       DEBUG: "False"
       API_URL: http://localhost:8000/api
-      DATABASE_URL: postgres://postgres:postgres@db:5432/qbd_db
+      DATABASE_URL: postgres://postgres:postgres@db:5432/dummy
       DB_HOST: db
   db:
     image: "postgres:latest"
@@ -29,7 +29,6 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - data:/var/lib/postgresql/data/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
   api:
   data:
