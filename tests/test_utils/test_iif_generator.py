@@ -20,7 +20,7 @@ def test_generate_iif_file_bills():
     """
     Test the generate_iif_file function
     """
-    file_path = 'test-iif-files/test_generator.csv'
+    file_path = '/tmp/test_generator.csv'
     transactions = fixtures['bills']
 
     iif_generator = QBDIIFGenerator(file_path)
