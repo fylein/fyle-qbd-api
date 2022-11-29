@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nsaklnsfklasnfwqonjcakssflaksjfnasju'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'fyle_rest_auth',
+    'fyle_accounting_mappings',
 
     # Created Apps
     'apps.users',
@@ -230,3 +231,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+FYLE_BASE_URL = os.environ.get('FYLE_BASE_URL')
+FYLE_TOKEN_URI = os.environ.get('FYLE_TOKEN_URI')
+FYLE_CLIENT_ID = os.environ.get('FYLE_CLIENT_ID')
+FYLE_CLIENT_SECRET = os.environ.get('FYLE_CLIENT_SECRET')

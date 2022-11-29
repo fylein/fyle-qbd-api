@@ -13,14 +13,19 @@ dj-database-url==0.5.0
 # Platform SDK
 fyle==0.29.0
 
-# Fyle Django REST Authetication Package
+# Reusable Fyle Packages
 fyle-rest-auth==1.1.0
+fyle-accounting-mappings==1.21.1
+fyle-integrations-platform-connector==1.21.0
 
 # Postgres Dependincies
 psycopg2-binary==2.8.4
 
 # Pylint
 pylint==2.7.4
+
+# Date Parser
+python-dateutil==2.8.1
 
 # Pylint Related Libraries
 pytest==7.1.2
