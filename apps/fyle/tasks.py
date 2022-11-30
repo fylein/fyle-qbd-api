@@ -9,7 +9,6 @@ from datetime import datetime
 import traceback
 
 from django.db import transaction
-from django_q.tasks import async_task
 
 from fyle_integrations_platform_connector import PlatformConnector
 from apps.tasks.models import AccountingExport
