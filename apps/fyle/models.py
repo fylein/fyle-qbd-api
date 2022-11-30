@@ -57,9 +57,10 @@ class Expense(models.Model):
     fund_source = models.CharField(max_length=255, help_text='Expense fund source')
     verified_at = models.DateTimeField(help_text='Report verified at', null=True)
     custom_properties = JSONField(null=True)
-    paid_on_xero = models.BooleanField(help_text='Expense Payment status on Xero', default=False)
     tax_amount = models.FloatField(null=True, help_text='Tax Amount')
     tax_group_id = models.CharField(null=True, max_length=255, help_text='Tax Group ID')
+    exported = models.BooleanField(default=False, help_text='Expense reimbursable or not')
+
 
     class Meta:
         db_table = 'expenses'
