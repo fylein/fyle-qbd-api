@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nsaklnsfklasnfwqonjcakssflaksjfnasju'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
@@ -47,11 +47,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'fyle_rest_auth',
+    'fyle_accounting_mappings',
+    'django_q',
 
     # Created Apps
     'apps.users',
     'apps.workspaces',
-    'apps.fyle'
+    'apps.fyle',
+    'apps.tasks'
 ]
 
 MIDDLEWARE = [
@@ -102,6 +105,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
+
+Q_CLUSTER = {
+    'name': 'fyle_netsuite_api',
+    'save_limit': 0,
+    'workers': int(os.environ.get('NO_WORKERS', 4)),
+    'queue_limit': 30,
+    'cached': False,
+    'orm': 'default',
+    'ack_failures': True,
+    'poll': 1,
+    'max_attempts': 1,
+    'attempt_count': 1,
+    'retry': 14400,
+    'timeout': 3600,
+    'catch_up': False
+}
+
 
 LOGGING = {
     'version': 1,
@@ -230,3 +250,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+FYLE_BASE_URL = os.environ.get('FYLE_BASE_URL')
+FYLE_TOKEN_URI = os.environ.get('FYLE_TOKEN_URI')
+FYLE_CLIENT_ID = os.environ.get('FYLE_CLIENT_ID')
+FYLE_CLIENT_SECRET = os.environ.get('FYLE_CLIENT_SECRET')
