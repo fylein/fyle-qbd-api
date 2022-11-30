@@ -48,11 +48,13 @@ INSTALLED_APPS = [
     'corsheaders',
     'fyle_rest_auth',
     'fyle_accounting_mappings',
+    'django_q',
 
     # Created Apps
     'apps.users',
     'apps.workspaces',
-    'apps.fyle'
+    'apps.fyle',
+    'apps.tasks'
 ]
 
 MIDDLEWARE = [
@@ -103,6 +105,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
+
+Q_CLUSTER = {
+    'name': 'fyle_netsuite_api',
+    'save_limit': 0,
+    'workers': int(os.environ.get('NO_WORKERS', 4)),
+    'queue_limit': 30,
+    'cached': False,
+    'orm': 'default',
+    'ack_failures': True,
+    'poll': 1,
+    'max_attempts': 1,
+    'attempt_count': 1,
+    'retry': 14400,
+    'timeout': 3600,
+    'catch_up': False
+}
+
 
 LOGGING = {
     'version': 1,
