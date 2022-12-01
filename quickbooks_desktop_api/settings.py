@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.workspaces',
     'apps.fyle',
-    'apps.tasks'
+    'apps.tasks',
+    'apps.qbd'
 ]
 
 MIDDLEWARE = [
