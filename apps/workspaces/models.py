@@ -15,7 +15,14 @@ class Workspace(models.Model):
     user = models.ManyToManyField(User, help_text='Reference to users table')
     org_id = models.CharField(max_length=255, help_text='org id', unique=True)
     cluster_domain = models.CharField(max_length=255, help_text='fyle cluster domain', null=True)
-    last_synced_at = models.DateTimeField(help_text='Datetime when expenses were pulled last', null=True)
+    reimbursable_last_synced_at = models.DateTimeField(
+        help_text='Datetime when reimbursable expenses were pulled last', 
+        null=True
+    )
+    ccc_last_synced_at = models.DateTimeField(
+        help_text='Datetime when credit card expenses were pulled last', 
+        null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 

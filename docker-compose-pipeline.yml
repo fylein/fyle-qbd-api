@@ -19,8 +19,11 @@ services:
       ALLOWED_HOSTS: "*"
       DEBUG: "False"
       API_URL: http://localhost:8000/api
-      DATABASE_URL: postgres://postgres:postgres@db:5432/dummy
+      DB_NAME: qbd_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
       DB_HOST: db
+      DB_PORT: 5432
   db:
     image: "postgres:latest"
     environment: 
