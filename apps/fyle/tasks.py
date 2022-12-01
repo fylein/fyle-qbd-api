@@ -45,11 +45,11 @@ def import_reimbursable_expenses(workspace_id, accounting_export: AccountingExpo
         )
 
         if expenses:
-            workspace.last_synced_at = datetime.now()
+            workspace.reimbursable_last_synced_at = datetime.now()
             workspace.save()
 
         with transaction.atomic():
-            Expense.create_expense_objects(expenses)
+            Expense.create_expense_objects(expenses, workspace_id)
 
         accounting_export.status = 'COMPLETE'
         accounting_export.detail = None
@@ -98,11 +98,11 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
         )
 
         if expenses:
-            workspace.last_synced_at = datetime.now()
+            workspace.ccc_last_synced_at = datetime.now()
             workspace.save()
 
         with transaction.atomic():
-            Expense.create_expense_objects(expenses)
+            Expense.create_expense_objects(expenses, workspace_id)
 
         accounting_export.status = 'COMPLETE'
         accounting_export.detail = None
