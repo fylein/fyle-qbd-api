@@ -4,15 +4,6 @@ FROM python:3.7.4-slim
 # install the requirements from the requirements.txt file via git
 RUN apt-get update && apt-get -y install libpq-dev gcc && apt-get install git -y --no-install-recommends
 
-ARG CI
-RUN if [ "$CI" = "ENABLED" ]; then \
-        apt-get install lsb-release gnupg2 wget -y --no-install-recommends; \
-        apt-cache search postgresql | grep postgresql; \
-        sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'; \
-        wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - ; \
-        apt -y update; \
-        apt-get install postgresql-14 -y --no-install-recommends; \
-    fi
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
