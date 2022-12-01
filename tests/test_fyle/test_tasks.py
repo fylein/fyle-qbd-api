@@ -33,7 +33,7 @@ def test_import_reimbursable_expenses(
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
     import_reimbursable_expenses(workspace_id, accounting_export)
 
-    expenses = Expense.objects.filter(workspace_id=workspace_id, fund_source='PERSONAL')
+    expenses = Expense.objects.filter(workspace_id=workspace_id, fund_source='PERSONAL', exported=False)
 
     assert accounting_export.status == 'COMPLETE'
     assert expenses.count() == 5
@@ -124,7 +124,7 @@ def test_import_credit_card_expenses(
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
     import_credit_card_expenses(workspace_id, accounting_export)
 
-    expenses = Expense.objects.filter(workspace_id=workspace_id, fund_source='CCC')
+    expenses = Expense.objects.filter(workspace_id=workspace_id, fund_source='CCC', exported=False)
 
     assert accounting_export.status == 'COMPLETE'
     assert expenses.count() == 5
