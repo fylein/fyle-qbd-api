@@ -14,8 +14,6 @@ import os
 from pathlib import Path
 import sys
 
-import dj_database_url
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'nsaklnsfklasnfwqonjcakssflaksjfnasju'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG') == 'True' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -42,16 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Installed Apps
     'rest_framework',
     'corsheaders',
     'fyle_rest_auth',
+    'fyle_accounting_mappings',
+    'django_q',
 
     # Created Apps
     'apps.users',
     'apps.workspaces',
-    'apps.fyle'
+    'apps.fyle',
+    'apps.tasks'
 ]
 
 MIDDLEWARE = [
@@ -102,6 +103,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
+
+Q_CLUSTER = {
+    'name': 'fyle_netsuite_api',
+    'save_limit': 0,
+    'workers': int(os.environ.get('NO_WORKERS', 4)),
+    'queue_limit': 30,
+    'cached': False,
+    'orm': 'default',
+    'ack_failures': True,
+    'poll': 1,
+    'max_attempts': 1,
+    'attempt_count': 1,
+    'retry': 14400,
+    'timeout': 3600,
+    'catch_up': False
+}
+
 
 LOGGING = {
     'version': 1,
@@ -163,29 +181,18 @@ WSGI_APPLICATION = 'quickbooks_desktop_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if os.environ.get('DATABASE_URL', ''):
-    DATABASES = {
-        'default': dj_database_url.config()
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'OPTIONS': {
-                'options': '-c search_path={0}'.format(os.environ.get('DB_SCHEMA'))
-            },
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),
-            'PORT': os.environ.get('DB_PORT'),
-        }
-    }
 
-DATABASES['cache_db'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': 'cache.db'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    }
 }
+
 
 DATABASE_ROUTERS = ['quickbooks_desktop_api.cache_router.CacheRouter']
 
@@ -229,3 +236,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+FYLE_BASE_URL = os.environ.get('FYLE_BASE_URL')
+FYLE_TOKEN_URI = os.environ.get('FYLE_TOKEN_URI')
+FYLE_CLIENT_ID = os.environ.get('FYLE_CLIENT_ID')
+FYLE_CLIENT_SECRET = os.environ.get('FYLE_CLIENT_SECRET')
+

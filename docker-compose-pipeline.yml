@@ -18,9 +18,16 @@ services:
       SECRET_KEY: thisisthedjangosecretkey
       ALLOWED_HOSTS: "*"
       DEBUG: "False"
+      FYLE_TOKEN_URI: https://localhost:1234/oauth/token
+      FYLE_BASE_URL: https://localhost:1234
       API_URL: http://localhost:8000/api
-      DATABASE_URL: postgres://postgres:postgres@db:5432/dummy
+      FYLE_CLIENT_ID: client_id
+      FYLE_CLIENT_SECRET: client_secret
+      DB_NAME: qbd_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
       DB_HOST: db
+      DB_PORT: 5432
   db:
     image: "postgres:latest"
     environment: 

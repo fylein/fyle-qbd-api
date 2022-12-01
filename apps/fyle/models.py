@@ -8,6 +8,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.db.models import JSONField
 from django.db import models
 
+from apps.workspaces.models import Workspace
+
 
 logger = logging.getLogger(__name__)
 logger.level = logging.INFO
@@ -57,15 +59,17 @@ class Expense(models.Model):
     fund_source = models.CharField(max_length=255, help_text='Expense fund source')
     verified_at = models.DateTimeField(help_text='Report verified at', null=True)
     custom_properties = JSONField(null=True)
-    paid_on_xero = models.BooleanField(help_text='Expense Payment status on Xero', default=False)
     tax_amount = models.FloatField(null=True, help_text='Tax Amount')
     tax_group_id = models.CharField(null=True, max_length=255, help_text='Tax Group ID')
+    exported = models.BooleanField(default=False, help_text='Expense reimbursable or not')
+    workspace = models.ForeignKey(Workspace, on_delete=models.PROTECT, help_text='Workspace reference')
+
 
     class Meta:
         db_table = 'expenses'
 
     @staticmethod
-    def create_expense_objects(expenses: List[Dict]):
+    def create_expense_objects(expenses: List[Dict], workspace_id: int):
         """
         Bulk create expense objects
         """
@@ -74,6 +78,7 @@ class Expense(models.Model):
         for expense in expenses:
             expense_object, _ = Expense.objects.update_or_create(
                 expense_id=expense['id'],
+                workspace_id=workspace_id,
                 defaults={
                     'employee_email': expense['employee_email'],
                     'employee_name': expense['employee_name'],
@@ -111,3 +116,11 @@ class Expense(models.Model):
             expense_objects.append(expense_object)
 
         return expense_objects
+
+
+class Reimbursement:
+    """
+    Creating a dummy class to be able to user
+    fyle_integrations_platform_connector correctly
+    """
+    pass
