@@ -149,6 +149,10 @@ class ExportSettings(models.Model):
         max_length=255,
         choices=CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES
     )
+    credit_card_expense_date = models.CharField(
+        max_length=255,
+        choices=CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES
+    )
 
     class Meta:
         db_table = 'export_settings'

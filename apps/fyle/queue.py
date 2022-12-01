@@ -16,7 +16,7 @@ def queue_import_reimbursable_expenses(workspace_id: int):
     """
     accounting_export, _ = AccountingExport.objects.update_or_create(
         workspace_id=workspace_id,
-        type='FETCHING_EXPENSES',
+        type='FETCHING_REIMBURSABLE_EXPENSES',
         defaults={
             'status': 'IN_PROGRESS'
         }

@@ -31,7 +31,7 @@ def import_reimbursable_expenses(workspace_id, accounting_export: AccountingExpo
         # Get export settings to determine Expense State
         export_settings = ExportSettings.objects.get(workspace_id=workspace_id)
         workspace = Workspace.objects.get(pk=workspace_id)
-        last_synced_at = workspace.last_synced_at
+        last_synced_at = workspace.reimbursable_last_synced_at
         fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
 
         platform = PlatformConnector(fyle_credentials)
@@ -84,7 +84,7 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
         # Get export settings to determine Expense State
         export_settings = ExportSettings.objects.get(workspace_id=workspace_id)
         workspace = Workspace.objects.get(pk=workspace_id)
-        last_synced_at = workspace.last_synced_at
+        last_synced_at = workspace.ccc_last_synced_at
         fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
 
         platform = PlatformConnector(fyle_credentials)
