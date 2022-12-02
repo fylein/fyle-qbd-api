@@ -13,7 +13,6 @@ from apps.fyle.helpers import upload_iif_to_fyle
 from apps.tasks.models import AccountingExport
 from apps.utils.iif_generator import QBDIIFGenerator
 from apps.workspaces.models import AdvancedSetting
-from quickbooks_desktop_api import settings
 
 from .helpers import generate_all_bills
 
