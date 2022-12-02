@@ -1,8 +1,9 @@
+from typing import List
 from django.db import models
 from apps.fyle.models import Expense
 from apps.tasks.models import AccountingExport
 
-from apps.workspaces.models import Workspace
+from apps.workspaces.models import ExportSettings, FieldMapping, Workspace
 
 
 class Bill(models.Model):
@@ -56,7 +57,12 @@ class Bill(models.Model):
         db_table = 'bills'
     
     @staticmethod
-    def create_bill(bill: dict, accounting_export: AccountingExport, workspace_id: int):
+    def create_bill(
+        expenses: List[Expense],
+        export_settings: ExportSettings,
+        accounting_export: AccountingExport,
+        workspace_id: int
+    ):
         """
         Create bill object
         :param bill: bill data
@@ -64,17 +70,20 @@ class Bill(models.Model):
         :param workspace_id: workspace id
         :return: bill object
         """
-        return Bill.objects.create(
-            transaction_type=bill.get('transaction_type'),
-            date=bill.get('date'),
-            account=bill.get('account'),
-            name=bill.get('name'),
-            class_name=bill.get('class'),
-            amount=bill.get('amount'),
-            memo=bill.get('memo'),
+        bill = Bill.objects.create(
+            transaction_type='BILL',
+            date=expenses[0].spent_at,
+            account=export_settings.bank_account_name,
+            name=expenses[0].employee_name,
+            class_name='',
+            amount=sum([expense.amount for expense in expenses]),
+            memo='Reimbursable Expenses by {}'.format(expenses[0].employee_email),
             accounting_export=accounting_export,
             workspace_id=workspace_id
         )
+
+        line_items = BillLineitem.create_bill_lineitems(expenses, bill, workspace_id)
+        return bill, line_items
 
 
 class BillLineitem(models.Model):
@@ -103,8 +112,8 @@ class BillLineitem(models.Model):
     transaction_type = models.CharField(max_length=255)
     date = models.DateTimeField()
     account = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    class_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    class_name = models.CharField(max_length=255, null=True)
     amount = models.FloatField(help_text='Bill amount')
     document_number = models.CharField(max_length=255, null=True, default='')
     memo = models.TextField()
@@ -129,7 +138,7 @@ class BillLineitem(models.Model):
         db_table = 'bill_lineitems'
     
     @staticmethod
-    def create_bill_lineitem(bill_lineitem: dict, bill: Bill, workspace_id: int, expense: Expense):
+    def create_bill_lineitems(expenses: List[Expense], bill: Bill, workspace_id: int):
         """
         Create bill lineitem object
         :param bill_lineitem: bill lineitem data
@@ -137,16 +146,27 @@ class BillLineitem(models.Model):
         :param workspace_id: workspace id
         :return: bill lineitem object
         """
-        return BillLineitem.objects.create(
-            transaction_type=bill_lineitem.get('transaction_type'),
-            date=bill_lineitem.get('date'),
-            account=bill_lineitem.get('account'),
-            name=bill_lineitem.get('name'),
-            class_name=bill_lineitem.get('class'),
-            amount=bill_lineitem.get('amount'),
-            memo=bill_lineitem.get('memo'),
-            reimbursable_expense=bill_lineitem.get('reimbursable_expense'),
-            bill=bill,
-            expense=expense,
-            workspace_id=workspace_id
-        )
+        field_mappings: FieldMapping = FieldMapping.objects.get(workspace_id=workspace_id)
+
+        lineitems = []
+        for expense in expenses:
+            class_name = expense.project if field_mappings.class_type == 'PROJECT' else expense.cost_center
+            project_name = expense.project if field_mappings.project_type == 'PROJECT' else expense.cost_center
+
+            lineitem = BillLineitem.objects.create(
+                transaction_type='BILL',
+                date=expense.spent_at,
+                account=expense.category,
+                name=project_name,
+                class_name=class_name,
+                amount=expense.amount,
+                memo='Expense on Category - {}'.format(expense.category),
+                reimbursable_expense='Yes',
+                bill=bill,
+                workspace_id=workspace_id,
+                expense=expense
+            )
+
+            lineitems.append(lineitem)
+
+        return lineitems
