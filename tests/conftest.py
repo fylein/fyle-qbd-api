@@ -9,7 +9,8 @@ from rest_framework.test import APIClient
 
 from apps.workspaces.models import (
     Workspace, FyleCredential,
-    ExportSettings, FieldMapping
+    ExportSettings, FieldMapping,
+    AdvancedSetting
 )
 from apps.tasks.models import AccountingExport
 
@@ -164,4 +165,25 @@ def add_field_mappings():
             workspace_id=workspace_id,
             class_type='COST_CENTER' if workspace_id in [1, 2] else 'PROJECT',
             project_type='PROJECT' if workspace_id in [1, 2] else 'COST_CENTER',
+        )
+
+
+@pytest.fixture()
+@pytest.mark.django_db(databases=['default'])
+def add_advanced_settings():
+    """
+    Pytest fixture to add advanced settings to a workspace
+    """
+    workspace_ids = [
+        1, 2, 3
+    ]
+
+    for workspace_id in workspace_ids:
+        AdvancedSetting.objects.create(
+           workspace_id=workspace_id,
+           emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
+           schedule_is_enabled=False,
+           interval_hours=24 * 7,
+           schedule_id=None,
+           memo_structure=[],
         )
