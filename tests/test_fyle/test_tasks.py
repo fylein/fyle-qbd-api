@@ -9,7 +9,7 @@ from .fixtures import fixtures
 
 @pytest.mark.django_db(databases=['default'])
 def test_import_reimbursable_expenses(
-        create_temp_workspace, add_accounting_export, 
+        create_temp_workspace, add_accounting_export_expenses, 
         add_fyle_credentials, add_export_settings, 
         mocker
     ):
@@ -43,7 +43,7 @@ def test_import_reimbursable_expenses(
 
 @pytest.mark.django_db(databases=['default'])
 def test_import_reimbursable_expenses_fatal(
-        create_temp_workspace, add_accounting_export, mocker
+        create_temp_workspace, add_accounting_export_expenses, mocker
     ):
     """
     Test import reimbursable expenses task
@@ -70,7 +70,7 @@ def test_import_reimbursable_expenses_fatal(
 
 @pytest.mark.django_db(databases=['default'])
 def test_import_reimbursable_expenses_fail(
-        create_temp_workspace, add_accounting_export, add_export_settings, 
+        create_temp_workspace, add_accounting_export_expenses, add_export_settings, 
         mocker
     ):
     """
@@ -99,7 +99,7 @@ def test_import_reimbursable_expenses_fail(
 @pytest.mark.django_db(databases=['default'])
 def test_import_credit_card_expenses(
         create_temp_workspace, 
-        add_accounting_export, 
+        add_accounting_export_expenses, 
         add_fyle_credentials, 
         add_export_settings, 
         mocker
@@ -134,7 +134,7 @@ def test_import_credit_card_expenses(
 @pytest.mark.django_db(databases=['default'])
 def test_import_credit_card_expenses_failed(
         create_temp_workspace, 
-        add_accounting_export, 
+        add_accounting_export_expenses, 
         add_export_settings, 
         mocker
     ):
@@ -164,7 +164,7 @@ def test_import_credit_card_expenses_failed(
 @pytest.mark.django_db(databases=['default'])
 def test_import_credit_card_expenses_fatal(
         create_temp_workspace, 
-        add_accounting_export,
+        add_accounting_export_expenses,
         mocker
     ):
     """
