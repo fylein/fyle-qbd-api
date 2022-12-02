@@ -14,12 +14,10 @@ def queue_create_bills_iif_file(workspace_id: int):
     :param workspace_id: Workspace id
     :return: None
     """
-    accounting_export, _ = AccountingExport.objects.update_or_create(
+    accounting_export = AccountingExport.objects.create(
         workspace_id=workspace_id,
-        type='EXPORT_BILLSS',
-        defaults={
-            'status': 'ENQUEUED'
-        }
+        type='EXPORT_BILLS',
+        status='ENQUEUED'
     )
 
     async_task('apps.qbd.tasks.create_bills_iif_file', workspace_id, accounting_export)

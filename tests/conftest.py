@@ -115,7 +115,7 @@ def add_export_settings():
             bank_account_name='Bank Account Name',
             reimbursable_expense_state='PAYMENT_PROCESSING',
             reimbursable_expense_date='CREATED_AT',
-            reimbursable_expense_grouped_by='REPORT',
+            reimbursable_expense_grouped_by='REPORT' if workspace_id in [1, 2] else 'EXPENSE',
             credit_card_expense_export_type='CREDIT CARD CHARGE',
             credit_card_expense_state='PAYMENT_PROCESSING',
             credit_card_account_name='Credit Card Account Name',
