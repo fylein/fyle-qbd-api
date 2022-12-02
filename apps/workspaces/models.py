@@ -210,9 +210,9 @@ class AdvancedSetting(models.Model):
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 
     memo_structure = ArrayField(models.CharField(max_length=255), help_text='Array of fields in memo')
-    schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled')
-    interval_hours = models.IntegerField(help_text='Interval hours for schedule')
-    schedule_id = models.CharField(max_length=255, help_text='Schedule id')
+    schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled', default=False)
+    interval_hours = models.IntegerField(help_text='Interval hours for schedule',null=True)
+    schedule_id = models.CharField(max_length=255, help_text='Schedule id', null=True)
     emails = ArrayField(models.CharField(max_length=255), help_text='Array of emails')
 
     class Meta:

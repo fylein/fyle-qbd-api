@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
     volumes:
     - ./:/fyle-qbd-api
+    - /tmp:/tmp
     ports:
     - 8000:8000
     depends_on:

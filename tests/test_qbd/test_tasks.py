@@ -13,7 +13,8 @@ from tests.test_fyle.fixtures import fixtures as fyle_fixtures
 def test_create_bills_iif_file_report(
         create_temp_workspace, add_accounting_export_bills, 
         add_accounting_export_expenses, add_fyle_credentials, 
-        add_export_settings, add_field_mappings, mocker
+        add_export_settings, add_field_mappings, add_advanced_settings,
+        mocker
     ):
     """
     Test import reimbursable expenses task
@@ -166,7 +167,8 @@ def test_create_bills_iif_file_report_fatal(
 def test_create_bills_iif_file_expense(
         create_temp_workspace, add_accounting_export_bills, 
         add_accounting_export_expenses, add_fyle_credentials, 
-        add_export_settings, add_field_mappings, mocker
+        add_export_settings, add_field_mappings, add_advanced_settings,
+        mocker
     ):
     """
     Test import reimbursable expenses task
