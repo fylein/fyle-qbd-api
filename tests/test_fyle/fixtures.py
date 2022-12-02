@@ -1196,5 +1196,28 @@ fixtures = {
                      'id': 'usqywo0f3nBY'},
             'user_id': 'usqywo0f3nBY',
         }], 'offset': 0}
-    ]
+    ],
+    'create_file': {
+        'data': {
+            'content_type': None,
+            'created_at': '2022-12-02T05:54:49.217696+00:00',
+            'id': 'fimNloQVF0D8',
+            'name': 'bills.iif',
+            'org_id': 'orFcbTXP4Nzl',
+            'type': 'INTEGRATION',
+            'updated_at': '2022-12-02T05:54:49.217696+00:00',
+            'user_id': 'uswxaNAqh20T'
+        }
+    },
+    'generate_file_urls': {
+        'data': [
+            {
+                'content_type': None,
+                'download_url': 'https://fyle-storage-mumbai-3.s3.amazonaws.com/2022-12-02/orFcbTXP4Nzl/integrations/fimNloQVF0D8.bills.iif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA54Z3LIXTX6CFH4VG%2F20221202%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221202T090102Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=049855502d50779c694eb1df93f19a3c2e5386410cce9f337dfa127beddd2140',
+                'id': 'fimNloQVF0D8',
+                'name': 'bills.iif',
+                'upload_url': 'https://fyle-storage-mumbai-3.s3.amazonaws.com/2022-12-02/orFcbTXP4Nzl/integrations/fimNloQVF0D8.bills.iif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA54Z3LIXTX6CFH4VG%2F20221202%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20221202T090102Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b9e0943a61356cb8e85b2eaeee0df5464e3450d820387c19a984a132e6a5bd83'
+            }
+        ]
+    }
 }
