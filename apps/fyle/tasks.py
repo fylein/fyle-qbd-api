@@ -105,13 +105,13 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
             Expense.create_expense_objects(expenses, workspace_id)
 
         accounting_export.status = 'COMPLETE'
-        accounting_export.detail = None
+        accounting_export.errors = None
 
         accounting_export.save()
 
     except FyleCredential.DoesNotExist:
         logger.info('Fyle credentials not found %s', workspace_id)
-        accounting_export.detail = {
+        accounting_export.errors = {
             'message': 'Fyle credentials do not exist in workspace'
         }
         accounting_export.status = 'FAILED'
@@ -119,9 +119,9 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
 
     except Exception:
         error = traceback.format_exc()
-        accounting_export.detail = {
+        accounting_export.errors = {
             'error': error
         }
         accounting_export.status = 'FATAL'
         accounting_export.save()
-        logger.exception('Something unexpected happened workspace_id: %s %s', accounting_export.workspace_id, accounting_export.detail)
+        logger.exception('Something unexpected happened workspace_id: %s %s', accounting_export.workspace_id, accounting_export.errors)
