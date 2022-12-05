@@ -378,3 +378,157 @@ class CreditCardPurchaseLineitem(models.Model):
             lineitems.append(lineitem)
 
         return lineitems
+
+
+class Journal(models.Model):
+    """
+    Journal Table Model Class
+    
+    Example Data ->
+    'row_type': 'TRNS',
+    'transaction_id': '',
+    'transaction_type': 'GENERAL JOURNAL',
+    'date': '2021-04-26',
+    'account': 'Visa',
+    'name': 'Amazon',
+    'class': '',
+    'amount': 1284.22,
+    'document_number': '',
+    'memo': 'Credit Card Expenses by Shwetabh',
+    """
+    row_type = models.CharField(max_length=255, default='TRNS')
+    transaction_id = models.CharField(max_length=255, default='')
+    transaction_type = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    account = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    class_name = models.CharField(max_length=255, null=True)
+    amount = models.FloatField(help_text='Journal amount')
+    document_number = models.CharField(max_length=255, null=True, default='')
+    memo = models.TextField(null=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, related_name='journals'
+    )
+    accounting_export = models.ForeignKey(
+        AccountingExport, on_delete=models.PROTECT, related_name='journals', null=True
+    )
+
+    class Meta:
+        db_table = 'journals'
+
+    @staticmethod
+    def create_journals(
+        expenses: List[Expense],
+        fund_source: str,
+        export_settings: ExportSettings,
+        accounting_export: AccountingExport,
+        workspace_id: int
+    ):
+        """
+        Create Journals
+        :param expenses: List of expenses
+        :param fund_source: Fund Source
+        :param export_settings: Export Settings
+        :param accounting_export: Accounting Export
+        :param workspace_id: Workspace Id
+        """
+        journal = Journal.objects.create(
+            transaction_type='GENERAL JOURNAL',
+            date=expenses[0].spent_at,
+            account=export_settings.credit_card_account if fund_source == 'CCC' else export_settings.bank_account,
+            name=expenses[0].employee_email,
+            amount=sum([expense.amount for expense in expenses]),
+            memo='Credit Card Expenses by {}'.format(
+                expenses[0].employee_email
+            ) if fund_source == 'CCC' else 'Reimbursable Expenses by {}'.format(
+                expenses[0].employee_email
+            ),
+            accounting_export=accounting_export,
+            workspace_id=workspace_id
+        )
+
+        lineitems = JournalLineitem.create_journal_lineitems(
+            expenses, journal, workspace_id
+        )
+
+        return journal, lineitems
+        
+
+class JournalLineitem(models.Model):
+    """
+    Journal Lineitem Table Model Class
+
+    Example Data ->
+    'row_type': 'SPL',
+    'split_line_id': '',
+    'transaction_type': 'GENERAL JOURNAL',
+    'date': '2021-04-26',
+    'account': 'Food',
+    'name': 'Delloite',
+    'class': 'Awesome',
+    'amount': -642.11,
+    'document_number': '',
+    'memo': 'Amazon.com',
+    """
+    row_type = models.CharField(max_length=255, default='SPL')
+    split_line_id = models.CharField(max_length=255, default='')
+    transaction_type = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    account = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
+    class_name = models.CharField(max_length=255, null=True)
+    amount = models.FloatField(help_text='Journal Lineitem amount')
+    document_number = models.CharField(max_length=255, null=True, default='')
+    memo = models.TextField(null=True, default='')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    journal = models.ForeignKey(
+        Journal, on_delete=models.PROTECT, related_name='lineitems'
+    )
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, related_name='journal_lineitems'
+    )
+    expense = models.ForeignKey(
+        Expense, on_delete=models.PROTECT, related_name='journal_lineitems', null=True
+    )
+
+    class Meta:
+        db_table = 'journal_lineitems'
+    
+    @staticmethod
+    def create_journal_lineitems(
+        expenses: List[Expense], journal: Journal, workspace_id: int
+    ):
+        """
+        Create Journal Lineitems
+        :param expenses: List of expenses
+        :param journal: Journal
+        :param workspace_id: Workspace Id
+        :return: None
+        """
+        field_mappings: FieldMapping = FieldMapping.objects.get(workspace_id=workspace_id)
+
+        lineitems = []
+        for expense in expenses:
+            class_name = expense.project if field_mappings.class_type == 'PROJECT' else expense.cost_center
+
+            lineitem = JournalLineitem.objects.create(
+                transaction_type='GENERAL JOURNAL',
+                date=expense.spent_at,
+                account=expense.category,
+                name=expense.employee_name,
+                class_name=class_name,
+                amount=expense.amount * -1,
+                memo=expense.purpose,
+                journal=journal,
+                expense=expense,
+                workspace_id=workspace_id
+            )
+
+            lineitems.append(lineitem)
+
+        return lineitems
