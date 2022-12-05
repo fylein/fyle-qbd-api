@@ -35,3 +35,24 @@ def test_generate_iif_file_bills():
         for index in range(0, len(lines)):
             generated_lines[index] = [str(element) for element in generated_lines[index]]
             assert lines[index] == generated_lines[index]
+
+
+def test_generate_iif_file_credit_card_purchases():
+    """
+    Test the generate_iif_file function
+    """
+    file_path = '/tmp/test_generator.csv'
+    transactions = fixtures['credit_card_purchases']
+
+    iif_generator = QBDIIFGenerator(file_path)
+
+    generated_lines = iif_generator.generate_iif_file(transactions, 'CREDIT_CARD_PURCHASE')
+
+    with open(file_path, 'r') as iif_file:
+        lines = list(reader(iif_file, delimiter='\t'))
+
+        assert len(lines) == len(generated_lines)
+
+        for index in range(0, len(lines)):
+            generated_lines[index] = [str(element) for element in generated_lines[index]]
+            assert lines[index] == generated_lines[index]

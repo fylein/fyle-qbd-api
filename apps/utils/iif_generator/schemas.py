@@ -92,7 +92,7 @@ SCHEMAS = {
             'WAGEBASE'
         ),
         (
-            '!ENDTRNS'
+            '!ENDTRNS',
         )									
     ),
     'JOURNAL_ENTRY': (
@@ -122,7 +122,7 @@ SCHEMAS = {
 
         ),
         (
-            '!ENDTRNS'
+            '!ENDTRNS',
         )					
     )
 }
