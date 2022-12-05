@@ -215,4 +215,44 @@ fixtures = {
             ]
         }
     ],
+    'journal_entries': [
+        {
+            'row_type': 'TRNS',
+            'transaction_id': '',
+            'transaction_type': 'GENERAL JOURNAL',
+            'date': '2021-04-26',
+            'account': 'Visa',
+            'name': 'Amazon',
+            'class': '',
+            'amount': 1284.22,
+            'document_number': '',
+            'memo': 'Credit Card Expenses by Shwetabh',
+            'split_lines': [
+                {
+                    'row_type': 'SPL',
+                    'split_line_id': '',
+                    'transaction_type': 'GENERAL JOURNAL',
+                    'date': '2021-04-26',
+                    'account': 'Food',
+                    'name': 'Delloite',
+                    'class': 'Awesome',
+                    'amount': -642.11,
+                    'document_number': '',
+                    'memo': 'Expense on Category - Food'
+                },
+                {
+                    'row_type': 'SPL',
+                    'split_line_id': '',
+                    'transaction_type': 'GENERAL JOURNAL',
+                    'date': '2021-04-26',
+                    'account': 'Travel',
+                    'name': 'Delloite - 1',
+                    'class': 'Awesome',
+                    'amount': -642.11,
+                    'document_number': '',
+                    'memo': 'Expense on Category - Food'
+                }
+            ]
+        }
+    ]
 }

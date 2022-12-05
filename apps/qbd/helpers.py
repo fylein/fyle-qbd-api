@@ -4,7 +4,7 @@ from typing import List
 from apps.fyle.models import Expense
 from apps.qbd.models import (
     Bill, BillLineitem,
-    CreditCardPurchase, CreditCardPurchaseLineitem
+    CreditCardPurchase, CreditCardPurchaseLineitem, Journal, JournalLineitem
 )
 from apps.tasks.models import AccountingExport
 from apps.workspaces.models import ExportSettings
@@ -173,3 +173,85 @@ def generate_all_credit_card_purchases(expenses: List[Expense], accounting_expor
         )
 
     return all_credit_card_purchases
+
+
+def __create_journals_payload(journal: Journal, journal_lineitems: JournalLineitem):
+    """
+    Create Journals Payload
+    """
+    return {
+        'row_type': journal.row_type,
+        'transaction_id': journal.transaction_id,
+        'transaction_type': journal.transaction_type,
+        'date': journal.date.strftime('%Y-%m-%d'),
+        'account': journal.account,
+        'name': journal.name,
+        'class': journal.class_name,
+        'amount': journal.amount,
+        'document_number': journal.document_number,
+        'memo': journal.memo,
+        'split_lines': [
+            {
+                'row_type': journal_lineitem.row_type,
+                'split_line_id': journal_lineitem.split_line_id,
+                'transaction_type': journal_lineitem.transaction_type,
+                'date': journal_lineitem.date.strftime('%Y-%m-%d'),
+                'account': journal_lineitem.account,
+                'name': journal_lineitem.name,
+                'class': journal_lineitem.class_name,
+                'amount': journal_lineitem.amount,
+                'document_number': journal_lineitem.document_number,
+                'memo': journal_lineitem.memo
+            } for journal_lineitem in journal_lineitems
+        ]
+    }
+
+
+def generate_all_journals(
+    expenses: List[Expense], 
+    accounting_export: AccountingExport,
+    fund_source: str,
+    workspace_id: int
+):
+    """
+    Create Journals Payload
+    """
+    all_journals = []
+
+    export_settings = ExportSettings.objects.get(workspace_id=workspace_id)
+
+    if fund_source == 'PERSONAL':
+        grouped_by = export_settings.reimbursable_expense_grouped_by
+    else:
+        grouped_by = export_settings.credit_card_expense_grouped_by
+
+    expense_group_map = {}
+
+    if grouped_by == 'REPORT':
+        expense_group_map = {}
+
+        for expense in expenses:
+            if expense.report_id in expense_group_map:
+                expense_group_map[expense.report_id].append(expense)
+            else:
+                expense_group_map[expense.report_id] = [expense]
+    else:
+        expense_group_map = {}
+
+        for expense in expenses:
+            expense_group_map[expense.expense_id] = [expense]
+
+    for group_id in expense_group_map:
+        journal, journal_lineitems = Journal.create_journal(
+            expenses=expense_group_map[group_id],
+            fund_source=fund_source,
+            workspace_id=workspace_id,
+            export_settings=export_settings,
+            accounting_export=accounting_export
+        )
+       
+        all_journals.append(
+            __create_journals_payload(journal, journal_lineitems)
+        )
+
+    return all_journals
