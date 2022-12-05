@@ -419,7 +419,7 @@ class Journal(models.Model):
         db_table = 'journals'
 
     @staticmethod
-    def create_journals(
+    def create_journal(
         expenses: List[Expense],
         fund_source: str,
         export_settings: ExportSettings,
@@ -437,8 +437,8 @@ class Journal(models.Model):
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=expenses[0].spent_at,
-            account=export_settings.credit_card_account if fund_source == 'CCC' else export_settings.bank_account,
-            name=expenses[0].employee_email,
+            account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
+            name=expenses[0].employee_name,
             amount=sum([expense.amount for expense in expenses]),
             memo='Credit Card Expenses by {}'.format(
                 expenses[0].employee_email

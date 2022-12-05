@@ -223,7 +223,7 @@ def generate_all_journals(
     if fund_source == 'PERSONAL':
         grouped_by = export_settings.reimbursable_expense_grouped_by
     else:
-        grouped_by = export_settings.corporate_card_expense_grouped_by
+        grouped_by = export_settings.credit_card_expense_grouped_by
 
     expense_group_map = {}
 
