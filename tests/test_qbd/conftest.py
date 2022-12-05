@@ -20,3 +20,11 @@ def add_accounting_export_bills():
                 'status': 'ENQUEUED'
             }
         )
+
+        AccountingExport.objects.update_or_create(
+            workspace_id=workspace_id,
+            type='EXPORT_CREDIT_CARD_PURCHASES',
+            defaults={
+                'status': 'ENQUEUED'
+            }
+        )

@@ -4,9 +4,6 @@ from django.db.models import JSONField
 from apps.workspaces.models import Workspace
 
 
-def get_default():
-    return dict
-
 
 EXPORT_TYPE_CHOICES = (
     ('FETCHING_REIMBURSABLE_EXPENSES', 'FETCHING_REIMBURSABLE_EXPENSES'),
