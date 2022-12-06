@@ -1,0 +1,63 @@
+version: '3.7'
+
+services:
+  api:
+    entrypoint: bash run.sh
+    restart: unless-stopped
+    volumes:
+    - ./:/fyle-qbd-api
+    - /tmp:/tmp
+    ports:
+    - 8000:8000
+    depends_on:
+    - db
+    environment: 
+      SECRET_KEY: thisisthedjangosecretkey
+      ALLOWED_HOSTS: "*"
+      DEBUG: "False"
+      FYLE_TOKEN_URI: https://localhost:1234/oauth/token
+      FYLE_BASE_URL: https://localhost:1234
+      API_URL: http://localhost:8000/api
+      FYLE_CLIENT_ID: client_id
+      FYLE_CLIENT_SECRET: client_secret
+      DB_NAME: qbd_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+  worker:
+    entrypoint: python manage.py qcluster
+    restart: unless-stopped
+    volumes:
+    - ./:/fyle-qbd-api
+    - /tmp:/tmp
+    ports:
+    - 8000:8000
+    depends_on:
+    - api
+    - db
+    environment: 
+      SECRET_KEY: thisisthedjangosecretkey
+      ALLOWED_HOSTS: "*"
+      DEBUG: "False"
+      FYLE_TOKEN_URI: https://localhost:1234/oauth/token
+      FYLE_BASE_URL: https://localhost:1234
+      API_URL: http://localhost:8000/api
+      FYLE_CLIENT_ID: client_id
+      FYLE_CLIENT_SECRET: client_secret
+      DB_NAME: qbd_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+  db:
+    image: "postgres:latest"
+    environment: 
+      POSTGRES_DB: dummy
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - data:/var/lib/postgresql/data/
+volumes:
+  api:
+  data:

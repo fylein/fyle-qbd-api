@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 
 from unittest import mock
 import pytest
-from rest_framework.test import APIClient
 
 from apps.workspaces.models import (
     Workspace, FyleCredential,
@@ -15,14 +14,6 @@ from apps.workspaces.models import (
 from apps.tasks.models import AccountingExport
 
 from .test_fyle.fixtures import fixtures as fyle_fixtures
-
-
-@pytest.fixture
-def api_client():
-    """
-    API Client to help test views
-    """
-    return APIClient()
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -115,12 +106,13 @@ def add_export_settings():
             reimbursable_expenses_export_type='BILL',
             bank_account_name='Accounts Payable',
             reimbursable_expense_state='PAYMENT_PROCESSING',
-            reimbursable_expense_date='CREATED_AT',
-            reimbursable_expense_grouped_by='REPORT' if workspace_id in [1, 2] else 'EXPENSE',
+            reimbursable_expense_date='current_date' if workspace_id == 1 else 'last_spent_at',
+            reimbursable_expense_grouped_by='REPORT' if workspace_id == 1 else 'EXPENSE',
             credit_card_expense_export_type='CREDIT CARD CHARGE',
             credit_card_expense_state='PAYMENT_PROCESSING',
             credit_card_account_name='Visa',
-            credit_card_expense_grouped_by='EXPENSE' if workspace_id in [2, 3] else 'REPORT',
+            credit_card_entity_name_preference='EMPLOYEE' if workspace_id in [2, 3] else 'VENDOR',
+            credit_card_expense_grouped_by='EXPENSE' if workspace_id == 3 else 'REPORT',
             credit_card_expense_date='spent_at'
         )
 
@@ -185,5 +177,5 @@ def add_advanced_settings():
            schedule_is_enabled=False,
            interval_hours=24 * 7,
            schedule_id=None,
-           memo_structure=[],
+           memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
         )

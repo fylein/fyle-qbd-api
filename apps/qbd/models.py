@@ -1,9 +1,68 @@
+from datetime import datetime
 from typing import List
+
 from django.db import models
+
 from apps.fyle.models import Expense
 from apps.tasks.models import AccountingExport
+from apps.workspaces.models import (
+    AdvancedSetting, ExportSettings, FieldMapping, 
+    FyleCredential, Workspace
+)
 
-from apps.workspaces.models import ExportSettings, FieldMapping, Workspace
+
+def get_transaction_date(expenses: List[Expense], date_preference: str) -> str:
+    """
+    Returns date based on date_preference
+    :param expenses: List of expenses
+    :param date_preference: Date preference last_spent_at, created_at or spent_at
+    """
+    if date_preference == 'last_spent_at':
+        latest_expense = sorted(expenses, key=lambda expense: expense.spent_at, reverse=True)[0]
+
+        return latest_expense.spent_at
+
+    elif date_preference == 'spent_at':
+        return expenses[0].spent_at
+
+    return datetime.now()
+
+
+def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
+    """
+    Get Expense Purpose
+    :param workspace_id: Workspace ID
+    :param expense: Expense object
+    """
+    advanced_settings = AdvancedSetting.objects.get(workspace_id=workspace_id)
+
+    fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
+
+    org_id = fyle_credentials.workspace.org_id
+
+    memo_structure = advanced_settings.memo_structure
+
+    details = {
+        'employee_email': expense.employee_email,
+        'merchant': '{0}'.format(expense.vendor) if expense.vendor else '',
+        'category': '{0}'.format(expense.category) if expense.category else '',
+        'purpose': '{0}'.format(expense.purpose) if expense.purpose else '',
+        'report_number': '{0}'.format(expense.claim_number),
+        'spent_on': '{0}'.format(expense.spent_at.date()) if expense.spent_at else '',
+        'expense_link': '{0}/app/main/#/enterprise/view_expense/{1}?org_id={2}'.format(
+            fyle_credentials.cluster_domain, expense.expense_id, org_id
+        )
+    }
+
+    memo = ''
+
+    for index, field in enumerate(memo_structure):
+        if field in details:
+            memo = memo + details[field]
+            if index + 1 != len(memo_structure):
+                memo = '{0} - '.format(memo)
+
+    return memo
 
 
 class Bill(models.Model):
@@ -72,7 +131,7 @@ class Bill(models.Model):
         """
         bill = Bill.objects.create(
             transaction_type='BILL',
-            date=expenses[0].spent_at,
+            date=get_transaction_date(expenses, export_settings.reimbursable_expense_date),
             account=export_settings.bank_account_name,
             name=expenses[0].employee_name,
             class_name='',
@@ -160,7 +219,7 @@ class BillLineitem(models.Model):
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
-                memo='Expense on Category - {}'.format(expense.category),
+                memo=get_expense_purpose(workspace_id, expense),
                 reimbursable_expense='Yes',
                 bill=bill,
                 workspace_id=workspace_id,
@@ -257,11 +316,16 @@ class CreditCardPurchase(models.Model):
         :param workspace_id: workspace id
         :return: credit card purchase object
         """
+        name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
+
+        if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
+            name = expenses[0].employee_name
+
         credit_card_purchase = CreditCardPurchase.objects.create(
             transaction_type='CREDIT CARD',
-            date=expenses[0].spent_at,
+            date=get_transaction_date(expenses, 'spent_at'),
             account=export_settings.bank_account_name,
-            name=expenses[0].vendor if expenses[0].vendor else 'Default Credit Card Vendor',
+            name=name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]),
             memo='Credit Card Expenses by {}'.format(expenses[0].employee_email),
@@ -368,7 +432,7 @@ class CreditCardPurchaseLineitem(models.Model):
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
-                memo=expense.purpose,
+                memo=get_expense_purpose(workspace_id, expense),
                 reimbursable_expense='No',
                 credit_card_purchase=credit_card_purchase,
                 expense=expense,
@@ -434,11 +498,23 @@ class Journal(models.Model):
         :param accounting_export: Accounting Export
         :param workspace_id: Workspace Id
         """
+        name = expenses[0].employee_name
+
+        date_preference = export_settings.reimbursable_expense_date
+
+        if fund_source == 'CCC':
+            if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
+                name = expenses[0].employee_name
+            else:
+                name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
+            
+            date_preference = export_settings.credit_card_expense_date
+        
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
-            date=expenses[0].spent_at,
+            date=get_transaction_date(expenses, date_preference=date_preference),
             account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
-            name=expenses[0].employee_name,
+            name=name,
             amount=sum([expense.amount for expense in expenses]),
             memo='Credit Card Expenses by {}'.format(
                 expenses[0].employee_email
@@ -520,10 +596,10 @@ class JournalLineitem(models.Model):
                 transaction_type='GENERAL JOURNAL',
                 date=expense.spent_at,
                 account=expense.category,
-                name=expense.employee_name,
+                name=journal.name,
                 class_name=class_name,
                 amount=expense.amount * -1,
-                memo=expense.purpose,
+                memo=get_expense_purpose(workspace_id, expense),
                 journal=journal,
                 expense=expense,
                 workspace_id=workspace_id
