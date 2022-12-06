@@ -103,12 +103,12 @@ def add_export_settings():
     for workspace_id in workspace_ids:
         ExportSettings.objects.create(
             workspace_id=workspace_id,
-            reimbursable_expenses_export_type='BILL',
+            reimbursable_expenses_export_type='BILL' if workspace_id in [1, 2] else 'JOURNAL_ENTRY',
             bank_account_name='Accounts Payable',
             reimbursable_expense_state='PAYMENT_PROCESSING',
             reimbursable_expense_date='current_date' if workspace_id == 1 else 'last_spent_at',
             reimbursable_expense_grouped_by='REPORT' if workspace_id == 1 else 'EXPENSE',
-            credit_card_expense_export_type='CREDIT CARD CHARGE',
+            credit_card_expense_export_type='CREDIT_CARD_PURCHASE' if workspace_id in [1, 2] else 'JOURNAL_ENTRY',
             credit_card_expense_state='PAYMENT_PROCESSING',
             credit_card_account_name='Visa',
             credit_card_entity_name_preference='EMPLOYEE' if workspace_id in [2, 3] else 'VENDOR',
@@ -174,7 +174,7 @@ def add_advanced_settings():
         AdvancedSetting.objects.create(
            workspace_id=workspace_id,
            emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
-           schedule_is_enabled=False,
+           schedule_is_enabled=True if workspace_id in [1, 2] else False,
            interval_hours=24 * 7,
            schedule_id=None,
            memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
