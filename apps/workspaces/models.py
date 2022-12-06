@@ -90,6 +90,11 @@ CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES = (
     ('SPEND DATE', 'spent_at')
 )
 
+CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES = (
+    ('EMPLOYEE', 'EMPLOYEE'),
+    ('VENDOR', 'VENDOR')
+)
+
 
 class ExportSettings(models.Model):
     """
@@ -143,6 +148,10 @@ class ExportSettings(models.Model):
     credit_card_expense_state = models.CharField(
         max_length=255,
         choices=CREDIT_CARD_EXPENSE_STATE_CHOICES
+    )
+    credit_card_entity_name_preference = models.CharField(
+        max_length=255,
+        choices=CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES
     )
     credit_card_account_name = models.CharField(max_length=255, help_text='Credit card account name')
     credit_card_expense_grouped_by = models.CharField(

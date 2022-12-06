@@ -257,11 +257,16 @@ class CreditCardPurchase(models.Model):
         :param workspace_id: workspace id
         :return: credit card purchase object
         """
+        name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
+
+        if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
+            name = expenses[0].employee_name
+
         credit_card_purchase = CreditCardPurchase.objects.create(
             transaction_type='CREDIT CARD',
             date=expenses[0].spent_at,
             account=export_settings.bank_account_name,
-            name=expenses[0].vendor if expenses[0].vendor else 'Default Credit Card Vendor',
+            name=name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]),
             memo='Credit Card Expenses by {}'.format(expenses[0].employee_email),
@@ -434,11 +439,19 @@ class Journal(models.Model):
         :param accounting_export: Accounting Export
         :param workspace_id: Workspace Id
         """
+        name = expenses[0].employee_name
+
+        if fund_source == 'CCC':
+            if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
+                name = expenses[0].employee_name
+            else:
+                name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
+
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=expenses[0].spent_at,
             account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
-            name=expenses[0].employee_name,
+            name=name,
             amount=sum([expense.amount for expense in expenses]),
             memo='Credit Card Expenses by {}'.format(
                 expenses[0].employee_email
@@ -520,7 +533,7 @@ class JournalLineitem(models.Model):
                 transaction_type='GENERAL JOURNAL',
                 date=expense.spent_at,
                 account=expense.category,
-                name=expense.employee_name,
+                name=journal.name,
                 class_name=class_name,
                 amount=expense.amount * -1,
                 memo=expense.purpose,
