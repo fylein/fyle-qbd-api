@@ -174,7 +174,7 @@ def add_advanced_settings():
         AdvancedSetting.objects.create(
            workspace_id=workspace_id,
            emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
-           schedule_is_enabled=False,
+           schedule_is_enabled=True if workspace_id in [1, 2] else False,
            interval_hours=24 * 7,
            schedule_id=None,
            memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
