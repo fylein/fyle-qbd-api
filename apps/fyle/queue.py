@@ -8,7 +8,7 @@ from django_q.tasks import async_task
 from apps.tasks.models import AccountingExport
 
 
-def queue_import_reimbursable_expenses(workspace_id: int):
+def queue_import_reimbursable_expenses(workspace_id: int, synchronous: bool = False):
     """
     Queue Import of Reimbursable Expenses from Fyle
     :param workspace_id: Workspace id
@@ -22,10 +22,15 @@ def queue_import_reimbursable_expenses(workspace_id: int):
         }
     )
 
-    async_task('apps.fyle.tasks.import_reimbursable_expenses', workspace_id, accounting_export)
+    async_task(
+        'apps.fyle.tasks.import_reimbursable_expenses', 
+        workspace_id, 
+        accounting_export, 
+        sync=synchronous
+    )
 
 
-def queue_import_credit_card_expenses(workspace_id: int):
+def queue_import_credit_card_expenses(workspace_id: int, synchronous: bool = False):
     """
     Queue Import of Credit Card Expenses from Fyle
     :param workspace_id: Workspace id
@@ -39,4 +44,8 @@ def queue_import_credit_card_expenses(workspace_id: int):
         }
     )
 
-    async_task('apps.fyle.tasks.import_credit_card_expenses', workspace_id, accounting_export)
+    async_task(
+        'apps.fyle.tasks.import_credit_card_expenses',
+        workspace_id, accounting_export,
+        sync=synchronous
+    )
