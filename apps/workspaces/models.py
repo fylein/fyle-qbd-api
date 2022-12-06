@@ -86,8 +86,8 @@ CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES = (
 
 CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES = (
     ('LAST_SPEND_DATE', 'last_spent_at'),
-    ('CREATED_DATE', 'created_at'),
-    ('SPEND DATE', 'spent_at')
+    ('SPEND DATE', 'spent_at'),
+    ('CURRENT_DATE', 'current_date')
 )
 
 CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES = (
