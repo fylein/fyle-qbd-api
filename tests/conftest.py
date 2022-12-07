@@ -3,10 +3,10 @@ Fixture configuration for all the tests
 """
 from datetime import datetime, timezone
 
-from rest_framework.test import APIClient
 from unittest import mock
 import pytest
 
+from rest_framework.test import APIClient
 from fyle.platform.platform import Platform
 from fyle_rest_auth.models import User, AuthToken
 
