@@ -12,11 +12,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import include, path
+from django.urls import path
+
+from .views import (
+    WorkspaceView,
+    ExportSettingView,
+    AdvancedSettingView,
+    FieldMappingView
+)
 
 
 urlpatterns = [
-    path('api/auth/', include('fyle_rest_auth.urls')),
-    path('api/workspaces/', include('apps.workspaces.urls')),
-    path('api/user/', include('apps.users.urls'))
+    path('', WorkspaceView.as_view(), name='workspaces'),
+    path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export-settings'),
+    path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced-settings'),
+    path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field-mappings')
 ]
