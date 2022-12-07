@@ -18,7 +18,7 @@ services:
     environment: 
       SECRET_KEY: thisisthedjangosecretkey
       ALLOWED_HOSTS: "*"
-      DEBUG: "False"
+      DEBUG: "True"
       FYLE_TOKEN_URI: https://localhost:1234/oauth/token
       FYLE_BASE_URL: https://localhost:1234
       API_URL: http://localhost:8000/api
