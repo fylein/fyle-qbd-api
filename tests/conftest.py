@@ -3,17 +3,70 @@ Fixture configuration for all the tests
 """
 from datetime import datetime, timezone
 
+from rest_framework.test import APIClient
 from unittest import mock
 import pytest
 
+from fyle.platform.platform import Platform
+from fyle_rest_auth.models import User, AuthToken
+
+from apps.fyle.helpers import get_access_token
 from apps.workspaces.models import (
     Workspace, FyleCredential,
     ExportSettings, FieldMapping,
     AdvancedSetting
 )
 from apps.tasks.models import AccountingExport
+from quickbooks_desktop_api.tests import settings
 
 from .test_fyle.fixtures import fixtures as fyle_fixtures
+
+
+@pytest.fixture
+def api_client():
+    """
+    Fixture required to test views
+    """
+    return APIClient()
+
+
+@pytest.fixture()
+def test_connection(db):
+    """
+    Creates a connection with Fyle
+    """
+    client_id = settings.FYLE_CLIENT_ID
+    client_secret = settings.FYLE_CLIENT_SECRET
+    token_url = settings.FYLE_TOKEN_URI
+    refresh_token = 'Dummy.Refresh.Token'
+    server_url = settings.FYLE_BASE_URL
+
+    fyle_connection = Platform(
+        token_url=token_url,
+        client_id=client_id,
+        client_secret=client_secret,
+        refresh_token=refresh_token,
+        server_url=server_url
+    )
+
+    access_token = get_access_token(refresh_token)
+    fyle_connection.access_token = access_token
+    user_profile = fyle_connection.v1beta.spender.my_profile.get()['data']
+    user = User(
+        password='', last_login=datetime.now(tz=timezone.utc), id=1, email=user_profile['user']['email'],
+        user_id=user_profile['user_id'], full_name='', active='t', staff='f', admin='t'
+    )
+
+    user.save()
+
+    auth_token = AuthToken(
+        id=1,
+        refresh_token=refresh_token,
+        user=user
+    )
+    auth_token.save()
+
+    return fyle_connection
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -45,11 +98,18 @@ def default_session_fixture(request):
     )
     patched_4.__enter__()
 
+    patched_5 = mock.patch(
+        'fyle_rest_auth.helpers.get_fyle_admin',
+        return_value=fyle_fixtures['get_my_profile']
+    )
+    patched_5.__enter__()
+
     def unpatch():
         patched_1.__exit__()
         patched_2.__exit__()
         patched_3.__exit__()
         patched_4.__exit__()
+        patched_5.__exit__()
 
     request.addfinalizer(unpatch)
 
