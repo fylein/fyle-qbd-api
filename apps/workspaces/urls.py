@@ -24,7 +24,7 @@ from .views import (
 
 urlpatterns = [
     path('', WorkspaceView.as_view(), name='workspaces'),
-    path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export_settings'),
-    path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced_settings'),
-    path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field_mapping')
+    path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export-settings'),
+    path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced-settings'),
+    path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field-mappings')
 ]

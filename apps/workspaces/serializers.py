@@ -8,6 +8,7 @@ from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
 
 from apps.fyle.helpers import get_cluster_domain
+from quickbooks_desktop_api.utils import assert_valid
 
 from .schedule import schedule_run_import_export
 from .models import (
@@ -87,6 +88,7 @@ class ExportSettingsSerializer(serializers.ModelSerializer):
         """
         Create Export Settings
         """
+        assert_valid(validated_data, 'Body cannot be null')
         workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
     
         export_settings = ExportSettings.objects.filter(
@@ -142,7 +144,7 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
             workspace_id=workspace_id).first()
 
         if not advanced_setting:
-            if 'memo_structute' not in validated_data:
+            if 'memo_structure' not in validated_data:
                 validated_data['memo_structure'] = [
                     'employee_email',
                     'merchant',

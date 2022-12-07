@@ -63,9 +63,9 @@ REIMBURSABLE_EXPENSES_GROUPED_BY_CHOICES = (
 )
 
 REIMBURSABLE_EXPENSES_DATE_TYPE_CHOICES = (
-    ('LAST_SPEND_DATE', 'last_spent_at'),
-    ('CREATED_DATE', 'created_at'),
-    ('SPEND DATE', 'spent_at')
+    ('last_spent_at', 'last_spent_at'),
+    ('created_at', 'created_at'),
+    ('spent_at', 'spent_at')
 )
 
 # Credit Card Expense Choices
@@ -86,9 +86,9 @@ CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES = (
 )
 
 CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES = (
-    ('LAST_SPEND_DATE', 'last_spent_at'),
-    ('SPEND_DATE', 'spent_at'),
-    ('CURRENT_DATE', 'current_date')
+    ('last_spent_at', 'last_spent_at'),
+    ('spent_at', 'spent_at'),
+    ('created_at', 'created_at')
 )
 
 CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES = (
@@ -128,7 +128,10 @@ class ExportSettings(models.Model):
         choices=REIMBURSABLE_EXPENSE_EXPORT_TYPE_CHOICES,
         null=True
     )
-    bank_account_name = models.CharField(max_length=255, help_text='Bank account name')
+    bank_account_name = models.CharField(
+        max_length=255, help_text='Bank account name', 
+        null=True
+    )
     reimbursable_expense_state = models.CharField(
         max_length=255,
         choices=REIMBURSABLE_EXPENSE_STATE_CHOICES,
