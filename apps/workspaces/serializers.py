@@ -6,9 +6,18 @@ from rest_framework import serializers
 from django.core.cache import cache
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
+
 from apps.fyle.helpers import get_cluster_domain
 
-from apps.workspaces.models import FyleCredential, User, Workspace
+from .schedule import schedule_run_import_export
+from .models import (
+    FyleCredential,
+    User,
+    Workspace,
+    ExportSettings,
+    FieldMapping,
+    AdvancedSetting
+)
 
 
 
@@ -63,3 +72,90 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             )
 
         return workspace
+
+
+class ExportSettingsSerializer(serializers.ModelSerializer):
+    """
+    Export Settings serializer
+    """
+    class Meta:
+        model = ExportSettings
+        fields = '__all__'
+        read_only_fields = ('id', 'workspace', 'created_at', 'updated_at')
+
+    def create(self, validated_data):
+        """
+        Create Export Settings
+        """
+        workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
+    
+        export_settings = ExportSettings.objects.filter(
+            workspace_id=workspace_id).first()
+
+        export_settings, _ = ExportSettings.objects.update_or_create(
+            workspace_id=workspace_id,
+            defaults=validated_data
+        )
+        return export_settings
+
+
+class FieldMappingSerializer(serializers.ModelSerializer):
+    """
+    Field Mapping serializer
+    """
+    class Meta:
+        model = FieldMapping
+        fields = '__all__'
+        read_only_fields = ('id', 'workspace', 'created_at', 'updated_at')
+
+    def create(self, validated_data):
+        """
+        Create Field Mapping
+        """
+        workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
+
+        field_mapping = FieldMapping.objects.filter(
+            workspace_id=workspace_id).first()
+
+        field_mapping, _ = FieldMapping.objects.update_or_create(
+            workspace_id=workspace_id,
+            defaults=validated_data
+        )
+        return field_mapping
+
+
+class AdvancedSettingSerializer(serializers.ModelSerializer):
+    """
+    Advanced Settings serializer
+    """
+    class Meta:
+        model = AdvancedSetting
+        fields = '__all__'
+        read_only_fields = ('id', 'workspace', 'created_at', 'updated_at')
+
+    def create(self, validated_data):
+        """
+        Create Advanced Settings
+        """
+        workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
+        advanced_setting = AdvancedSetting.objects.filter(
+            workspace_id=workspace_id).first()
+
+        if not advanced_setting:
+            if 'memo_structute' not in validated_data:
+                validated_data['memo_structure'] = [
+                    'employee_email',
+                    'merchant',
+                    'purpose',
+                    'report_number'
+                ]
+
+        advanced_setting, _ = AdvancedSetting.objects.update_or_create(
+            workspace_id=workspace_id,
+            defaults=validated_data
+        )
+
+        # Schedule run import export or delete
+        schedule_run_import_export(workspace_id)
+
+        return advanced_setting

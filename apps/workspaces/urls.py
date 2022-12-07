@@ -14,9 +14,17 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import WorkspaceView
+from .views import (
+    WorkspaceView,
+    ExportSettingView,
+    AdvancedSettingView,
+    FieldMappingView
+)
 
 
 urlpatterns = [
-    path('', WorkspaceView.as_view(), name='workspaces')
+    path('', WorkspaceView.as_view(), name='workspaces'),
+    path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export_settings'),
+    path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced_settings'),
+    path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field_mapping')
 ]

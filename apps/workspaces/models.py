@@ -71,7 +71,7 @@ REIMBURSABLE_EXPENSES_DATE_TYPE_CHOICES = (
 # Credit Card Expense Choices
 CREDIT_CARD_EXPENSE_EXPORT_TYPE_CHOICES = (
     ('JOURNAL_ENTRY', 'JOURNAL_ENTRY'),
-    ('CREDIT_CARD_CHARGE', 'CREDIT_CARD_CHARGE')
+    ('CREDIT_CARD_PURCHASE', 'CREDIT_CARD_PURCHASE')
 )
 
 CREDIT_CARD_EXPENSE_STATE_CHOICES = (
@@ -87,7 +87,7 @@ CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES = (
 
 CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES = (
     ('LAST_SPEND_DATE', 'last_spent_at'),
-    ('SPEND DATE', 'spent_at'),
+    ('SPEND_DATE', 'spent_at'),
     ('CURRENT_DATE', 'current_date')
 )
 
@@ -125,43 +125,55 @@ class ExportSettings(models.Model):
     # Reimbursable Expenses Export Settings
     reimbursable_expenses_export_type = models.CharField(
         max_length=255, 
-        choices=REIMBURSABLE_EXPENSE_EXPORT_TYPE_CHOICES
+        choices=REIMBURSABLE_EXPENSE_EXPORT_TYPE_CHOICES,
+        null=True
     )
     bank_account_name = models.CharField(max_length=255, help_text='Bank account name')
     reimbursable_expense_state = models.CharField(
         max_length=255,
-        choices=REIMBURSABLE_EXPENSE_STATE_CHOICES
+        choices=REIMBURSABLE_EXPENSE_STATE_CHOICES,
+        null=True
     )
     reimbursable_expense_date = models.CharField(
         max_length=255,
-        choices=REIMBURSABLE_EXPENSES_DATE_TYPE_CHOICES
+        choices=REIMBURSABLE_EXPENSES_DATE_TYPE_CHOICES,
+        null=True
     )
     reimbursable_expense_grouped_by = models.CharField(
         max_length=255,
-        choices=REIMBURSABLE_EXPENSES_GROUPED_BY_CHOICES
+        choices=REIMBURSABLE_EXPENSES_GROUPED_BY_CHOICES,
+        null=True
     )
     
     # Credit Card Expenses Export Settings
     credit_card_expense_export_type = models.CharField(
         max_length=255,
-        choices=CREDIT_CARD_EXPENSE_EXPORT_TYPE_CHOICES
+        choices=CREDIT_CARD_EXPENSE_EXPORT_TYPE_CHOICES,
+        null=True
     )
     credit_card_expense_state = models.CharField(
         max_length=255,
-        choices=CREDIT_CARD_EXPENSE_STATE_CHOICES
+        choices=CREDIT_CARD_EXPENSE_STATE_CHOICES,
+        null=True
     )
     credit_card_entity_name_preference = models.CharField(
         max_length=255,
-        choices=CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES
+        choices=CREDIT_CARD_EXPENSES_ENTITY_NAME_CHOICES,
+        null=True
     )
-    credit_card_account_name = models.CharField(max_length=255, help_text='Credit card account name')
+    credit_card_account_name = models.CharField(
+        max_length=255, help_text='Credit card account name',
+        null=True
+    )
     credit_card_expense_grouped_by = models.CharField(
         max_length=255,
-        choices=CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES
+        choices=CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES,
+        null=True
     )
     credit_card_expense_date = models.CharField(
         max_length=255,
-        choices=CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES
+        choices=CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES,
+        null=True
     )
 
     class Meta:
@@ -188,8 +200,10 @@ class FieldMapping(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 
-    class_type = models.CharField(max_length=255, help_text='Class Mapped to Fyle Field')
-    project_type = models.CharField(max_length=255, help_text='Project Mapped to Fyle Field')
+    class_type = models.CharField(
+        max_length=255, help_text='Class Mapped to Fyle Field', null=True)
+    project_type = models.CharField(
+        max_length=255, help_text='Project Mapped to Fyle Field', null=True)
 
     class Meta:
         db_table = 'field_mapping'
@@ -219,7 +233,7 @@ class AdvancedSetting(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 
-    memo_structure = ArrayField(models.CharField(max_length=255), help_text='Array of fields in memo')
+    memo_structure = ArrayField(models.CharField(max_length=255), help_text='Array of fields in memo', null=True)
     schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled', default=False)
     interval_hours = models.IntegerField(help_text='Interval hours for schedule', null=True)
     schedule_id = models.CharField(max_length=255, help_text='Schedule id', null=True)
