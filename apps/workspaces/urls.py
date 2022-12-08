@@ -19,12 +19,14 @@ from .views import (
     ExportSettingView,
     AdvancedSettingView,
     FieldMappingView,
-    TriggerExportView
+    TriggerExportView,
+    ReadyView
 )
 
 
 urlpatterns = [
     path('', WorkspaceView.as_view(), name='workspaces'),
+    path('ready/', ReadyView.as_view(), name='ready'),
     path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export-settings'),
     path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced-settings'),
     path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field-mappings'),

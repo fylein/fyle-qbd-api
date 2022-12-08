@@ -290,3 +290,16 @@ def test_trigger_export_view(
 
     assert response.status_code == 200
     assert response.data['message'] == 'Export triggered successfully'
+
+
+def test_ready_view(api_client, test_connection):
+    '''
+    Test ready view
+    '''
+    url = reverse(
+        'ready'
+    )
+
+    response = api_client.get(url)
+
+    assert response.status_code == 200
