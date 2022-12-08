@@ -110,3 +110,35 @@ def upload_iif_to_fyle(file_path: str, workspace_id: int):
     )
 
     return file
+
+
+def download_iif_file(file_id: str, workspace_id: int):
+    """
+    Download file from fyle
+    :param file_id: (str)
+    :param workspace_id: (int)
+    :return: (dict)
+    """
+    fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
+    
+    platform = Platform(
+        server_url='{}/platform/v1beta'.format(fyle_credentials.cluster_domain),
+        token_url=settings.FYLE_TOKEN_URI,
+        client_id=settings.FYLE_CLIENT_ID,
+        client_secret=settings.FYLE_CLIENT_SECRET,
+        refresh_token=fyle_credentials.refresh_token,
+     )
+
+    bulk_generate_file_urls_payload = {
+        'data': [
+            {
+                'id': file_id
+            }
+        ]
+    }
+
+    download_url = platform.v1beta.admin.files.bulk_generate_file_urls(
+        bulk_generate_file_urls_payload
+    )['data'][0]['download_url']
+
+    return download_url
