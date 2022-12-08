@@ -88,3 +88,23 @@ class TriggerExportView(generics.CreateAPIView):
                 'message': 'Export triggered successfully'
             }
         )
+
+class ReadyView(generics.RetrieveAPIView):
+    """
+    Ready call to check if the api is ready
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        """
+        Ready call
+        """
+        Workspace.objects.first()
+
+        return Response(
+            data={
+                'message': 'Ready'
+            },
+            status=status.HTTP_200_OK
+        )
