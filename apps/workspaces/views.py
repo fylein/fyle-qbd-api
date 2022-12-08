@@ -1,4 +1,7 @@
 from rest_framework import generics
+from rest_framework.views import Response, status
+
+from quickbooks_desktop_api.utils import assert_valid
 
 from apps.workspaces.models import (
     Workspace, ExportSettings,
@@ -8,7 +11,8 @@ from apps.workspaces.serializers import (
     WorkspaceSerializer, ExportSettingsSerializer,
     FieldMappingSerializer, AdvancedSettingSerializer
 )
-from quickbooks_desktop_api.utils import assert_valid
+from .tasks import run_import_export
+
 
 class WorkspaceView(generics.CreateAPIView, generics.RetrieveAPIView):
     """
@@ -63,3 +67,24 @@ class AdvancedSettingView(generics.CreateAPIView, generics.RetrieveAPIView):
     lookup_url_kwarg = 'workspace_id'
 
     queryset = AdvancedSetting.objects.all()
+
+
+class TriggerExportView(generics.CreateAPIView):
+    """
+    Trigger Export
+    """
+
+    def post(self, request, *args, **kwargs):
+        """
+        Trigger Export
+        """
+        workspace_id = self.kwargs.get('workspace_id')
+
+        run_import_export(workspace_id=workspace_id)
+
+        return Response(
+            status=status.HTTP_200_OK,
+            data={
+                'message': 'Export triggered successfully'
+            }
+        )

@@ -100,8 +100,6 @@ def upload_iif_to_fyle(file_path: str, workspace_id: int):
         bulk_generate_file_urls_payload
     )['data'][0]['upload_url']
 
-    print(upload_url)
-
     file_data = open(file_path, 'rb')
     file_data = base64.b64encode(file_data.read())
 
