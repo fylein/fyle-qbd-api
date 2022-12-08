@@ -15,7 +15,7 @@ def post_request(url, body, refresh_token=None):
     """
     access_token = None
     api_headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     }
     if refresh_token:
         access_token = get_access_token(refresh_token)
@@ -44,7 +44,7 @@ def get_access_token(refresh_token: str) -> str:
         'client_secret': settings.FYLE_CLIENT_SECRET
     }
 
-    return post_request(settings.FYLE_TOKEN_URI, body=api_data)['access_token']
+    return post_request(settings.FYLE_TOKEN_URI, body=json.dumps(api_data))['access_token']
 
 
 def get_cluster_domain(refresh_token: str) -> str:

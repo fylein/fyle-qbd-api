@@ -75,6 +75,8 @@ Django Rest Framework API for Fyle Quickbooks Desktop Integration
     docker-compose exec api /bin/bash
     ```
 
+* If you're a frontend developer you can find the API docs and Postman Collection [here.](https://documenter.getpostman.com/view/8534306/2s8YzRy38t) 
+
 ### Running Tests
 
 * Run the following commands
