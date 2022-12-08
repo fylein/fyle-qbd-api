@@ -1,6 +1,7 @@
 import json
 
 from django.urls import reverse
+import pytest
 
 from apps.workspaces.models import AdvancedSetting, ExportSettings, Workspace
 
@@ -256,3 +257,36 @@ def test_advanced_settings(api_client, test_connection):
     assert response.data['emails'] == [
         'shwetabh.kumar@fylehq.com'
     ]
+
+
+@pytest.mark.django_db(databases=['default'], transaction=True)
+def test_trigger_export_view(
+    api_client, test_connection, 
+    create_temp_workspace, add_export_settings
+):
+    '''
+    Test trigger export view
+    '''
+    url = reverse(
+        'workspaces'
+    )
+
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
+    response = api_client.post(url)
+
+    workspace_id = response.data['id']
+
+    ExportSettings.objects.filter(workspace_id=1).update(workspace_id=workspace_id)
+
+    url = reverse(
+        'trigger-export', kwargs={
+            'workspace_id': workspace_id
+        }
+    )
+
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
+
+    response = api_client.post(url)
+
+    assert response.status_code == 200
+    assert response.data['message'] == 'Export triggered successfully'

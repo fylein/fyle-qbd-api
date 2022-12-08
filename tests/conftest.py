@@ -11,6 +11,7 @@ from fyle.platform.platform import Platform
 from fyle_rest_auth.models import User, AuthToken
 
 from apps.fyle.helpers import get_access_token
+from apps.fyle.models import Expense
 from apps.workspaces.models import (
     Workspace, FyleCredential,
     ExportSettings, FieldMapping,
@@ -239,3 +240,18 @@ def add_advanced_settings():
            schedule_id=None,
            memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
         )
+
+
+@pytest.fixture()
+@pytest.mark.django_db(databases=['default'])
+def add_expenses():
+    """
+    Add Expense to a workspace
+    """
+    expenses = fyle_fixtures['platform_connector_expenses']
+
+    for workspace_id in [1, 2, 3]:
+        for expense in expenses:
+            expense['id'] = expense['id'] + str(workspace_id)
+
+        Expense.create_expense_objects(expenses, workspace_id)
