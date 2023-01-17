@@ -238,7 +238,8 @@ def add_advanced_settings():
            schedule_is_enabled=True if workspace_id in [1, 2] else False,
            interval_hours=24 * 7,
            schedule_id=None,
-           memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
+           top_memo_structure=['employee_email', 'purpose'],
+           expense_memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
         )
 
 

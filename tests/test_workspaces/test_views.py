@@ -190,7 +190,7 @@ def test_advanced_settings(api_client, test_connection):
     api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
 
     payload = {
-        'memo_structure': [
+        'expense_memo_structure': [
             'employee_email',
             'merchant',
             'purpose',
@@ -207,7 +207,7 @@ def test_advanced_settings(api_client, test_connection):
     response = api_client.post(url, payload)
     
     assert response.status_code == 201
-    assert response.data['memo_structure'] == [
+    assert response.data['expense_memo_structure'] == [
         'employee_email',
         'merchant',
         'purpose',
@@ -224,7 +224,7 @@ def test_advanced_settings(api_client, test_connection):
     response = api_client.get(url)
 
     assert response.status_code == 200
-    assert response.data['memo_structure'] == [
+    assert response.data['expense_memo_structure'] == [
         'employee_email',
         'merchant',
         'purpose',
@@ -238,14 +238,14 @@ def test_advanced_settings(api_client, test_connection):
         'shwetabh.kumar@fylehq.com'
     ]
 
-    del payload['memo_structure']
+    del payload['expense_memo_structure']
 
     AdvancedSetting.objects.filter(workspace_id=workspace_id).first().delete()
 
     response = api_client.post(url, payload)
     
     assert response.status_code == 201
-    assert response.data['memo_structure'] == [
+    assert response.data['expense_memo_structure'] == [
         'employee_email',
         'merchant',
         'purpose',
