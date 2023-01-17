@@ -80,7 +80,7 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
 
     details = {
         'employee_email': expense.employee_email,
-        'purpose': '{0}'.format(expense.purpose) if expense.purpose else ''
+        'purpose': f'{expense.purpose}' if expense.purpose else ''
     }
 
     memo = ''
@@ -89,7 +89,7 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
         if field in details:
             memo = memo + details[field]
             if index + 1 != len(top_memo_structure):
-                memo = '{0} - '.format(memo)
+                memo = f'{memo} - '
 
     return memo
 
@@ -167,7 +167,7 @@ class Bill(models.Model):
             amount=sum([expense.amount for expense in expenses]),
             memo=get_top_purpose(workspace_id=workspace_id,
                 expense=expenses[0],
-                default='Reimbursable Expenses by {}'.format(expenses[0].employee_email)
+                default=f'Reimbursable Expenses by {expenses[0].employee_email}'
             ),
             accounting_export=accounting_export,
             workspace_id=workspace_id
@@ -363,7 +363,7 @@ class CreditCardPurchase(models.Model):
             memo=get_top_purpose(
                 workspace_id=workspace_id,
                 expense=expenses[0],
-                default='Credit Card Expenses by {}'.format(expenses[0].employee_email)
+                default=f'Credit Card Expenses by {expenses[0].employee_email}'
             ),
             accounting_export=accounting_export,
             workspace_id=workspace_id
@@ -546,10 +546,9 @@ class Journal(models.Model):
             
             date_preference = export_settings.credit_card_expense_date
         
-        default_memo = 'Credit Card Expenses by {}'.format(expenses[0].employee_email) \
-            if fund_source == 'CCC' else 'Reimbursable Expenses by {}'.format(
-                expenses[0].employee_email
-            )   
+        default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
+            if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
+
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=get_transaction_date(expenses, date_preference=date_preference),
@@ -557,8 +556,8 @@ class Journal(models.Model):
             name=name,
             amount=sum([expense.amount for expense in expenses]),
             memo=get_top_purpose(
-                workspace_id=workspace_id, 
-                expense=expenses[0], 
+                workspace_id=workspace_id,
+                expense=expenses[0],
                 default=default_memo
             ),
             accounting_export=accounting_export,
@@ -614,7 +613,7 @@ class JournalLineitem(models.Model):
 
     class Meta:
         db_table = 'journal_lineitems'
-    
+
     @staticmethod
     def create_journal_lineitems(
         expenses: List[Expense], journal: Journal, workspace_id: int

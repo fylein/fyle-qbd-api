@@ -236,8 +236,12 @@ class AdvancedSetting(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 
-    top_memo_structure = ArrayField(models.CharField(max_length=255), help_text='Array of fields in memo', null=True)
-    expense_memo_structure = ArrayField(models.CharField(max_length=255), help_text='Array of fields in memo', null=True)
+    top_memo_structure = ArrayField(
+        models.CharField(max_length=255), help_text='Array of fields in memo', null=True
+    )
+    expense_memo_structure = ArrayField(
+        models.CharField(max_length=255), help_text='Array of fields in memo', null=True
+    )
     schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled', default=False)
     interval_hours = models.IntegerField(help_text='Interval hours for schedule', null=True)
     schedule_id = models.CharField(max_length=255, help_text='Schedule id', null=True)

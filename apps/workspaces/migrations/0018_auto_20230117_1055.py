@@ -19,6 +19,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='advancedsetting',
             name='top_memo_structure',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), help_text='Array of fields in memo', null=True, size=None),
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(max_length=255),
+                help_text='Array of fields in memo', null=True, size=None
+            ),
         ),
     ]
