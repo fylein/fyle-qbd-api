@@ -95,6 +95,10 @@ FYLE_REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'apps.users.serializers.UserSerializer'
 }
 
+FYLE_REST_AUTH_SETTINGS = {
+    'async_update_user': False
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',

@@ -77,7 +77,7 @@ def test_create_bills_iif_file_report(
 def test_create_bills_iif_file_report_fail(
         create_temp_workspace, add_accounting_export_bills, 
         add_accounting_export_expenses, add_fyle_credentials, 
-        add_export_settings, mocker
+        add_export_settings, add_advanced_settings, mocker
     ):
     """
     Test import reimbursable expenses task
@@ -348,7 +348,7 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
 def test_create_credit_card_purchases_iif_file_expense_fail(
     create_temp_workspace, add_accounting_export_bills, 
     add_accounting_export_expenses, add_fyle_credentials, 
-    add_export_settings, mocker
+    add_export_settings, add_advanced_settings, mocker
 ):
     """
     Test create credit card purchases iif file
@@ -620,7 +620,7 @@ def test_create_journals_iif_file_ccc_report_employee(
 def test_create_journals_iif_file_ccc_report_fail(
     create_temp_workspace, add_accounting_export_bills, 
     add_accounting_export_expenses, add_fyle_credentials, 
-    add_export_settings, mocker
+    add_export_settings, add_advanced_settings, mocker
 ):
     """
     Test create journals iif file Fail

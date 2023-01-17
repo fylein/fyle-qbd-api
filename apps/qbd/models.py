@@ -40,7 +40,7 @@ def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
 
     org_id = fyle_credentials.workspace.org_id
 
-    memo_structure = advanced_settings.memo_structure
+    expense_memo_structure = advanced_settings.expense_memo_structure
 
     details = {
         'employee_email': expense.employee_email,
@@ -56,11 +56,40 @@ def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
 
     memo = ''
 
-    for index, field in enumerate(memo_structure):
+    for index, field in enumerate(expense_memo_structure):
         if field in details:
             memo = memo + details[field]
-            if index + 1 != len(memo_structure):
+            if index + 1 != len(expense_memo_structure):
                 memo = '{0} - '.format(memo)
+
+    return memo
+
+
+def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
+    """
+    Get Expense Purpose
+    :param workspace_id: Workspace ID
+    :param expense: Expense object
+    """
+    advanced_settings = AdvancedSetting.objects.get(workspace_id=workspace_id)
+
+    top_memo_structure = advanced_settings.top_memo_structure
+
+    if not top_memo_structure:
+        return default
+
+    details = {
+        'employee_email': expense.employee_email,
+        'purpose': f'{expense.purpose}' if expense.purpose else ''
+    }
+
+    memo = ''
+
+    for index, field in enumerate(top_memo_structure):
+        if field in details:
+            memo = memo + details[field]
+            if index + 1 != len(top_memo_structure):
+                memo = f'{memo} - '
 
     return memo
 
@@ -136,7 +165,10 @@ class Bill(models.Model):
             name=expenses[0].employee_name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]),
-            memo='Reimbursable Expenses by {}'.format(expenses[0].employee_email),
+            memo=get_top_purpose(workspace_id=workspace_id,
+                expense=expenses[0],
+                default=f'Reimbursable Expenses by {expenses[0].employee_email}'
+            ),
             accounting_export=accounting_export,
             workspace_id=workspace_id
         )
@@ -328,7 +360,11 @@ class CreditCardPurchase(models.Model):
             name=name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]),
-            memo='Credit Card Expenses by {}'.format(expenses[0].employee_email),
+            memo=get_top_purpose(
+                workspace_id=workspace_id,
+                expense=expenses[0],
+                default=f'Credit Card Expenses by {expenses[0].employee_email}'
+            ),
             accounting_export=accounting_export,
             workspace_id=workspace_id
         )
@@ -510,16 +546,19 @@ class Journal(models.Model):
             
             date_preference = export_settings.credit_card_expense_date
         
+        default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
+            if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
+
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=get_transaction_date(expenses, date_preference=date_preference),
             account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
             name=name,
             amount=sum([expense.amount for expense in expenses]),
-            memo='Credit Card Expenses by {}'.format(
-                expenses[0].employee_email
-            ) if fund_source == 'CCC' else 'Reimbursable Expenses by {}'.format(
-                expenses[0].employee_email
+            memo=get_top_purpose(
+                workspace_id=workspace_id,
+                expense=expenses[0],
+                default=default_memo
             ),
             accounting_export=accounting_export,
             workspace_id=workspace_id
@@ -574,7 +613,7 @@ class JournalLineitem(models.Model):
 
     class Meta:
         db_table = 'journal_lineitems'
-    
+
     @staticmethod
     def create_journal_lineitems(
         expenses: List[Expense], journal: Journal, workspace_id: int

@@ -17,7 +17,7 @@ dj-database-url==0.5.0
 fyle==0.30.0
 
 # Reusable Fyle Packages
-fyle-rest-auth==1.1.0
+fyle-rest-auth==1.4.0
 fyle-accounting-mappings==1.21.1
 fyle-integrations-platform-connector==1.21.0
 

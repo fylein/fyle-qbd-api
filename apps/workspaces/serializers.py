@@ -144,8 +144,8 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
             workspace_id=workspace_id).first()
 
         if not advanced_setting:
-            if 'memo_structure' not in validated_data:
-                validated_data['memo_structure'] = [
+            if 'expense_memo_structure' not in validated_data:
+                validated_data['expense_memo_structure'] = [
                     'employee_email',
                     'merchant',
                     'purpose',
