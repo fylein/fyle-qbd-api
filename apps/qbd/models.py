@@ -356,7 +356,7 @@ class CreditCardPurchase(models.Model):
         credit_card_purchase = CreditCardPurchase.objects.create(
             transaction_type='CREDIT CARD',
             date=get_transaction_date(expenses, 'spent_at'),
-            account=export_settings.bank_account_name,
+            account=export_settings.credit_card_account_name,
             name=name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]),
