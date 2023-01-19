@@ -1,4 +1,4 @@
-from datetime import datetime, time_inputdelta, time
+from datetime import datetime, timedelta, time
 from .models import AdvancedSetting
 from django_q.models import Schedule
 
@@ -27,12 +27,12 @@ def __get_time_inputstamp_from_time_input_and_weekday(day_of_the_week: str, time
 
     if next_run.weekday() == day_of_the_week:
         if next_run.hour > hour:
-            next_run = next_run + time_inputdelta(days=7)
+            next_run = next_run + timedelta(days=7)
         elif next_run.hour == hour:
             if next_run.minute > minute:
-                next_run = next_run + time_inputdelta(days=7)
+                next_run = next_run + timedelta(days=7)
     elif next_run.weekday() > day_of_the_week:
-        next_run = next_run + time_inputdelta(days=7)
+        next_run = next_run + timedelta(days=7)
 
     next_run = next_run.replace(
         hour=hour,
@@ -55,13 +55,13 @@ def __get_time_inputstamp_from_time_input_and_day_of_month(day_of_month: int, ti
     next_run = datetime.now()
 
     if next_run.day > day_of_month:
-        next_run = next_run + time_inputdelta(days=30)
+        next_run = next_run + timedelta(days=30)
     elif next_run.day == day_of_month:
         if next_run.hour > hour:
-            next_run = next_run + time_inputdelta(days=30)
+            next_run = next_run + timedelta(days=30)
         elif next_run.hour == hour:
             if next_run.minute > minute:
-                next_run = next_run + time_inputdelta(days=30)
+                next_run = next_run + timedelta(days=30)
 
     next_run = next_run.replace(
         day=day_of_month,
