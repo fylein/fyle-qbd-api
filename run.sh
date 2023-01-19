@@ -7,4 +7,4 @@ python manage.py createcachetable --database cache_db
 python manage.py migrate
 
 # Running qcluster server
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8008
