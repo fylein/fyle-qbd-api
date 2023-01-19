@@ -43,6 +43,7 @@ def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
     expense_memo_structure = advanced_settings.expense_memo_structure
 
     details = {
+        'employee_name': expense.employee_name,
         'employee_email': expense.employee_email,
         'merchant': '{0}'.format(expense.vendor) if expense.vendor else '',
         'category': '{0}'.format(expense.category) if expense.category else '',
@@ -79,6 +80,7 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
         return default
 
     details = {
+        'employee_name': expense.employee_name,
         'employee_email': expense.employee_email,
         'purpose': f'{expense.purpose}' if expense.purpose else ''
     }
