@@ -299,8 +299,9 @@ class AdvancedSetting(models.Model):
         models.CharField(max_length=255), help_text='Array of fields in memo', null=True
     )
     schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled', default=False)
-    frequency = models.CharField(max_length=255, choices=FREQUENCY_CHOICES, help_text='Frequency for schedule', null=True)
-    
+    frequency = models.CharField(
+        max_length=255, choices=FREQUENCY_CHOICES, help_text='Frequency for schedule', null=True)
+
     day_of_month = models.CharField(
         max_length=5, choices=DAY_OF_MONTH_CHOICES, help_text='Day of month for schedule', null=True
     )
