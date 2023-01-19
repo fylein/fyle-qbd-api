@@ -233,13 +233,16 @@ def add_advanced_settings():
 
     for workspace_id in workspace_ids:
         AdvancedSetting.objects.create(
-           workspace_id=workspace_id,
-           emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
-           schedule_is_enabled=True if workspace_id in [1, 2] else False,
-           interval_hours=24 * 7,
-           schedule_id=None,
-           top_memo_structure=['employee_email', 'purpose'],
-           expense_memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
+            workspace_id=workspace_id,
+            emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
+            schedule_is_enabled=True if workspace_id in [1, 2] else False,
+            frequency='WEEKLY' if workspace_id in [1, 2] else 'MONTHLY',
+            day_of_week='MONDAY' if workspace_id in [1, 2] else 'TUESDAY',
+            day_of_month=1 if workspace_id in [1, 2] else 2,
+            time_of_day='00:00:00' if workspace_id in [1, 2] else '01:00:00',
+            schedule_id=None,
+            top_memo_structure=['employee_email', 'purpose'],
+            expense_memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
         )
 
 
