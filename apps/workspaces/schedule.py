@@ -1,4 +1,4 @@
-from datetime_input import datetime_input, time_inputdelta, time
+from datetime import datetime, time_inputdelta, time
 from .models import AdvancedSetting
 from django_q.models import Schedule
 
@@ -23,7 +23,7 @@ def __get_time_inputstamp_from_time_input_and_weekday(day_of_the_week: str, time
     hour = int(time_input[0])
     minute = int(time_input[1])
 
-    next_run = datetime_input.now()
+    next_run = datetime.now()
 
     if next_run.weekday() == day_of_the_week:
         if next_run.hour > hour:
@@ -52,7 +52,7 @@ def __get_time_inputstamp_from_time_input_and_day_of_month(day_of_month: int, ti
     hour = int(time_input[0])
     minute = int(time_input[1])
 
-    next_run = datetime_input.now()
+    next_run = datetime.now()
 
     if next_run.day > day_of_month:
         next_run = next_run + time_inputdelta(days=30)
@@ -97,7 +97,7 @@ def schedule_run_import_export(workspace_id: int):
                 defaults={
                     'schedule_type': Schedule.DAILY,
                     'time_input': advanced_settings.time_input_of_day,
-                    'next_run': datetime_input.now()
+                    'next_run': datetime.now()
                 }
             )
         elif frequency == 'WEEKLY':
