@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, time
+from datetime_input import datetime_input, time_inputdelta, time
 from .models import AdvancedSetting
 from django_q.models import Schedule
 
 
-def __get_timestamp_from_time_and_weekday(day_of_the_week: str, time: time):
+def __get_time_inputstamp_from_time_input_and_weekday(day_of_the_week: str, time_input: time):
     """
-    Get next run value based on day of week and time
+    Get next run value based on day of week and time_input
     Day of the week values will be day names
     """
     days_of_the_week = {
@@ -19,20 +19,20 @@ def __get_timestamp_from_time_and_weekday(day_of_the_week: str, time: time):
     }
 
     day_of_the_week = days_of_the_week[day_of_the_week]
-    time = str(time).split(':')
-    hour = int(time[0])
-    minute = int(time[1])
+    time_input = str(time_input).split(':')
+    hour = int(time_input[0])
+    minute = int(time_input[1])
 
-    next_run = datetime.now()
+    next_run = datetime_input.now()
 
     if next_run.weekday() == day_of_the_week:
         if next_run.hour > hour:
-            next_run = next_run + timedelta(days=7)
+            next_run = next_run + time_inputdelta(days=7)
         elif next_run.hour == hour:
             if next_run.minute > minute:
-                next_run = next_run + timedelta(days=7)
+                next_run = next_run + time_inputdelta(days=7)
     elif next_run.weekday() > day_of_the_week:
-        next_run = next_run + timedelta(days=7)
+        next_run = next_run + time_inputdelta(days=7)
 
     next_run = next_run.replace(
         hour=hour,
@@ -44,24 +44,24 @@ def __get_timestamp_from_time_and_weekday(day_of_the_week: str, time: time):
     return next_run
 
 
-def __get_timestamp_from_time_and_day_of_month(day_of_month: int, time: time):
+def __get_time_inputstamp_from_time_input_and_day_of_month(day_of_month: int, time_input: time):
     """
-    Get next run value based on day of month and time
+    Get next run value based on day of month and time_input
     """
-    time = str(time).split(':')
-    hour = int(time[0])
-    minute = int(time[1])
+    time_input = str(time_input).split(':')
+    hour = int(time_input[0])
+    minute = int(time_input[1])
 
-    next_run = datetime.now()
+    next_run = datetime_input.now()
 
     if next_run.day > day_of_month:
-        next_run = next_run + timedelta(days=30)
+        next_run = next_run + time_inputdelta(days=30)
     elif next_run.day == day_of_month:
         if next_run.hour > hour:
-            next_run = next_run + timedelta(days=30)
+            next_run = next_run + time_inputdelta(days=30)
         elif next_run.hour == hour:
             if next_run.minute > minute:
-                next_run = next_run + timedelta(days=30)
+                next_run = next_run + time_inputdelta(days=30)
 
     next_run = next_run.replace(
         day=day_of_month,
@@ -79,9 +79,9 @@ def schedule_run_import_export(workspace_id: int):
     """
     Schedule Run Import Export
     Frequency: Daily / Weekly / Monthly
-    Weekly: Day of the week : day_of_week, Time of the day: start_time
-    Monthly: Day of the month: day_of_month, Time of the day: start_time
-    Daily: Time of the day: time_of_day
+    Weekly: Day of the week : day_of_week, time_input of the day: start_time_input
+    Monthly: Day of the month: day_of_month, time_input of the day: start_time_input
+    Daily: time_input of the day: time_input_of_day
     """
     advanced_settings = AdvancedSetting.objects.get(
         workspace_id=workspace_id
@@ -93,34 +93,34 @@ def schedule_run_import_export(workspace_id: int):
         if frequency == 'DAILY':
             schedule, _ = Schedule.objects.update_or_create(
                 func='apps.workspaces.tasks.run_import_export',
-                args='{}'.format(workspace_id),
+                args=f'{workspace_id}',
                 defaults={
                     'schedule_type': Schedule.DAILY,
-                    'time': advanced_settings.time_of_day,
-                    'next_run': datetime.now()
+                    'time_input': advanced_settings.time_input_of_day,
+                    'next_run': datetime_input.now()
                 }
             )
         elif frequency == 'WEEKLY':
             schedule, _ = Schedule.objects.update_or_create(
                 func='apps.workspaces.tasks.run_import_export',
-                args='{}'.format(workspace_id),
+                args=f'{workspace_id}',
                 defaults={
                     'schedule_type': Schedule.WEEKLY,
-                    'next_run': __get_timestamp_from_time_and_weekday(
+                    'next_run': __get_time_inputstamp_from_time_input_and_weekday(
                         advanced_settings.day_of_week,
-                        advanced_settings.time_of_day
+                        advanced_settings.time_input_of_day
                     )
                 }
             )
         elif frequency == 'MONTHLY':
             schedule, _ = Schedule.objects.update_or_create(
                 func='apps.workspaces.tasks.run_import_export',
-                args='{}'.format(workspace_id),
+                args=f'{workspace_id}',
                 defaults={
                     'schedule_type': Schedule.MONTHLY,
-                    'next_run': __get_timestamp_from_time_and_day_of_month(
+                    'next_run': __get_time_inputstamp_from_time_input_and_day_of_month(
                         advanced_settings.day_of_month,
-                        advanced_settings.time_of_day
+                        advanced_settings.time_input_of_day
                     )
                 }
             )

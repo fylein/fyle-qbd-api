@@ -17,16 +17,34 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='advancedsetting',
             name='day_of_month',
-            field=models.CharField(choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'), ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'), ('16', '16'), ('17', '17'), ('18', '18'), ('19', '19'), ('20', '20'), ('21', '21'), ('22', '22'), ('23', '23'), ('24', '24'), ('25', '25'), ('26', '26'), ('27', '27'), ('28', '28'), ('29', '29'), ('30', '30'), ('31', '31')], help_text='Day of month for schedule', max_length=5, null=True),
+            field=models.CharField(choices=[
+                ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), 
+                ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'), 
+                ('11', '11'), ('12', '12'), ('13', '13'), ('14', '14'), ('15', '15'), 
+                ('16', '16'), ('17', '17'), ('18', '18'), ('19', '19'), ('20', '20'), 
+                ('21', '21'), ('22', '22'), ('23', '23'), ('24', '24'), ('25', '25'), 
+                ('26', '26'), ('27', '27'), ('28', '28'), ('29', '29'), ('30', '30'), 
+                ('31', '31')
+            ], help_text='Day of month for schedule', max_length=5, null=True),
         ),
         migrations.AddField(
             model_name='advancedsetting',
             name='day_of_week',
-            field=models.CharField(choices=[('MONDAY', 'MONDAY'), ('TUESDAY', 'TUESDAY'), ('WEDNESDAY', 'WEDNESDAY'), ('THURSDAY', 'THURSDAY'), ('FRIDAY', 'FRIDAY'), ('SATURDAY', 'SATURDAY'), ('SUNDAY', 'SUNDAY')], help_text='Day of week for schedule', max_length=10, null=True),
+            field=models.CharField(choices=[
+                ('MONDAY', 'MONDAY'), ('TUESDAY', 'TUESDAY'),
+                ('WEDNESDAY', 'WEDNESDAY'), ('THURSDAY', 'THURSDAY'),
+                ('FRIDAY', 'FRIDAY'), ('SATURDAY', 'SATURDAY'),
+                ('SUNDAY', 'SUNDAY')],
+                help_text='Day of week for schedule', max_length=10, null=True),
         ),
         migrations.AddField(
             model_name='advancedsetting',
             name='frequency',
-            field=models.CharField(choices=[('DAILY', 'DAILY'), ('WEEKLY', 'WEEKLY'), ('MONTHLY', 'MONTHLY')], help_text='Frequency for schedule', max_length=255, null=True),
+            field=models.CharField(choices=[
+                ('DAILY', 'DAILY'),
+                ('WEEKLY', 'WEEKLY'),
+                ('MONTHLY', 'MONTHLY')
+            ], 
+            help_text='Frequency for schedule', max_length=255, null=True),
         ),
     ]
