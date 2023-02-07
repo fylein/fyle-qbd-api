@@ -7,7 +7,6 @@ User = get_user_model()
 
 
 ONBOARDING_STATE_CHOICES = (
-    ('CONNECTION', 'CONNECTION'),
     ('EXPORT_SETTINGS', 'EXPORT_SETTINGS'),
     ('FIELD_MAPPINGS', 'FIELD_MAPPINGS'),
     ('ADVANCED_SETTINGS', 'ADVANCED_SETTINGS'),
@@ -16,7 +15,7 @@ ONBOARDING_STATE_CHOICES = (
 
 
 def get_default_onboarding_state():
-    return 'CONNECTION'
+    return 'EXPORT_SETTINGS'
 
 
 class Workspace(models.Model):
