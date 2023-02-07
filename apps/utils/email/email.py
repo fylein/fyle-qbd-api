@@ -18,10 +18,13 @@ def send_email(receipient_emails: List[str], file_path:str):
     :param file_path: (str)
     """
     message = Mail(
-        from_email=settings.SENDGRID_FROM_EMAIL,
+        from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
         to_emails=receipient_emails,
-        subject='QuickBooks Desktop IIF File {}'.format(datetime.now().strftime('%Y-%m-%d')),
-        html_content='Please find attached the IIF file for your QuickBooks Desktop'
+        subject='Fyle QuickBooks Desktop IIF File {}'.format(datetime.now().strftime('%Y-%m-%d')),
+        html_content='Please find attached the IIF file upload with Fyle Expenses for \
+            QuickBooks Desktop for the date {}.'.format(
+            datetime.now().strftime('%Y-%m-%d')
+        )
     )
 
     sendgrid_api_key = settings.SENDGRID_API_KEY

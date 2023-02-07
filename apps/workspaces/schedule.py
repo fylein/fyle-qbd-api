@@ -79,6 +79,13 @@ def schedule_run_import_export(workspace_id: int):
         workspace_id=workspace_id
     )
 
+    # Delete the schedule if it exists
+    # It is necessary to delete cron schedules to recreate / change them
+    if advanced_settings.schedule_id:
+        schedule = Schedule.objects.filter(args=str(workspace_id)).first()
+        if schedule:
+            schedule.delete()
+
     if advanced_settings.schedule_is_enabled:
         crontab = None
 
@@ -90,25 +97,16 @@ def schedule_run_import_export(workspace_id: int):
             crontab = __get_monthly_crontab(advanced_settings.day_of_month, advanced_settings.time_of_day)
 
         if crontab:
-            schedule, _ = Schedule.objects.update_or_create(
+            schedule = Schedule.objects.create(
                 func='apps.workspaces.tasks.run_import_export',
                 args=str(workspace_id),
-                defaults={
-                    'name': 'Run Import Export',
-                    'schedule_type': Schedule.CRON,
-                    'cron': crontab
-                }
+                name='Run Import Export',
+                schedule_type=Schedule.CRON,
+                cron=crontab
             )
 
             advanced_settings.schedule_id = schedule.id
 
         advanced_settings.save()
-
-    elif not advanced_settings.schedule_is_enabled:
-        schedule = Schedule.objects.filter(id=advanced_settings.schedule_id).first()
-        advanced_settings.schedule_id = None
-        advanced_settings.save()
-        if schedule:
-            schedule.delete()
 
     return advanced_settings
