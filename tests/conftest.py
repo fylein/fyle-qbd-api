@@ -241,7 +241,7 @@ def add_advanced_settings():
             day_of_month=1 if workspace_id in [1, 2] else 2,
             time_of_day='00:00:00' if workspace_id in [1, 2] else '01:00:00',
             schedule_id=None,
-            top_memo_structure=['employee_email', 'purpose'],
+            top_memo_structure=['employee_email', 'purpose'] if workspace_id in [1, 2] else None,
             expense_memo_structure=['employee_email', 'category', 'report_number', 'spent_on', 'expense_link'],
         )
 
