@@ -212,6 +212,57 @@ class FieldMapping(models.Model):
         db_table = 'field_mapping'
 
 
+FREQUENCY_CHOICES = (
+    ('DAILY', 'DAILY'),
+    ('WEEKLY', 'WEEKLY'),
+    ('MONTHLY', 'MONTHLY')
+)
+
+DAY_OF_MONTH_CHOICES = (
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
+    ('6', '6'),
+    ('7', '7'),
+    ('8', '8'),
+    ('9', '9'),
+    ('10', '10'),
+    ('11', '11'),
+    ('12', '12'),
+    ('13', '13'),
+    ('14', '14'),
+    ('15', '15'),
+    ('16', '16'),
+    ('17', '17'),
+    ('18', '18'),
+    ('19', '19'),
+    ('20', '20'),
+    ('21', '21'),
+    ('22', '22'),
+    ('23', '23'),
+    ('24', '24'),
+    ('25', '25'),
+    ('26', '26'),
+    ('27', '27'),
+    ('28', '28'),
+    ('29', '29'),
+    ('30', '30'),
+    ('31', '31')
+)
+
+
+DAY_OF_WEEK_CHOICES = (
+    ('MONDAY', 'MONDAY'),
+    ('TUESDAY', 'TUESDAY'),
+    ('WEDNESDAY', 'WEDNESDAY'),
+    ('THURSDAY', 'THURSDAY'),
+    ('FRIDAY', 'FRIDAY'),
+    ('SATURDAY', 'SATURDAY'),
+    ('SUNDAY', 'SUNDAY')
+)
+
 class AdvancedSetting(models.Model):
     """
     Table to store advanced settings
@@ -222,7 +273,12 @@ class AdvancedSetting(models.Model):
 
     expense_memo_structure: Array of fields in memo
     schedule_is_enabled: Boolean to check if schedule is enabled
-    interval_hours: Interval hours for schedule
+
+    frequency: Frequency of schedule
+
+    day_of_month: Day of month for schedule
+    day_of_week: Day of week for schedule
+    time_of_day: Time of day for schedule
     schedule_id: Schedule id
     emails: Array of emails
 
@@ -243,7 +299,18 @@ class AdvancedSetting(models.Model):
         models.CharField(max_length=255), help_text='Array of fields in memo', null=True
     )
     schedule_is_enabled = models.BooleanField(help_text='Boolean to check if schedule is enabled', default=False)
-    interval_hours = models.IntegerField(help_text='Interval hours for schedule', null=True)
+    frequency = models.CharField(
+        max_length=255, choices=FREQUENCY_CHOICES, help_text='Frequency for schedule', null=True)
+
+    day_of_month = models.CharField(
+        max_length=5, choices=DAY_OF_MONTH_CHOICES, help_text='Day of month for schedule', null=True
+    )
+    day_of_week = models.CharField(
+        max_length=10, choices=DAY_OF_WEEK_CHOICES, help_text='Day of week for schedule', null=True
+    )
+
+    time_of_day = models.TimeField(help_text='Time of day for schedule', null=True)
+
     schedule_id = models.CharField(max_length=255, help_text='Schedule id', null=True)
     emails = ArrayField(models.CharField(max_length=255), help_text='Array of emails')
 

@@ -198,7 +198,9 @@ def test_advanced_settings(api_client, test_connection):
             'expense_link'
         ],
         'schedule_is_enabled': False,
-        'interval_hours': 100,
+        'day_of_month': '1',
+        'frequency': 'MONTHLY',
+        'time_of_day': '00:00:00',
         'emails': [
             'shwetabh.kumar@fylehq.com'
         ]
@@ -215,7 +217,10 @@ def test_advanced_settings(api_client, test_connection):
         'expense_link'
     ]
     assert response.data['schedule_is_enabled'] == False
-    assert response.data['interval_hours'] == 100
+    assert response.data['day_of_month'] == '1'
+    assert response.data['day_of_week'] == None
+    assert response.data['frequency'] == 'MONTHLY'
+    assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
     assert response.data['emails'] == [
         'shwetabh.kumar@fylehq.com'
@@ -232,7 +237,10 @@ def test_advanced_settings(api_client, test_connection):
         'expense_link'
     ]
     assert response.data['schedule_is_enabled'] == False
-    assert response.data['interval_hours'] == 100
+    assert response.data['day_of_month'] == '1'
+    assert response.data['day_of_week'] == None
+    assert response.data['frequency'] == 'MONTHLY'
+    assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
     assert response.data['emails'] == [
         'shwetabh.kumar@fylehq.com'
@@ -252,7 +260,10 @@ def test_advanced_settings(api_client, test_connection):
         'report_number'
     ]
     assert response.data['schedule_is_enabled'] == False
-    assert response.data['interval_hours'] == 100
+    assert response.data['day_of_month'] == '1'
+    assert response.data['day_of_week'] == None
+    assert response.data['frequency'] == 'MONTHLY'
+    assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
     assert response.data['emails'] == [
         'shwetabh.kumar@fylehq.com'
