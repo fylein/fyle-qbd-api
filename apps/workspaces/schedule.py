@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, time
+from datetime import time
 from .models import AdvancedSetting
 from django_q.models import Schedule
 

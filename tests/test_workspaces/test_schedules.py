@@ -26,12 +26,6 @@ def test_schedule_run_import_export_enabled(
     """
     workspace_id = 1
 
-    # schedules = Schedule.objects.all()
-
-    # assert schedules.count() == 1
-
-    AdvancedSetting.objects.filter(workspace_id=workspace_id).update(schedule_is_enabled=False)
-
     # Create 3 cases for daily, weekly and monthly
     # Daily
     AdvancedSetting.objects.filter(workspace_id=workspace_id).update(
@@ -58,7 +52,7 @@ def test_schedule_run_import_export_enabled(
     schedule_run_import_export(workspace_id)
 
     schedules = Schedule.objects.filter(args=str(workspace_id)).all()
-    
+
     assert schedules.count() == 1
     assert schedules[0].cron == '0 12 * * 1'
 

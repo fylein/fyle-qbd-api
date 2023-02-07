@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('DAILY', 'DAILY'),
                 ('WEEKLY', 'WEEKLY'),
                 ('MONTHLY', 'MONTHLY')
-            ], 
+            ],
             help_text='Frequency for schedule', max_length=255, null=True),
         ),
     ]
