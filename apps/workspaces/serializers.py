@@ -98,6 +98,14 @@ class ExportSettingsSerializer(serializers.ModelSerializer):
             workspace_id=workspace_id,
             defaults=validated_data
         )
+
+        # Update workspace onboarding state
+        workspace = export_settings.workspace
+
+        if workspace.onboarding_state == 'EXPORT_SETTINGS':
+            workspace.onboarding_state = 'FIELD_MAPPINGS'
+            workspace.save()
+
         return export_settings
 
 
@@ -123,6 +131,14 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             workspace_id=workspace_id,
             defaults=validated_data
         )
+
+        # Update workspace onboarding state
+        workspace = field_mapping.workspace
+
+        if workspace.onboarding_state == 'FIELD_MAPPINGS':
+            workspace.onboarding_state = 'ADVANCED_SETTINGS'
+            workspace.save()
+
         return field_mapping
 
 
@@ -159,5 +175,12 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
 
         # Schedule run import export or delete
         schedule_run_import_export(workspace_id)
+
+        # Update workspace onboarding state
+        workspace = advanced_setting.workspace
+
+        if workspace.onboarding_state == 'ADVANCED_SETTINGS':
+            workspace.onboarding_state = 'COMPLETE'
+            workspace.save()
 
         return advanced_setting
