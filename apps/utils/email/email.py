@@ -20,10 +20,9 @@ def send_email(receipient_emails: List[str], file_path:str):
     message = Mail(
         from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
         to_emails=receipient_emails,
-        subject='Fyle QuickBooks Desktop IIF File {}'.format(datetime.now().strftime('%Y-%m-%d')),
-        html_content='Please find attached the IIF file upload with Fyle Expenses for \
-            QuickBooks Desktop for the date {}.'.format(
-            datetime.now().strftime('%Y-%m-%d')
+        subject=f'Fyle QuickBooks Desktop IIF File {datetime.now().strftime("%Y-%m-%d")}',
+        html_content=f'Please find attached the IIF file upload with Fyle Expenses for \
+            QuickBooks Desktop for the date {datetime.now().strftime("%Y-%m-%d")}.'
         )
     )
 
