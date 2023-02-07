@@ -6,6 +6,19 @@ from django.contrib.postgres.fields import ArrayField
 User = get_user_model()
 
 
+ONBOARDING_STATE_CHOICES = (
+    ('CONNECTION', 'CONNECTION'),
+    ('EXPORT_SETTINGS', 'EXPORT_SETTINGS'),
+    ('FIELD_MAPPINGS', 'FIELD_MAPPINGS'),
+    ('ADVANCED_SETTINGS', 'ADVANCED_SETTINGS'),
+    ('COMPLETE', 'COMPLETE')
+)
+
+
+def get_default_onboarding_state():
+    return 'CONNECTION'
+
+
 class Workspace(models.Model):
     """
     Workspace model
@@ -23,6 +36,11 @@ class Workspace(models.Model):
     ccc_last_synced_at = models.DateTimeField(
         help_text='Datetime when credit card expenses were pulled last', 
         null=True
+    )
+
+    onboarding_state = models.CharField(
+        max_length=50, choices=ONBOARDING_STATE_CHOICES, default=get_default_onboarding_state,
+        help_text='Onboarding status of the workspace', null=True
     )
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
