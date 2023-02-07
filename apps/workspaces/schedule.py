@@ -3,10 +3,29 @@ from .models import AdvancedSetting
 from django_q.models import Schedule
 
 
+def __get_daily_crontab(time_input: time):
+    """
+    Create Daily cron schedule string for time_input
+
+    Eg: '12 0 * * *' for every day at 12:00 AM
+    """
+    time_input = str(time_input).split(':')
+    hour = int(time_input[0])
+    minute = int(time_input[1])
+
+    # Return corntab string
+    hour = str(hour)
+    minute = str(minute)
+
+    return f'{minute} {hour} * * *'
+
+
 def __get_weekly_crontab(day_of_the_week: str, time_input: time):
     """
     Create Weekly cron schedule string for day of the week and time_input
     Day of the week values will be day names
+
+    Eg: '12 0 * * 1' for Monday at 12:00 AM
     """
     day_of_week = {
         'SUNDAY': 0,
@@ -33,6 +52,8 @@ def __get_weekly_crontab(day_of_the_week: str, time_input: time):
 def __get_monthly_crontab(day_of_month: int, time_input: time):
     """
     Create Monthly cron schedule string for day of the month and time_input
+
+    Eg: '12 0 1 * *' for 1st of every month at 12:00 AM
     """
     time_input = str(time_input).split(':')
     hour = int(time_input[0])
@@ -44,21 +65,6 @@ def __get_monthly_crontab(day_of_month: int, time_input: time):
     day_of_month = str(day_of_month)
 
     return f'{minute} {hour} {day_of_month} * *'
-
-
-def __get_daily_crontab(time_input: time):
-    """
-    Create Daily cron schedule string for time_input
-    """
-    time_input = str(time_input).split(':')
-    hour = int(time_input[0])
-    minute = int(time_input[1])
-
-    # Return corntab string
-    hour = str(hour)
-    minute = str(minute)
-
-    return f'{minute} {hour} * * *'
 
 
 def schedule_run_import_export(workspace_id: int):
