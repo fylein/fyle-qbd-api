@@ -234,7 +234,16 @@ def add_advanced_settings():
     for workspace_id in workspace_ids:
         AdvancedSetting.objects.create(
             workspace_id=workspace_id,
-            emails=['integrations@fylehq.com', 'shwetabh.kumar@fyle.in'],
+            emails_selected=[
+                {
+                    'name': 'Shwetabh Kumar',
+                    'email': 'shwetabh.kumar@fylehq.com'
+                },
+                {
+                    'name': 'Netra Ballabh',
+                    'email': 'nilesh.p@fylehq.com'
+                },
+            ],
             schedule_is_enabled=True if workspace_id in [1, 2] else False,
             frequency='WEEKLY' if workspace_id in [1, 2] else 'MONTHLY',
             day_of_week='MONDAY' if workspace_id in [1, 2] else 'TUESDAY',

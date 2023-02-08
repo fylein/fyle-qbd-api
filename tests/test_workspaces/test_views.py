@@ -201,12 +201,21 @@ def test_advanced_settings(api_client, test_connection):
         'day_of_month': '1',
         'frequency': 'MONTHLY',
         'time_of_day': '00:00:00',
-        'emails': [
-            'shwetabh.kumar@fylehq.com'
-        ]
+        'emails_selected': json.dumps([
+            {
+                'name': 'Shwetabh Kumar',
+                'email': 'shwetabh.kumar@fylehq.com'
+            },
+            {
+                'name': 'Netra Ballabh',
+                'email': 'nilesh.p@fylehq.com'
+            },
+        ])
     }
 
     response = api_client.post(url, payload)
+
+    print(response.data)
     
     assert response.status_code == 201
     assert response.data['expense_memo_structure'] == [
@@ -222,8 +231,15 @@ def test_advanced_settings(api_client, test_connection):
     assert response.data['frequency'] == 'MONTHLY'
     assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
-    assert response.data['emails'] == [
-        'shwetabh.kumar@fylehq.com'
+    assert response.data['emails_selected'] == [
+        {
+            'name': 'Shwetabh Kumar',
+            'email': 'shwetabh.kumar@fylehq.com'
+        },
+        {
+            'name': 'Netra Ballabh',
+            'email': 'nilesh.p@fylehq.com'
+        },
     ]
 
     response = api_client.get(url)
@@ -242,8 +258,15 @@ def test_advanced_settings(api_client, test_connection):
     assert response.data['frequency'] == 'MONTHLY'
     assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
-    assert response.data['emails'] == [
-        'shwetabh.kumar@fylehq.com'
+    assert response.data['emails_selected'] == [
+        {
+            'name': 'Shwetabh Kumar',
+            'email': 'shwetabh.kumar@fylehq.com'
+        },
+        {
+            'name': 'Netra Ballabh',
+            'email': 'nilesh.p@fylehq.com'
+        },
     ]
 
     del payload['expense_memo_structure']
@@ -265,10 +288,16 @@ def test_advanced_settings(api_client, test_connection):
     assert response.data['frequency'] == 'MONTHLY'
     assert response.data['time_of_day'] == '00:00:00'
     assert response.data['schedule_id'] == None
-    assert response.data['emails'] == [
-        'shwetabh.kumar@fylehq.com'
+    assert response.data['emails_selected'] == [
+        {
+            'name': 'Shwetabh Kumar',
+            'email': 'shwetabh.kumar@fylehq.com'
+        },
+        {
+            'name': 'Netra Ballabh',
+            'email': 'nilesh.p@fylehq.com'
+        },
     ]
-
 
 @pytest.mark.django_db(databases=['default'], transaction=True)
 def test_trigger_export_view(

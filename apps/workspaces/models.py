@@ -297,7 +297,7 @@ class AdvancedSetting(models.Model):
     day_of_week: Day of week for schedule
     time_of_day: Time of day for schedule
     schedule_id: Schedule id
-    emails: Array of emails
+    emails_selected: Array of emails_selected
 
     """
     id = models.AutoField(primary_key=True)
@@ -329,7 +329,8 @@ class AdvancedSetting(models.Model):
     time_of_day = models.TimeField(help_text='Time of day for schedule', null=True)
 
     schedule_id = models.CharField(max_length=255, help_text='Schedule id', null=True)
-    emails = ArrayField(models.CharField(max_length=255), help_text='Array of emails')
+    emails_selected = models.JSONField(
+        default=list, help_text='Emails Selected For Email Notification',  null=True)
 
     class Meta:
         db_table = 'advanced_settings'
