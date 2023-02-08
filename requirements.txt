@@ -39,5 +39,5 @@ pytest-cov==3.0.0
 pytest-django==4.5.2
 pytest-mock==3.8.2
 
-# Sendgrid for sending emails
+# Sendgrid for sending emails_selected
 sendgrid==6.9.7

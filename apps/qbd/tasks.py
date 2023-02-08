@@ -31,8 +31,8 @@ def email_iif_file(file_path: str, workspace_id: int):
     """
     advanced_settings = AdvancedSetting.objects.get(workspace_id=workspace_id)
 
-    if advanced_settings.emails:
-        send_email(advanced_settings.emails, file_path)
+    if advanced_settings.emails_selected:
+        send_email(advanced_settings.emails_selected, file_path)
 
 
 def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport):
