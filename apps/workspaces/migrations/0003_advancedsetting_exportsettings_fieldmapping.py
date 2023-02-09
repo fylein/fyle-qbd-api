@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('schedule_is_enabled', models.BooleanField(help_text='Boolean to check if schedule is enabled')),
                 ('interval_hours', models.IntegerField(help_text='Interval hours for schedule')),
                 ('schedule_id', models.CharField(help_text='Schedule id', max_length=255)),
-                ('emails_selected', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), help_text='Array of emails_selected', size=None)),
+                ('emails', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), help_text='Array of emails', size=None)),
                 ('workspace', models.OneToOneField(help_text='Reference to Workspace model', on_delete=django.db.models.deletion.PROTECT, to='workspaces.workspace')),
             ],
             options={

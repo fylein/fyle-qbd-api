@@ -48,8 +48,8 @@ def test_run_import_export_journal_journal(
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
-    expenses = Expense.objects.filter(workspace_id=workspace_id).all()
-    print(expenses)
+    Expense.objects.filter(workspace_id=workspace_id).all()
+
     run_import_export(workspace_id)
 
     tasks = OrmQ.objects.all()

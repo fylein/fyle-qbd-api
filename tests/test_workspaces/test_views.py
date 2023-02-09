@@ -214,8 +214,6 @@ def test_advanced_settings(api_client, test_connection):
     }
 
     response = api_client.post(url, payload)
-
-    print(response.data)
     
     assert response.status_code == 201
     assert response.data['expense_memo_structure'] == [
