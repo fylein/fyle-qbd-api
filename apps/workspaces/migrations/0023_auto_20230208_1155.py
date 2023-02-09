@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='advancedsetting',
-            name='emails_selected',
+            name='emails',
         ),
         migrations.AddField(
             model_name='advancedsetting',
