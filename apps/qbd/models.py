@@ -166,7 +166,7 @@ class Bill(models.Model):
             account=export_settings.bank_account_name,
             name=expenses[0].employee_name,
             class_name='',
-            amount=sum([expense.amount for expense in expenses]),
+            amount=sum([expense.amount for expense in expenses]) * -1,
             memo=get_top_purpose(workspace_id=workspace_id,
                 expense=expenses[0],
                 default=f'Reimbursable Expenses by {expenses[0].employee_email}'
@@ -361,7 +361,7 @@ class CreditCardPurchase(models.Model):
             account=export_settings.credit_card_account_name,
             name=name,
             class_name='',
-            amount=sum([expense.amount for expense in expenses]),
+            amount=sum([expense.amount for expense in expenses]) * -1,
             memo=get_top_purpose(
                 workspace_id=workspace_id,
                 expense=expenses[0],
