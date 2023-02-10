@@ -556,7 +556,7 @@ class Journal(models.Model):
             date=get_transaction_date(expenses, date_preference=date_preference),
             account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
             name=name,
-            amount=sum([expense.amount for expense in expenses]),
+            amount=sum([expense.amount for expense in expenses]) * -1,
             memo=get_top_purpose(
                 workspace_id=workspace_id,
                 expense=expenses[0],
