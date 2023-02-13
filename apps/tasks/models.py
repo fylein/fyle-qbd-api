@@ -4,7 +4,6 @@ from django.db.models import JSONField
 from apps.workspaces.models import Workspace
 
 
-
 EXPORT_TYPE_CHOICES = (
     ('FETCHING_REIMBURSABLE_EXPENSES', 'FETCHING_REIMBURSABLE_EXPENSES'),
     ('FETCHING_CREDIT_CARD_EXPENSES', 'FETCHING_CREDIT_CARD_EXPENSES'),
