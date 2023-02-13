@@ -11,6 +11,27 @@ from apps.workspaces.models import (
 )
 
 
+def get_class_and_project_name(field_mappings: FieldMapping, expense: Expense):
+    """
+    According to class_type, project_type return the value of project, class field
+    class_type can be PROJECT or COST_CENTER or None
+    project_type can be PROJECT or COST_CENTER or None
+    """
+    class_name = None
+    project_name = None
+
+    if field_mappings.class_type == 'PROJECT':
+        class_name = expense.project
+
+    elif field_mappings.class_type == 'COST_CENTER':
+        class_name = expense.cost_center
+
+    if field_mappings.project_type == 'PROJECT':
+        project_name = expense.project
+
+    return class_name, project_name
+
+
 def get_transaction_date(expenses: List[Expense], date_preference: str) -> str:
     """
     Returns date based on date_preference
@@ -61,7 +82,8 @@ def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
         if field in details:
             memo = memo + details[field]
             if index + 1 != len(expense_memo_structure):
-                memo = '{0} - '.format(memo)
+                if memo:
+                    memo = f'{memo} - '
 
     return memo
 
@@ -243,8 +265,9 @@ class BillLineitem(models.Model):
 
         lineitems = []
         for expense in expenses:
-            class_name = expense.project if field_mappings.class_type == 'PROJECT' else expense.cost_center
-            project_name = expense.project if field_mappings.project_type == 'PROJECT' else expense.cost_center
+            class_name, project_name = get_class_and_project_name(
+                field_mappings, expense
+            )
 
             lineitem = BillLineitem.objects.create(
                 transaction_type='BILL',
@@ -460,8 +483,9 @@ class CreditCardPurchaseLineitem(models.Model):
 
         lineitems = []
         for expense in expenses:
-            class_name = expense.project if field_mappings.class_type == 'PROJECT' else expense.cost_center
-            project_name = expense.project if field_mappings.project_type == 'PROJECT' else expense.cost_center
+            class_name, project_name = get_class_and_project_name(
+                field_mappings, expense
+            )
 
             lineitem = CreditCardPurchaseLineitem.objects.create(
                 transaction_type='CREDIT CARD',
@@ -631,7 +655,9 @@ class JournalLineitem(models.Model):
 
         lineitems = []
         for expense in expenses:
-            class_name = expense.project if field_mappings.class_type == 'PROJECT' else expense.cost_center
+            class_name, _ = get_class_and_project_name(
+                field_mappings, expense
+            )
 
             lineitem = JournalLineitem.objects.create(
                 transaction_type='GENERAL JOURNAL',
