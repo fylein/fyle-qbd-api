@@ -328,6 +328,7 @@ def test_trigger_export_view(
 
     assert response.status_code == 200
     assert response.data['message'] == 'Export triggered successfully'
+    assert response.data['new_expenses_imported'] == False
 
 
 def test_ready_view(api_client, test_connection):
