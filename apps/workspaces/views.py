@@ -3,6 +3,8 @@ from rest_framework.views import Response, status
 
 from quickbooks_desktop_api.utils import assert_valid
 
+from apps.fyle.models import Expense
+
 from apps.workspaces.models import (
     Workspace, ExportSettings,
     FieldMapping, AdvancedSetting
@@ -81,11 +83,15 @@ class TriggerExportView(generics.CreateAPIView):
         workspace_id = self.kwargs.get('workspace_id')
 
         run_import_export(workspace_id=workspace_id)
+        new_expenses_imported = Expense.objects.filter(
+            workspace_id=workspace_id, exported=False
+        ).exists()
 
         return Response(
             status=status.HTTP_200_OK,
             data={
-                'message': 'Export triggered successfully'
+                'message': 'Export triggered successfully',
+                'new_expenses_imported': new_expenses_imported
             }
         )
 
