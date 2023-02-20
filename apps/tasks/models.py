@@ -20,6 +20,11 @@ STATUS_CHOICES  = (
     ('FATAL', 'FATAL')
 )
 
+FUND_SOURCE_CHOICES = (
+    ('PERSONAL', 'PERSONAL'),
+    ('CCC', 'CCC')
+)
+
 
 class AccountingExport(models.Model):
     """
@@ -33,6 +38,7 @@ class AccountingExport(models.Model):
     )
     type = models.CharField(max_length=50, choices=EXPORT_TYPE_CHOICES)
     file_id = models.CharField(max_length=255, null=True)
+    fund_source = models.CharField(max_length=50, choices=FUND_SOURCE_CHOICES, default='CCC')
     task_id = models.CharField(max_length=255, null=True, help_text='Django Q task reference')
     status = models.CharField(max_length=255, choices=STATUS_CHOICES)
     errors = JSONField(help_text='Fatal Errors', null=True)
