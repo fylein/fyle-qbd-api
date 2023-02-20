@@ -91,6 +91,12 @@ def test_list_accounting_exports(
     assert response.status_code == 200
     assert response.data['count'] == 1
 
+    # test with start_date and end_date filter
+    response = api_client.get(url, {'start_date': '2021-01-01', 'end_date': '2050-12-31'})
+
+    assert response.status_code == 200
+    assert response.data['count'] == 1
+
 
 def test_accounting_export_download(api_client, test_connection, mocker):
     '''

@@ -4,6 +4,10 @@ All the tasks which are queued into django-q
     * Schedule Triggered Async Tasks
 """
 from django_q.tasks import async_task
+from apps.fyle.tasks import (
+    import_credit_card_expenses,
+    import_reimbursable_expenses
+)
 
 from apps.tasks.models import AccountingExport
 
@@ -22,12 +26,14 @@ def queue_import_reimbursable_expenses(workspace_id: int, synchronous: bool = Fa
         }
     )
 
-    async_task(
-        'apps.fyle.tasks.import_reimbursable_expenses', 
-        workspace_id, 
-        accounting_export, 
-        sync=synchronous
-    )
+    if not synchronous:
+        async_task(
+            'apps.fyle.tasks.import_reimbursable_expenses',
+            workspace_id, accounting_export,
+        )
+        return
+
+    import_reimbursable_expenses(workspace_id, accounting_export)
 
 
 def queue_import_credit_card_expenses(workspace_id: int, synchronous: bool = False):
@@ -44,8 +50,11 @@ def queue_import_credit_card_expenses(workspace_id: int, synchronous: bool = Fal
         }
     )
 
-    async_task(
-        'apps.fyle.tasks.import_credit_card_expenses',
-        workspace_id, accounting_export,
-        sync=synchronous
-    )
+    if not synchronous:
+        async_task(
+            'apps.fyle.tasks.import_credit_card_expenses',
+            workspace_id, accounting_export,
+        )
+        return
+
+    import_credit_card_expenses(workspace_id, accounting_export)
