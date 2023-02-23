@@ -17,12 +17,17 @@ def send_email(receipient_emails: List[str], file_path:str):
     :param receipient_emails: (List[str])
     :param file_path: (str)
     """
+    # Format template.html file with the data
+    
+    template_file = open('apps/utils/email/template.html', 'r')
+    template = template_file.read().format(file_date=datetime.now().strftime("%Y-%m-%d"))
+    template_file.close()
+    
     message = Mail(
         from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
         to_emails=[email['email'] for email in receipient_emails],
-        subject=f'Fyle QuickBooks Desktop IIF File {datetime.now().strftime("%Y-%m-%d")}',
-        html_content=f'Please find attached the IIF file upload with Fyle \
-            Expenses for QuickBooks Desktop for the date {datetime.now().strftime("%Y-%m-%d")}.'
+        subject=f'Fyle: Your scheduled IIF file for {datetime.now().strftime("%Y-%m-%d")} is here!',
+        html_content=template
     )
 
     sendgrid_api_key = settings.SENDGRID_API_KEY
@@ -38,5 +43,5 @@ def send_email(receipient_emails: List[str], file_path:str):
 
         message.attachment = attachment
         if sendgrid_api_key:
-            sendgrid = SendGridAPIClient(settings.SENDGRID_API_KEY)
+            sendgrid = SendGridAPIClient(sendgrid_api_key)
             sendgrid.send(message)
