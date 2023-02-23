@@ -18,11 +18,12 @@ def send_email(receipient_emails: List[str], file_path:str):
     :param file_path: (str)
     """
     # Format template.html file with the data
-    
     template_file = open('apps/utils/email/template.html', 'r')
-    template = template_file.read().format(file_date=datetime.now().strftime("%Y-%m-%d"))
+    template = template_file.read().format(
+        file_date=datetime.now().strftime("%Y-%m-%d")
+    )
     template_file.close()
-    
+
     message = Mail(
         from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
         to_emails=[email['email'] for email in receipient_emails],
