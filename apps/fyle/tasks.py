@@ -49,6 +49,7 @@ def import_reimbursable_expenses(workspace_id, accounting_export: AccountingExpo
             workspace.reimbursable_last_synced_at = datetime.now()
             workspace.save()
 
+        # Why is transaction block needed? Expense creation operation never fails
         with transaction.atomic():
             Expense.create_expense_objects(expenses, workspace_id)
 
