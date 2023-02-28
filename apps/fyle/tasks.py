@@ -43,6 +43,7 @@ def import_reimbursable_expenses(workspace_id, accounting_export: AccountingExpo
             filter_credit_expenses=True,
             last_paid_at=last_synced_at if export_settings.reimbursable_expense_state == 'PAID' else None
         )
+        print('expenses',expenses)
 
         if expenses:
             workspace.reimbursable_last_synced_at = datetime.now()
