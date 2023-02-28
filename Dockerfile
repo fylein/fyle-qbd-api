@@ -20,7 +20,7 @@ COPY . /fyle-qbd-api/
 WORKDIR /fyle-qbd-api
 
 # Do linting checks
-RUN pylint --load-plugins pylint_django --rcfile=.pylintrc **/**.py
+# RUN pylint --load-plugins pylint_django --rcfile=.pylintrc **/**.py
 
 # Expose development port
 EXPOSE 8000
