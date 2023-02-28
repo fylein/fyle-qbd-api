@@ -45,6 +45,7 @@ def send_email(receipient_emails: List[str], file_path:str):
         )
 
         message.attachment = attachment
+        print('attachment',attachment)
         if sendgrid_api_key:
             print('sendgrid_api_key', sendgrid_api_key)
             sendgrid = SendGridAPIClient(sendgrid_api_key)
