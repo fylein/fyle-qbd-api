@@ -23,6 +23,8 @@ def send_email(receipient_emails: List[str], file_path:str):
         file_date=datetime.now().strftime("%Y-%m-%d")
     )
     template_file.close()
+    print('receipient_emails',receipient_emails)
+    print('template',template)
 
     message = Mail(
         from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
@@ -44,5 +46,6 @@ def send_email(receipient_emails: List[str], file_path:str):
 
         message.attachment = attachment
         if sendgrid_api_key:
+            print('sendgrid_api_key', sendgrid_api_key)
             sendgrid = SendGridAPIClient(sendgrid_api_key)
             sendgrid.send(message)
