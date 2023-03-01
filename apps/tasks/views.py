@@ -40,8 +40,7 @@ class AccountingExportView(generics.ListAPIView):
             filters['updated_at__range'] = [start_date, end_date]
 
         if type:
-            type = type.split(',')
-            filters['type__in'] = type
+            filters['type__in'] = type.split(',')
         
         if id:
             filters['id__in'] = id
