@@ -4,10 +4,10 @@ import logging
 import traceback
 from datetime import datetime
 
-from python_http_client.exceptions import HTTPError
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+
+from python_http_client.exceptions import HTTPError
 
 from apps.utils.email import send_email
 from apps.fyle.models import Expense
