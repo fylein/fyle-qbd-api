@@ -4,6 +4,8 @@ import logging
 import traceback
 from datetime import datetime
 
+from python_http_client.exceptions import HTTPError
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
@@ -79,6 +81,11 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
         accounting_export.status = 'FAILED'
         accounting_export.save()
 
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.status = 'FAILED'
+        accounting_export.save()
+
     except Exception:
         error = traceback.format_exc()
         accounting_export.errors = {
@@ -129,6 +136,11 @@ def create_credit_card_purchases_iif_file(workspace_id: int, accounting_export: 
         accounting_export.errors = {
             'message': exception.args[0]
         }
+        accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
         accounting_export.status = 'FAILED'
         accounting_export.save()
 
@@ -186,6 +198,11 @@ def create_journals_iif_file(workspace_id: int, accounting_export: AccountingExp
         accounting_export.errors = {
             'message': exception.args[0]
         }
+        accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
         accounting_export.status = 'FAILED'
         accounting_export.save()
 

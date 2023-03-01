@@ -7,7 +7,6 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (
     Mail, Attachment, From
 )
-from python_http_client.exceptions import HTTPError
 
 from quickbooks_desktop_api import settings
 
@@ -51,10 +50,5 @@ def send_email(receipient_emails: List[str], file_path:str):
 
         message.attachment = attachment
         if sendgrid_api_key:
-            try:
-                sendgrid = SendGridAPIClient(sendgrid_api_key)
-                sendgrid.send(message)
-            except HTTPError as e:
-                logger.error('Something went wrong while sending email', e.__dict__)
-            except Exception as e:
-                logger.error('Something went wrong while sending email', e.__dict__)
+            sendgrid = SendGridAPIClient(sendgrid_api_key)
+            sendgrid.send(message)
