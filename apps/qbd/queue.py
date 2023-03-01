@@ -14,7 +14,6 @@ def queue_create_bills_iif_file(workspace_id: int):
     :param workspace_id: Workspace id
     :return: None
     """
-    print('queue_create_bills_iif_file')
     accounting_export = AccountingExport.objects.create(
         workspace_id=workspace_id,
         type='EXPORT_BILLS',

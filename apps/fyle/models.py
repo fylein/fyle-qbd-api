@@ -113,7 +113,6 @@ class Expense(models.Model):
                     'billable': expense['billable'] if expense['billable'] else False
                 }
             )
-            print(expense_object, expense_object.exported)
             expense_objects.append(expense_object)
 
         return expense_objects

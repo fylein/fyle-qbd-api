@@ -48,7 +48,6 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
         workspace_name = accounting_export.workspace.name
 
         file_path = os.path.join('/tmp', '{}-{}-bills-{}.iif'.format(workspace_name, accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
-        print('file_path', file_path)
 
         expenses = Expense.objects.filter(
             workspace_id=workspace_id,

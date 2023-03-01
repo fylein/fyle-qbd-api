@@ -31,7 +31,6 @@ def run_import_export(workspace_id: int):
             workspace_id=workspace_id,
             type='FETCHING_REIMBURSABLE_EXPENSES'
         )
-        print('accounting_export', accounting_export, accounting_export.status)
         
         if accounting_export.status == 'COMPLETE':
             expenses = Expense.objects.filter(
@@ -39,7 +38,6 @@ def run_import_export(workspace_id: int):
                 exported=False,
                 fund_source='PERSONAL'
             )
-            print('expenses',expenses, expenses.count())
 
             if expenses.count():
                 if export_settings.reimbursable_expenses_export_type == 'BILL':
