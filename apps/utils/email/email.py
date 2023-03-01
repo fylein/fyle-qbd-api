@@ -1,14 +1,19 @@
 import base64
+import logging
 from datetime import datetime
 from typing import List
 
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (
-    Mail, Attachment
+    Mail, Attachment, From
 )
+from python_http_client.exceptions import HTTPError
 
 from quickbooks_desktop_api import settings
 
+
+logger = logging.getLogger(__name__)
+logger.level = logging.INFO
 
 def send_email(receipient_emails: List[str], file_path:str):
     """
@@ -27,7 +32,7 @@ def send_email(receipient_emails: List[str], file_path:str):
     print('template',template)
 
     message = Mail(
-        from_email=(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
+        from_email=From(settings.SENDGRID_FROM_EMAIL, 'Team Fyle'),
         to_emails=[email['email'] for email in receipient_emails],
         subject=f'Fyle: Your scheduled IIF file for {datetime.now().strftime("%Y-%m-%d")} is here!',
         html_content=template
@@ -45,8 +50,11 @@ def send_email(receipient_emails: List[str], file_path:str):
         )
 
         message.attachment = attachment
-        print('attachment',attachment)
         if sendgrid_api_key:
-            print('sendgrid_api_key', sendgrid_api_key)
-            sendgrid = SendGridAPIClient(sendgrid_api_key)
-            sendgrid.send(message)
+            try:
+                sendgrid = SendGridAPIClient(sendgrid_api_key)
+                sendgrid.send(message)
+            except HTTPError as e:
+                logger.error('Something went wrong while sending email', e.__dict__)
+            except Exception as e:
+                logger.error('Something went wrong while sending email', e.__dict__)
