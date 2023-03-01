@@ -1,5 +1,9 @@
 
 import pytest
+from unittest import mock
+
+from python_http_client.exceptions import HTTPError
+
 from apps.fyle.models import Expense
 from apps.fyle.tasks import import_credit_card_expenses, import_reimbursable_expenses
 from apps.tasks.models import AccountingExport
@@ -48,6 +52,11 @@ def test_create_bills_iif_file_report(
 
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
         return_value=None
     )
 
@@ -110,6 +119,11 @@ def test_create_bills_iif_file_report_fail(
         return_value=None
     )
 
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
+        return_value=None
+    )
+
     workspace_id = 1
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
     import_reimbursable_expenses(workspace_id, accounting_export)
@@ -153,6 +167,11 @@ def test_create_bills_iif_file_report_fatal(
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
+        return_value=None
     )
 
     workspace_id = 1
@@ -205,6 +224,11 @@ def test_create_bills_iif_file_expense(
 
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
         return_value=None
     )
 
@@ -261,6 +285,11 @@ def test_create_credit_card_purchases_iif_file_expense_vendor(
         return_value=None
     )
 
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
+        return_value=None
+    )
+
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
@@ -314,6 +343,11 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
 
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
         return_value=None
     )
 
@@ -471,6 +505,12 @@ def test_create_journals_iif_file_reimbursable_expense(
         return_value=None
     )
 
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
+        return_value=None
+    )
+
+
     workspace_id = 3
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
@@ -525,6 +565,11 @@ def test_create_journals_iif_file_ccc_report_vendor(
 
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
         return_value=None
     )
 
@@ -584,6 +629,11 @@ def test_create_journals_iif_file_ccc_report_employee(
 
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
         return_value=None
     )
 
@@ -717,3 +767,75 @@ def test_create_journals_iif_file_ccc_report_fatal(
     assert accounting_export.journals.count() == 0
     assert accounting_export.file_id is None
     assert accounting_export.errors is not None
+
+
+def assert_email_failure_error(accounting_export: AccountingExport):
+    assert accounting_export.status == 'FAILED'
+    assert accounting_export.journals.count() == 0
+    assert accounting_export.errors == {
+        'status_code': 500,
+        'body': 'Internal Server Error',
+        'reason': 'Internal Server Error',
+        'headers': 'None'
+    }
+
+
+@pytest.mark.django_db(databases=['default'])
+def test_email_failure(
+    create_temp_workspace, add_accounting_export_bills,
+    add_accounting_export_expenses, add_fyle_credentials,
+    add_export_settings, add_field_mappings, add_advanced_settings,
+    mocker
+):
+    """
+    Test create journals iif file Failed for email failure
+    """
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        return_value=fyle_fixtures['credit_card_expenses']
+    )
+
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        return_value=fyle_fixtures['create_file']
+    )
+
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        return_value=fyle_fixtures['generate_file_urls']
+    )
+
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        return_value=None
+    )
+
+    mocker.patch(
+        'sendgrid.SendGridAPIClient.send',
+        side_effect=HTTPError(500, 'Internal Server Error', 'Internal Server Error', 'None')
+    )
+
+    workspace_id = 1
+
+    accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+
+    import_credit_card_expenses(workspace_id, accounting_export)
+
+    accounting_export = AccountingExport.objects.get(
+        workspace_id=workspace_id, type='EXPORT_JOURNALS', status='ENQUEUED'
+    )
+
+    create_journals_iif_file(workspace_id, accounting_export, 'CCC')
+    assert_email_failure_error(accounting_export)
+
+    create_credit_card_purchases_iif_file(workspace_id, accounting_export)
+    assert_email_failure_error(accounting_export)
+
+
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        return_value=fyle_fixtures['reimbursable_expenses']
+    )
+    import_reimbursable_expenses(workspace_id, accounting_export)
+    create_bills_iif_file(workspace_id, accounting_export)
+    assert_email_failure_error(accounting_export)

@@ -82,6 +82,12 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
 
     except HTTPError as e:
         logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
+        }
         accounting_export.status = 'FAILED'
         accounting_export.save()
 
@@ -140,6 +146,12 @@ def create_credit_card_purchases_iif_file(workspace_id: int, accounting_export: 
 
     except HTTPError as e:
         logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
+        }
         accounting_export.status = 'FAILED'
         accounting_export.save()
 
@@ -203,6 +215,12 @@ def create_journals_iif_file(workspace_id: int, accounting_export: AccountingExp
     except HTTPError as e:
         logger.error('Something went wrong while sending email', e.__dict__)
         accounting_export.status = 'FAILED'
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
+        }
         accounting_export.save()
 
     except Exception:
