@@ -74,7 +74,7 @@ def test_list_accounting_exports(
     assert response.data['count'] == 1
 
     # test with `type` filter
-    response = api_client.get(url, {'type': 'FETCHING_REIMBURSABLE_EXPENSES, FETCHING_CREDIT_CARD_EXPENSES'})
+    response = api_client.get(url, {'type': 'FETCHING_REIMBURSABLE_EXPENSES,FETCHING_CREDIT_CARD_EXPENSES'})
 
     assert response.status_code == 200
     assert response.data['count'] == 1
