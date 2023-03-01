@@ -20,9 +20,9 @@ class AccountingExportView(generics.ListAPIView):
     def get_queryset(self):
         workspace_id = self.kwargs.get('workspace_id')
 
-        type = self.request.query_params.getlist('type')
+        accounting_export_type = self.request.query_params.get('type', None)
 
-        status = self.request.query_params.getlist('status', ['COMPLETE'])
+        status = self.request.query_params.get('status', None)
 
         id = self.request.query_params.getlist('id')
 
@@ -33,17 +33,20 @@ class AccountingExportView(generics.ListAPIView):
 
         filters = {
             'workspace_id': workspace_id,
-            'status__in': status,
+            'status__in': ['COMPLETE'],
         }
 
         if start_date and end_date:
             filters['updated_at__range'] = [start_date, end_date]
 
-        if type:
-            filters['type__in'] = type
-        
+        if accounting_export_type:
+            filters['type__in'] = accounting_export_type.split(',')
+
         if id:
             filters['id__in'] = id
+
+        if status:
+            filters['status__in'] = status.split(',')
 
         return AccountingExport.objects.filter(
             **filters

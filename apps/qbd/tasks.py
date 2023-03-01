@@ -7,6 +7,8 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
+from python_http_client.exceptions import HTTPError
+
 from apps.utils.email import send_email
 from apps.fyle.models import Expense
 from apps.fyle.helpers import upload_iif_to_fyle
@@ -46,7 +48,7 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
         workspace_name = accounting_export.workspace.name
 
         file_path = os.path.join('/tmp', '{}-{}-bills-{}.iif'.format(workspace_name, accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
-        
+
         expenses = Expense.objects.filter(
             workspace_id=workspace_id,
             exported=False,
@@ -74,6 +76,17 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
     except ObjectDoesNotExist as exception:
         accounting_export.errors = {
             'message': exception.args[0]
+        }
+        accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
         }
         accounting_export.status = 'FAILED'
         accounting_export.save()
@@ -127,6 +140,17 @@ def create_credit_card_purchases_iif_file(workspace_id: int, accounting_export: 
     except ObjectDoesNotExist as exception:
         accounting_export.errors = {
             'message': exception.args[0]
+        }
+        accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
         }
         accounting_export.status = 'FAILED'
         accounting_export.save()
@@ -186,6 +210,17 @@ def create_journals_iif_file(workspace_id: int, accounting_export: AccountingExp
             'message': exception.args[0]
         }
         accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except HTTPError as e:
+        logger.error('Something went wrong while sending email', e.__dict__)
+        accounting_export.status = 'FAILED'
+        accounting_export.errors = {
+            'status_code': e.status_code,
+            'body': e.body,
+            'reason': e.reason,
+            'headers': e.headers
+        }
         accounting_export.save()
 
     except Exception:
