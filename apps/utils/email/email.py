@@ -11,9 +11,6 @@ from sendgrid.helpers.mail import (
 from quickbooks_desktop_api import settings
 
 
-logger = logging.getLogger(__name__)
-logger.level = logging.INFO
-
 def send_email(receipient_emails: List[str], file_path:str):
     """
     Email IIF file to the user using sendgrid
