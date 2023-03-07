@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.views import Response, status
+from rest_framework.permissions import IsAuthenticated
 
 from quickbooks_desktop_api.utils import assert_valid
 
@@ -22,7 +23,9 @@ class WorkspaceView(generics.CreateAPIView, generics.RetrieveAPIView):
     """
     serializer_class = WorkspaceSerializer
 
-    permission_classes = []
+    permission_classes = [
+        IsAuthenticated
+    ]
 
     def get_object(self):
         """
