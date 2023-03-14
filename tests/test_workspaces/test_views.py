@@ -47,7 +47,7 @@ def test_get_of_workspace(api_client, test_connection):
     response = api_client.get('{}?org_id=orNoatdUnm1w'.format(url))
 
     assert response.status_code == 400
-    assert response.data['message'] == 'Workspace not found'
+    assert response.data['message'] == 'Workspace not found or the user does not have access to workspaces'
 
     response = api_client.post(url)
     response = api_client.get('{}?org_id=orNoatdUnm1w'.format(url))
