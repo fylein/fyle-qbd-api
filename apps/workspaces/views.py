@@ -31,13 +31,18 @@ class WorkspaceView(generics.CreateAPIView, generics.RetrieveAPIView):
         """
         return workspace object for the given org_id
         """
+        user_id = self.request.user
+
         org_id = self.request.query_params.get('org_id')
 
         assert_valid(org_id is not None, 'org_id is missing')
 
-        workspace = Workspace.objects.filter(org_id=org_id).first()
+        workspace = Workspace.objects.filter(org_id=org_id, user__user_id=user_id).first()
 
-        assert_valid(workspace is not None, 'Workspace not found')
+        assert_valid(
+            workspace is not None,
+            'Workspace not found or the user does not have access to workspaces'
+        )
 
         return workspace
 
