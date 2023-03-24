@@ -32,7 +32,7 @@ services:
       SENDGRID_API_KEY: dummy
       SENDGRID_EMAIL_FROM: hehe@hehe.com
   db:
-    image: "postgres:latest"
+    image: "postgres:15"
     environment: 
       POSTGRES_DB: dummy
       POSTGRES_USER: postgres
