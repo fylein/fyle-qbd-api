@@ -29,6 +29,9 @@ def get_class_and_project_name(field_mappings: FieldMapping, expense: Expense):
     if field_mappings.project_type == 'PROJECT':
         project_name = expense.project
 
+    elif field_mappings.project_type == 'COST_CENTER':
+        project_name = expense.cost_center
+
     return class_name, project_name
 
 
