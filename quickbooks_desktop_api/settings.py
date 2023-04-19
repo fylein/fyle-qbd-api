@@ -16,6 +16,8 @@ import sys
 
 import dj_database_url
 
+from .sentry import Sentry
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -270,3 +272,6 @@ FYLE_CLIENT_SECRET = os.environ.get('FYLE_CLIENT_SECRET')
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 SENDGRID_FROM_EMAIL = os.environ.get('SENDGRID_EMAIL_FROM')
 CORS_ORIGIN_ALLOW_ALL = True
+
+# Sentry
+Sentry.init()
