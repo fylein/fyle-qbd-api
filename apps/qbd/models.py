@@ -108,7 +108,7 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
         'employee_name': expense.employee_name,
         'employee_email': expense.employee_email,
         'purpose': f'{expense.purpose}' if expense.purpose else '',
-        'merchant': expense.vendor
+        'merchant': f'{expense.vendor}' if expense.vendor else ''
     }
 
     memo = ''
