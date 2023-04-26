@@ -107,7 +107,8 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
     details = {
         'employee_name': expense.employee_name,
         'employee_email': expense.employee_email,
-        'purpose': f'{expense.purpose}' if expense.purpose else ''
+        'purpose': f'{expense.purpose}' if expense.purpose else '',
+        'merchant': expense.vendor
     }
 
     memo = ''
@@ -118,6 +119,7 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
             if index + 1 != len(top_memo_structure):
                 memo = f'{memo} - '
 
+    print(memo)
     return memo
 
 
@@ -193,7 +195,7 @@ class Bill(models.Model):
             class_name='',
             amount=sum([expense.amount for expense in expenses]) * -1,
             memo=get_top_purpose(workspace_id=workspace_id,
-                expense=expenses[0],
+                expense=expenses[0] ,
                 default=f'Reimbursable Expenses by {expenses[0].employee_email}'
             ),
             accounting_export=accounting_export,
