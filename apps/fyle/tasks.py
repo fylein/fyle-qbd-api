@@ -93,7 +93,7 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
             source_account_type=['PERSONAL_CORPORATE_CREDIT_CARD_ACCOUNT'],
             state=export_settings.credit_card_expense_state,
             settled_at=last_synced_at if export_settings.credit_card_expense_state == 'PAYMENT_PROCESSING' else None,
-            approved_at = last_synced_at if export_settings.credit_card_expense_state == 'APPROVED' else None,
+            approved_at=last_synced_at if export_settings.credit_card_expense_state == 'APPROVED' else None,
             filter_credit_expenses=True,
             last_paid_at=last_synced_at if export_settings.credit_card_expense_state == 'PAID' else None
         )
