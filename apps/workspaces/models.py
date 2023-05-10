@@ -138,6 +138,8 @@ class ExportSettings(models.Model):
     workspace = models.OneToOneField(Workspace, on_delete=models.PROTECT, help_text='Reference to Workspace model')
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
+    is_simplify_report_closure_enabled = models.BooleanField(default=False,
+        help_text='Simplify report closure is enabled')
 
     # Reimbursable Expenses Export Settings
     reimbursable_expenses_export_type = models.CharField(
