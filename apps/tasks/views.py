@@ -50,7 +50,7 @@ class AccountingExportView(generics.ListAPIView):
 
         return AccountingExport.objects.filter(
             **filters
-        ).all()
+        ).all().order_by("-updated_at")
 
 
 class AccountingExportDownloadView(generics.CreateAPIView):
