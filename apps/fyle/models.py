@@ -52,6 +52,7 @@ class Expense(models.Model):
     file_ids = ArrayField(base_field=models.CharField(max_length=255), null=True, help_text='File IDs')
     spent_at = models.DateTimeField(null=True, help_text='Expense spent at')
     approved_at = models.DateTimeField(null=True, help_text='Expense approved at')
+    posted_at = models.DateTimeField(null=True, help_text='Date when the money is taken from the bank')
     expense_created_at = models.DateTimeField(help_text='Expense created at')
     expense_updated_at = models.DateTimeField(help_text='Expense created at')
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at')
@@ -103,6 +104,7 @@ class Expense(models.Model):
                     'file_ids': expense['file_ids'],
                     'spent_at': expense['spent_at'],
                     'approved_at': expense['approved_at'],
+                    'posted_at': expense['posted_at'],
                     'expense_created_at': expense['expense_created_at'],
                     'expense_updated_at': expense['expense_updated_at'],
                     'fund_source': SOURCE_ACCOUNT_MAP[expense['source_account_type']],

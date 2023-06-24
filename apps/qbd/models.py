@@ -48,6 +48,9 @@ def get_transaction_date(expenses: List[Expense], date_preference: str) -> str:
 
     elif date_preference == 'spent_at':
         return expenses[0].spent_at
+    
+    elif date_preference == 'posted_at':
+        return expenses[0].posted_at
 
     return datetime.now()
 
