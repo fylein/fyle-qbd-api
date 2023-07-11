@@ -382,12 +382,14 @@ class CreditCardPurchase(models.Model):
         """
         name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
 
+        date_preference = export_settings.credit_card_expense_date
+
         if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
             name = expenses[0].employee_name
 
         credit_card_purchase = CreditCardPurchase.objects.create(
             transaction_type='CREDIT CARD',
-            date=get_transaction_date(expenses, 'spent_at'),
+            date=get_transaction_date(expenses, date_preference),
             account=export_settings.credit_card_account_name,
             name=name,
             class_name='',
