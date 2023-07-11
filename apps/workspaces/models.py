@@ -105,6 +105,7 @@ CREDIT_CARD_EXPENSES_GROUPED_BY_CHOICES = (
 CREDIT_CARD_EXPENSES_DATE_TYPE_CHOICES = (
     ('last_spent_at', 'last_spent_at'),
     ('spent_at', 'spent_at'),
+    ('posted_at', 'posted_at'),
     ('created_at', 'created_at')
 )
 
