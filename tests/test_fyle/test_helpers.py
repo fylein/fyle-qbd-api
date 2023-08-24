@@ -1,5 +1,6 @@
 import json
 from apps.fyle.helpers import post_request
+from unittest import mock
 
 
 def test_post_request():
@@ -14,4 +15,5 @@ def test_post_request():
         'website': 'www.srilankaairways.com',
         'established': '1990'
     }
+    mock.patch('apps.fyle.helpers.post_request', return_value=[])
     post_request(url, body=json.dumps(body))
