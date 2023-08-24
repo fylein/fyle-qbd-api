@@ -15,5 +15,5 @@ def test_post_request(mocker):
         'website': 'www.srilankaairways.com',
         'established': '1990'
     }
-    mocker.patch('requests.post', return_value={'status_code': 200, 'text': 'Successfully created airline.'}})
+    mocker.patch('requests.post', return_value={'status_code': 200, 'text': 'Successfully created airline.'})
     post_request(url, body=json.dumps(body))
