@@ -15,5 +15,5 @@ def test_post_request(mocker):
         'website': 'www.srilankaairways.com',
         'established': '1990'
     }
-    mocker.patch('apps.fyle.helpers.post_request', return_value=[])
+    mocker.patch('requests.post', return_value=[])
     post_request(url, body=json.dumps(body))
