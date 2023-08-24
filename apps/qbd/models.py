@@ -371,6 +371,7 @@ class CreditCardPurchase(models.Model):
         export_settings: ExportSettings,
         accounting_export: AccountingExport,
         workspace_id: int
+        
     ):
         """
         Create credit card purchase object
