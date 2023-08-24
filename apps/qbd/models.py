@@ -279,7 +279,8 @@ class BillLineitem(models.Model):
             lineitem = BillLineitem.objects.create(
                 transaction_type='BILL',
                 date=expense.spent_at,
-                account=export_settings.mileage_account_name if expense.category == 'Mileage' and export_settings.mileage_account_name else  expense.category,
+                account=export_settings.mileage_account_name if expense.category == 'Mileage' and \
+                    export_settings.mileage_account_name else  expense.category,
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
@@ -371,7 +372,7 @@ class CreditCardPurchase(models.Model):
         export_settings: ExportSettings,
         accounting_export: AccountingExport,
         workspace_id: int
-        
+
     ):
         """
         Create credit card purchase object
@@ -605,7 +606,7 @@ class Journal(models.Model):
         )
 
         return journal, lineitems
-        
+
 
 class JournalLineitem(models.Model):
     """
@@ -672,7 +673,8 @@ class JournalLineitem(models.Model):
             lineitem = JournalLineitem.objects.create(
                 transaction_type='GENERAL JOURNAL',
                 date=expense.spent_at,
-                account=export_settings.mileage_account_name if fund_source != 'CCC' and expense.category == 'Mileage' and export_settings.mileage_account_name else expense.category,
+                account=export_settings.mileage_account_name if fund_source != 'CCC' and expense.category == 'Mileage' \
+                    and export_settings.mileage_account_name else expense.category,
                 name=journal.name,
                 class_name=class_name,
                 amount=expense.amount * -1,
