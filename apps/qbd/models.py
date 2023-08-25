@@ -280,7 +280,7 @@ class BillLineitem(models.Model):
                 transaction_type='BILL',
                 date=expense.spent_at,
                 account=export_settings.mileage_account_name if expense.category == 'Mileage' and \
-                    export_settings.mileage_account_name else  expense.category,
+                    export_settings.mileage_account_name else expense.category,
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
