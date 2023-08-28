@@ -152,6 +152,10 @@ class ExportSettings(models.Model):
         max_length=255, help_text='Bank account name', 
         null=True
     )
+    mileage_account_name = models.CharField(
+        max_length=255, help_text='Mileage account name',
+        null=True
+    )
     reimbursable_expense_state = models.CharField(
         max_length=255,
         choices=REIMBURSABLE_EXPENSE_STATE_CHOICES,

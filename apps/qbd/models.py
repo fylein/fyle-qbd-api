@@ -204,7 +204,7 @@ class Bill(models.Model):
             workspace_id=workspace_id
         )
 
-        line_items = BillLineitem.create_bill_lineitems(expenses, bill, workspace_id)
+        line_items = BillLineitem.create_bill_lineitems(expenses, bill, workspace_id, export_settings)
         return bill, line_items
 
 
@@ -260,7 +260,7 @@ class BillLineitem(models.Model):
         db_table = 'bill_lineitems'
     
     @staticmethod
-    def create_bill_lineitems(expenses: List[Expense], bill: Bill, workspace_id: int):
+    def create_bill_lineitems(expenses: List[Expense], bill: Bill, workspace_id: int, export_settings: ExportSettings):
         """
         Create bill lineitem object
         :param bill_lineitem: bill lineitem data
@@ -279,7 +279,8 @@ class BillLineitem(models.Model):
             lineitem = BillLineitem.objects.create(
                 transaction_type='BILL',
                 date=expense.spent_at,
-                account=expense.category,
+                account=export_settings.mileage_account_name if expense.category == 'Mileage' and \
+                    export_settings.mileage_account_name else expense.category,
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
@@ -371,6 +372,7 @@ class CreditCardPurchase(models.Model):
         export_settings: ExportSettings,
         accounting_export: AccountingExport,
         workspace_id: int
+
     ):
         """
         Create credit card purchase object
@@ -600,11 +602,11 @@ class Journal(models.Model):
         )
 
         lineitems = JournalLineitem.create_journal_lineitems(
-            expenses, journal, workspace_id
+            expenses, journal, workspace_id, export_settings, fund_source
         )
 
         return journal, lineitems
-        
+
 
 class JournalLineitem(models.Model):
     """
@@ -651,7 +653,7 @@ class JournalLineitem(models.Model):
 
     @staticmethod
     def create_journal_lineitems(
-        expenses: List[Expense], journal: Journal, workspace_id: int
+        expenses: List[Expense], journal: Journal, workspace_id: int, export_settings: ExportSettings, fund_source: str
     ):
         """
         Create Journal Lineitems
@@ -671,7 +673,8 @@ class JournalLineitem(models.Model):
             lineitem = JournalLineitem.objects.create(
                 transaction_type='GENERAL JOURNAL',
                 date=expense.spent_at,
-                account=expense.category,
+                account=export_settings.mileage_account_name if fund_source != 'CCC' and expense.category == 'Mileage' \
+                    and export_settings.mileage_account_name else expense.category,
                 name=journal.name,
                 class_name=class_name,
                 amount=expense.amount * -1,
