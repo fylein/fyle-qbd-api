@@ -7,7 +7,7 @@ class QBDMappingSerializer(serializers.ModelSerializer):
 		model = QBDMapping
 		fields = '__all__'
 		read_only_fields = ('workspace', 'created_at', 'updated_at')
-	
+
 	def create(self, validated_data):
 		workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
 		qbd_mapping, _ = QBDMapping.objects.update_or_create(

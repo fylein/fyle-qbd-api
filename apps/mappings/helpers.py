@@ -47,4 +47,3 @@ def sync_card(workspace_id: int):
 
     except Exception:
         logger.exception('Something unexpected happened workspace_id: %s', workspace_id)
-

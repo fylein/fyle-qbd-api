@@ -48,7 +48,7 @@ fixture = {
     ],
     'get_qbd_CCC_mapping': {
         "count": 2,
-        "next": "http://localhost:8008/api/workspaces/1/qbd_mappings/?attribute_type=CORPORATE_CARD&destination_value__is=true&limit=10&offset=10",
+        "next": "http://localhost:8008/api/workspaces/1/qbd_mappings/?attribute_type=CORPORATE_CARD",
         "previous": '',
         "results": [
             {

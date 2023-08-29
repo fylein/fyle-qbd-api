@@ -1,5 +1,5 @@
-from django.db import models
 from typing import List, Dict
+from django.db import models
 
 from apps.workspaces.models import Workspace
 
@@ -11,7 +11,8 @@ class QBDMapping(models.Model):
     attribute_type = models.CharField(max_length=255, help_text='Type of expense attribute')
     source_value = models.CharField(max_length=1000, help_text='Value of expense attribute')
     source_id = models.CharField(max_length=255, help_text='Fyle ID')
-    destination_value = models.CharField(max_length=1000, null=True, blank=True, help_text='Value of destination attribute')
+    destination_value = models.CharField(max_length=1000,
+        null=True, blank=True, help_text='Value of destination attribute')
     workspace = models.ForeignKey(Workspace, on_delete=models.PROTECT, help_text='Reference to Workspace model')
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')

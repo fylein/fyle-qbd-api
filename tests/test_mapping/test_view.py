@@ -1,7 +1,6 @@
 from django.urls import reverse
 import pytest
 
-from apps.mappings.helpers import sync_card
 from apps.mappings.models import QBDMapping
 
 from .fixture import fixture
@@ -56,7 +55,8 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
     # get all mapped rows (destination_value__isnull is false)
 
-    response = api_client.get(url, {'attribute_type': 'CORPORATE_CARD', 'limit':10, 'offset':0, 'destination_value__isnull': 'false'})
+    param = {'attribute_type': 'CORPORATE_CARD', 'limit':10, 'offset':0, 'destination_value__isnull': 'false'}
+    response = api_client.get(url, param)
 
     assert response.status_code == 200
     assert len(response.data['results']) == len(fixture['get_qbd_CCC_mapping']['results'])-1
@@ -65,7 +65,8 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
     # get all unmapped rows (destination_value__isnull is true)
 
-    response = api_client.get(url, {'attribute_type': 'CORPORATE_CARD', 'limit':10, 'offset':0, 'destination_value__isnull': 'true'})
+    param = {'attribute_type': 'CORPORATE_CARD', 'limit':10, 'offset':0, 'destination_value__isnull': 'true'}
+    response = api_client.get(url, param)
 
     assert response.status_code == 200
     assert len(response.data['results']) == len(fixture['get_qbd_CCC_mapping']['results'])-1
@@ -74,7 +75,8 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
 @pytest.mark.django_db(databases=['default'])
 def test_qbd_mapping_stats_view(api_client, test_connection):
-    qbd_mapping_count = QBDMapping.objects.filter(workspace_id=2, attribute_type = 'CORPORATE_CARD').count()
+    qbd_mapping_count = QBDMapping.objects.filter(workspace_id=2, 
+        attribute_type = 'CORPORATE_CARD').count()
     if qbd_mapping_count == 0:
         QBDMapping.update_or_create_mapping_objects(fixture['create_qbd_mapping'], 2)
     url = reverse(

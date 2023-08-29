@@ -12,7 +12,7 @@ from .tasks import sync_attributes
 class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
     """
     QBD Mapping Update View
-    """ 
+    """
     queryset = QBDMapping.objects.all()
     serializer_class = QBDMappingSerializer
     lookup_field = 'workspace_id'
@@ -25,7 +25,7 @@ class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
         sync_attributes(attribute_type, workspace_id)
 
         return self.list(request, *args, **kwargs)
-    
+
 #mapping stats view
 class QBDMappingStatsView(generics.RetrieveAPIView):
     """
@@ -36,10 +36,15 @@ class QBDMappingStatsView(generics.RetrieveAPIView):
         workspace_id= self.kwargs['workspace_id']
 
         assert_valid(source_type is not None, 'query param source_type not found')
-  
-        total_attributes_count = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type = source_type).count()
-        
-        unmapped_attributes_count = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type = source_type, destination_value__isnull=True).count()
+
+        total_attributes_count = QBDMapping.objects.filter(
+            workspace_id=workspace_id,
+            attribute_type = source_type).count()
+
+        unmapped_attributes_count = QBDMapping.objects.filter(
+            workspace_id=workspace_id,
+            attribute_type = source_type,
+            destination_value__isnull=True).count()
 
         return Response(
             data={
@@ -47,4 +52,4 @@ class QBDMappingStatsView(generics.RetrieveAPIView):
                 'unmapped_attributes_count': unmapped_attributes_count
             },
             status=status.HTTP_200_OK
-        )        
+        )    
