@@ -23,7 +23,7 @@ class QBDMapping(models.Model):
     @staticmethod
     def update_or_create_mapping_objects(qbd_mapping_objects: List[Dict],workspace_id: int):
         for qbd_mapping_object in qbd_mapping_objects:
-            qbd_mapping, _ = QBDMapping.objects.update_or_create(
+            QBDMapping.objects.update_or_create(
                 workspace_id= workspace_id,
                 source_value= qbd_mapping_object['value'],
                 attribute_type= qbd_mapping_object['attribute_type'],

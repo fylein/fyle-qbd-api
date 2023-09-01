@@ -49,7 +49,9 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
     }
     response = api_client.post(url,payload)
 
-    post_value = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type = payload['attribute_type'], source_id = payload['source_id'])
+    post_value = QBDMapping.objects.filter(workspace_id=workspace_id,
+        attribute_type = payload['attribute_type'],
+        source_id = payload['source_id'])
     assert response.status_code == 201
     assert post_value[0].destination_value == payload['destination_value']
 
@@ -75,7 +77,7 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
 @pytest.mark.django_db(databases=['default'])
 def test_qbd_mapping_stats_view(api_client, test_connection):
-    qbd_mapping_count = QBDMapping.objects.filter(workspace_id=2, 
+    qbd_mapping_count = QBDMapping.objects.filter(workspace_id=2,
         attribute_type = 'CORPORATE_CARD').count()
     if qbd_mapping_count == 0:
         QBDMapping.update_or_create_mapping_objects(fixture['create_qbd_mapping'], 2)
@@ -99,6 +101,6 @@ def test_qbd_mapping_stats_view(api_client, test_connection):
 
     response = api_client.get(url, {'source_type': 'CORPORATE_CARD'})
 
-    assert response.status_code == 200
-    assert response.data['all_attributes_count'] == fixture['get_qbd_CCC_mapping_state']['all_attributes_count']
-    assert response.data['unmapped_attributes_count'] == fixture['get_qbd_CCC_mapping_state']['unmapped_attributes_count']
+    assert response.status_code==200
+    assert response.data['all_attributes_count']==fixture['get_qbd_CCC_mapping_state']['all_attributes_count']
+    assert response.data['unmapped_attributes_count']==fixture['get_qbd_CCC_mapping_state']['unmapped_attributes_count']
