@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='exportsettings',
             name='credit_card_expense_date',
-            field=models.CharField(choices=[('last_spent_at', 'last_spent_at'), 
-            ('spent_at', 'spent_at'), 
-            ('posted_at', 'posted_at'), 
+            field=models.CharField(choices=[('last_spent_at', 'last_spent_at'),
+            ('spent_at', 'spent_at'),
+            ('posted_at', 'posted_at'),
             ('created_at', 'created_at')], max_length=255, null=True),
         ),
     ]

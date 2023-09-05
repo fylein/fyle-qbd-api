@@ -16,5 +16,5 @@ def test_sync_card(create_temp_workspace,
     sync_card(workspace_id)
     qbd_mappings = QBDMapping.objects.filter(workspace_id=1, attribute_type = 'CORPORATE_CARD')
     assert len(qbd_mappings) == len(fixture['get_qbd_CCC_mapping']['results'])
-    for i in range(0,len(qbd_mappings)):
+    for i, item in enumerate(qbd_mappings):
         assert qbd_mappings[i].source_value == fixture['get_qbd_CCC_mapping']['results'][i]['source_value']
