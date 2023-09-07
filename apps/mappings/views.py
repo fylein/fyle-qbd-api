@@ -8,11 +8,14 @@ from quickbooks_desktop_api.utils import assert_valid, LookupFieldMixin
 
 from .models import QBDMapping
 from .tasks import sync_attributes
+from .actions import qbd_mapping_stat
+
 
 class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
     """
     QBD Mapping Update View
     """
+    
     queryset = QBDMapping.objects.all()
     serializer_class = QBDMappingSerializer
     lookup_field = 'workspace_id'
@@ -27,30 +30,22 @@ class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
 
         return self.list(request, *args, **kwargs)
 
+
 #mapping stats view
 class QBDMappingStatsView(generics.RetrieveAPIView):
     """
     Stats for total mapped and unmapped count for a given attribute type
     """
+
     def get(self, request, *args, **kwargs):
         source_type = self.request.query_params.get('source_type')
         workspace_id= self.kwargs['workspace_id']
 
         assert_valid(source_type is not None, 'query param source_type not found')
 
-        total_attributes_count = QBDMapping.objects.filter(
-            workspace_id=workspace_id,
-            attribute_type = source_type).count()
-
-        unmapped_attributes_count = QBDMapping.objects.filter(
-            workspace_id=workspace_id,
-            attribute_type = source_type,
-            destination_value__isnull=True).count()
+        stat_response = qbd_mapping_stat(source_type, workspace_id)
 
         return Response(
-            data={
-                'all_attributes_count': total_attributes_count,
-                'unmapped_attributes_count': unmapped_attributes_count
-            },
+            data=stat_response,
             status=status.HTTP_200_OK
         )    
