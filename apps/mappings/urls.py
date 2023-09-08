@@ -21,6 +21,6 @@ from .views import (
 
 
 urlpatterns = [
-    path('', QBDMappingView.as_view(), name='QBD-Mapping'),
-    path('stats/', QBDMappingStatsView.as_view(), name='QBD-Mapping-stats'),
+    path('', QBDMappingView.as_view(), name='qbd-mapping'),
+    path('stats/', QBDMappingStatsView.as_view(), name='qbd-mapping-stats'),
 ]

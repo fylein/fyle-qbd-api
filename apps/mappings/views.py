@@ -22,11 +22,16 @@ class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
     lookup_url_kwarg = 'workspace_id'
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = {'attribute_type': {'exact'},'destination_value': {'isnull'}}
+    ordering_fields = ('source_value',)
 
     def get(self, request, *args, **kwargs):
         attribute_type = self.request.query_params.get('attribute_type')
         workspace_id= self.kwargs['workspace_id']
-        sync_attributes(attribute_type, workspace_id)
+        qbd_mapping_count = QBDMapping.objects.filter(
+            workspace_id = workspace_id).count()
+
+        if qbd_mapping_count == 0:
+            sync_attributes(attribute_type, workspace_id)
 
         return self.list(request, *args, **kwargs)
 

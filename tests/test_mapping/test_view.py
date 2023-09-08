@@ -21,7 +21,7 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
     workspace_id = response.data['id']
 
     url = reverse(
-        'QBD-Mapping', kwargs={
+        'qbd-mapping', kwargs={
             'workspace_id': workspace_id
         }
     )
@@ -35,7 +35,7 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
     # post qbd mapping
     url = reverse(
-        'QBD-Mapping', kwargs={
+        'qbd-mapping', kwargs={
             'workspace_id': workspace_id
         }
     )
@@ -94,7 +94,7 @@ def test_qbd_mapping_stats_view(api_client, test_connection):
     workspace_id = response.data['id']
 
     url = reverse(
-        'QBD-Mapping-stats', kwargs={
+        'qbd-mapping-stats', kwargs={
             'workspace_id': workspace_id
         }
     )

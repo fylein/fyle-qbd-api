@@ -10,20 +10,20 @@ class PlatformConnector:
 
     def __init__(self, workspace_id: int):
 
-        credentials_object = FyleCredential.objects.get(workspace_id=workspace_id)
+        fyle_credentials  = FyleCredential.objects.get(workspace_id=workspace_id)
     
         self.platform = Platform(
-            server_url='{}/platform/v1beta'.format(credentials_object.cluster_domain),
+            server_url='{}/platform/v1beta'.format(fyle_credentials .cluster_domain),
             token_url=settings.FYLE_TOKEN_URI,
             client_id=settings.FYLE_CLIENT_ID,
             client_secret=settings.FYLE_CLIENT_SECRET,
-            refresh_token=credentials_object.refresh_token,
+            refresh_token=fyle_credentials .refresh_token,
         )
 
         self.workspace_id = workspace_id
 
-        credentials_object.refresh_token = self.platform._Platform__refresh_token
-        credentials_object.save()
+        fyle_credentials .refresh_token = self.platform._Platform__refresh_token
+        fyle_credentials .save()
 
     
     def sync_corporate_card(self):
