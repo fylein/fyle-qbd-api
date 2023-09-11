@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'fyle_rest_auth',
     'fyle_accounting_mappings',
     'django_q',
-    'django_filters'
+    'django_filters',
 
     # Created Apps
     'apps.users',
