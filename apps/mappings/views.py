@@ -8,7 +8,7 @@ from quickbooks_desktop_api.utils import assert_valid, LookupFieldMixin
 
 from .models import QBDMapping
 from .tasks import sync_attributes
-from .actions import qbd_mapping_stat
+from .actions import get_qbd_mapping_stat
 
 
 class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
@@ -24,17 +24,6 @@ class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
     filterset_fields = {'attribute_type': {'exact'},'destination_value': {'isnull'}}
     ordering_fields = ('source_value',)
 
-    def get(self, request, *args, **kwargs):
-        attribute_type = self.request.query_params.get('attribute_type')
-        workspace_id= self.kwargs['workspace_id']
-        qbd_mapping_count = QBDMapping.objects.filter(
-            workspace_id = workspace_id).count()
-
-        if qbd_mapping_count == 0:
-            sync_attributes(attribute_type, workspace_id)
-
-        return self.list(request, *args, **kwargs)
-
 
 #mapping stats view
 class QBDMappingStatsView(generics.RetrieveAPIView):
@@ -48,7 +37,7 @@ class QBDMappingStatsView(generics.RetrieveAPIView):
 
         assert_valid(source_type is not None, 'query param source_type not found')
 
-        stat_response = qbd_mapping_stat(source_type, workspace_id)
+        stat_response = get_qbd_mapping_stat(source_type, workspace_id)
 
         return Response(
             data=stat_response,

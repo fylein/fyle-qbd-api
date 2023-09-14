@@ -6,11 +6,7 @@ from apps.mappings.models import QBDMapping
 from .fixture import fixture
 
 @pytest.mark.django_db(databases=['default'])
-def test_qbd_mapping_view(api_client, test_connection, mocker):
-    mocker.patch(
-            'fyle.platform.apis.v1beta.admin.corporate_cards.list_all',
-            return_value=fixture['credit_card_sdk']
-        )
+def test_qbd_mapping_view(api_client, test_connection):
     url = reverse(
         'workspaces'
     )
@@ -19,6 +15,8 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
     response = api_client.post(url)
 
     workspace_id = response.data['id']
+
+    QBDMapping.update_or_create_mapping_objects(fixture['create_qbd_mapping'], workspace_id)
 
     url = reverse(
         'qbd-mapping', kwargs={
@@ -77,10 +75,6 @@ def test_qbd_mapping_view(api_client, test_connection, mocker):
 
 @pytest.mark.django_db(databases=['default'])
 def test_qbd_mapping_stats_view(api_client, test_connection):
-    qbd_mapping_count = QBDMapping.objects.filter(workspace_id=2,
-        attribute_type = 'CORPORATE_CARD').count()
-    if qbd_mapping_count == 0:
-        QBDMapping.update_or_create_mapping_objects(fixture['create_qbd_mapping'], 2)
     url = reverse(
         'workspaces'
     )
@@ -88,10 +82,9 @@ def test_qbd_mapping_stats_view(api_client, test_connection):
     api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
     response = api_client.post(url)
 
-    api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
-    response = api_client.post(url)
-
     workspace_id = response.data['id']
+
+    QBDMapping.update_or_create_mapping_objects(fixture['create_qbd_mapping'], workspace_id)
 
     url = reverse(
         'qbd-mapping-stats', kwargs={

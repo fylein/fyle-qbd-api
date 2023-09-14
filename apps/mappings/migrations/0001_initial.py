@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('workspaces', '0025_auto_20230825_1040'),
+        ('workspaces', '0025_auto_20230823_1118'),
     ]
 
     operations = [

@@ -22,9 +22,6 @@ class PlatformConnector:
 
         self.workspace_id = workspace_id
 
-        fyle_credentials.refresh_token = self.platform._Platform__refresh_token
-        fyle_credentials.save()
-
     
     def sync_corporate_card(self):
         """
