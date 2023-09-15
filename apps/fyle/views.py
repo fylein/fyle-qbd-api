@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import status
 
-from apps.mappings.tasks import sync_attributes
+from .actions import sync_fyle_dimensions
 
 
 class SyncFyleDimensionView(generics.ListCreateAPIView):
@@ -15,6 +15,6 @@ class SyncFyleDimensionView(generics.ListCreateAPIView):
         """
         Sync Data From Fyle
         """
-        sync_attributes('CORPORATE_CARD', workspace_id=kwargs['workspace_id'])
+        sync_fyle_dimensions('CORPORATE_CARD', workspace_id=kwargs['workspace_id'])
 
         return Response(status=status.HTTP_200_OK)

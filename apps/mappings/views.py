@@ -7,7 +7,6 @@ from apps.mappings.serializers import QBDMappingSerializer
 from quickbooks_desktop_api.utils import assert_valid, LookupFieldMixin
 
 from .models import QBDMapping
-from .tasks import sync_attributes
 from .actions import get_qbd_mapping_stat
 
 
