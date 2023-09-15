@@ -15,6 +15,6 @@ class SyncFyleDimensionView(generics.ListCreateAPIView):
         """
         Sync Data From Fyle
         """
-        sync_fyle_dimensions('CORPORATE_CARD', workspace_id=kwargs['workspace_id'])
+        sync_fyle_dimensions(workspace_id=kwargs['workspace_id'])
 
         return Response(status=status.HTTP_200_OK)
