@@ -281,4 +281,13 @@ def add_ccc_mapping():
     mappings = mapping_fixtures['create_qbd_mapping']
 
     for workspace_id in [1, 2, 3]:
-        QBDMapping.update_or_create_mapping_objects(mappings, workspace_id)
+        for mapping in mappings:
+            QBDMapping.objects.update_or_create(
+                    workspace_id= workspace_id,
+                    source_value= mapping['value'],
+                    attribute_type= mapping['attribute_type'],
+                    defaults={
+                        'source_id': mapping['source_id'],
+                        'destination_value': 'mastercard' if mapping['value'] == 'American Express - 055470' else None
+                    }
+                )

@@ -361,6 +361,11 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
         workspace_id=workspace_id, type='EXPORT_CREDIT_CARD_PURCHASES', status='ENQUEUED'
     )
 
+    expense = Expense.objects.filter(workspace_id=workspace_id, exported=False).first()
+
+    expense.corporate_card_id = 'bacc1DHywC3YAd'
+    expense.save()
+
     create_credit_card_purchases_iif_file(workspace_id, accounting_export)
 
     expenses = Expense.objects.filter(workspace_id=workspace_id, exported=False)
@@ -647,6 +652,11 @@ def test_create_journals_iif_file_ccc_report_employee(
     accounting_export = AccountingExport.objects.get(
         workspace_id=workspace_id, type='EXPORT_JOURNALS', status='ENQUEUED'
     )
+
+    expense = Expense.objects.filter(workspace_id=workspace_id, exported=False).first()
+
+    expense.corporate_card_id = 'bacc1DHywC3YAd'
+    expense.save()
 
     # Testing for entity preference as Vendor
     create_journals_iif_file(workspace_id, accounting_export, 'CCC')

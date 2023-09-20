@@ -598,13 +598,15 @@ class Journal(models.Model):
             
             date_preference = export_settings.credit_card_expense_date
         
+        corporate_card_name = get_corporate_card_name(expenses[0].corporate_card_id, workspace_id, export_settings)
+        
         default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
             if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
 
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=get_transaction_date(expenses, date_preference=date_preference),
-            account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
+            account=corporate_card_name if fund_source == 'CCC' else export_settings.bank_account_name,
             name=name,
             amount=sum([expense.amount for expense in expenses]),
             memo=get_top_purpose(
