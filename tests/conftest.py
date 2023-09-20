@@ -282,4 +282,3 @@ def add_ccc_mapping():
 
     for workspace_id in [1, 2, 3]:
         QBDMapping.update_or_create_mapping_objects(mappings, workspace_id)
-            
