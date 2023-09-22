@@ -31,5 +31,7 @@ urlpatterns = [
     path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced-settings'),
     path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field-mappings'),
     path('<int:workspace_id>/trigger_export/', TriggerExportView.as_view(), name='trigger-export'),
-    path('<int:workspace_id>/accounting_exports/', include('apps.tasks.urls'))
+    path('<int:workspace_id>/accounting_exports/', include('apps.tasks.urls')),
+    path('<int:workspace_id>/qbd_mappings/', include('apps.mappings.urls')),
+    path('<int:workspace_id>/fyle/', include('apps.fyle.urls')),
 ]

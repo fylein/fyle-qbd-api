@@ -18,9 +18,11 @@ from apps.workspaces.models import (
     AdvancedSetting
 )
 from apps.tasks.models import AccountingExport
+from apps.mappings.models import QBDMapping
 from quickbooks_desktop_api.tests import settings
 
 from .test_fyle.fixtures import fixtures as fyle_fixtures
+from .test_mapping.fixture import fixture as mapping_fixtures
 
 
 @pytest.fixture
@@ -268,3 +270,24 @@ def add_expenses():
             expense['id'] = expense['id'] + str(workspace_id)
 
         Expense.create_expense_objects(expenses, workspace_id)
+
+
+@pytest.fixture()
+@pytest.mark.django_db(databases=['default'])
+def add_ccc_mapping():
+    """
+    Add Expense to a workspace
+    """
+    mappings = mapping_fixtures['create_qbd_mapping']
+
+    for workspace_id in [1, 2, 3]:
+        for mapping in mappings:
+            QBDMapping.objects.update_or_create(
+                    workspace_id= workspace_id,
+                    source_value= mapping['value'],
+                    attribute_type= mapping['attribute_type'],
+                    defaults={
+                        'source_id': mapping['source_id'],
+                        'destination_value': 'mastercard' if mapping['value'] == 'American Express - 055470' else None
+                    }
+                )

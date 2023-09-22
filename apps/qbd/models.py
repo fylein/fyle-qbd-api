@@ -9,6 +9,7 @@ from apps.workspaces.models import (
     AdvancedSetting, ExportSettings, FieldMapping, 
     FyleCredential, Workspace
 )
+from apps.mappings.models import QBDMapping
 
 
 def get_class_and_project_name(field_mappings: FieldMapping, expense: Expense):
@@ -123,6 +124,18 @@ def get_top_purpose(workspace_id: str, expense: Expense, default: str) -> str:
                 memo = f'{memo} - '
 
     return memo
+
+
+def get_corporate_card_name(corporate_card_id: str, workspace_id: int, export_settings: ExportSettings):
+    corporate_card_name = export_settings.credit_card_account_name
+
+    qbd_mapping = QBDMapping.objects.filter(workspace_id=workspace_id, source_id=corporate_card_id)
+
+    if len(qbd_mapping) > 0 and qbd_mapping[0].destination_value:
+        corporate_card_name = qbd_mapping[0].destination_value
+
+    return corporate_card_name
+
 
 
 class Bill(models.Model):
@@ -386,13 +399,15 @@ class CreditCardPurchase(models.Model):
 
         date_preference = export_settings.credit_card_expense_date
 
+        corporate_card_name = get_corporate_card_name(expenses[0].corporate_card_id, workspace_id, export_settings)
+
         if export_settings.credit_card_entity_name_preference == 'EMPLOYEE':
             name = expenses[0].employee_name
 
         credit_card_purchase = CreditCardPurchase.objects.create(
             transaction_type='CREDIT CARD',
             date=get_transaction_date(expenses, date_preference),
-            account=export_settings.credit_card_account_name,
+            account=corporate_card_name,
             name=name,
             class_name='',
             amount=sum([expense.amount for expense in expenses]) * -1,
@@ -583,13 +598,15 @@ class Journal(models.Model):
             
             date_preference = export_settings.credit_card_expense_date
         
+        corporate_card_name = get_corporate_card_name(expenses[0].corporate_card_id, workspace_id, export_settings)
+        
         default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
             if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
 
         journal = Journal.objects.create(
             transaction_type='GENERAL JOURNAL',
             date=get_transaction_date(expenses, date_preference=date_preference),
-            account=export_settings.credit_card_account_name if fund_source == 'CCC' else export_settings.bank_account_name,
+            account=corporate_card_name if fund_source == 'CCC' else export_settings.bank_account_name,
             name=name,
             amount=sum([expense.amount for expense in expenses]),
             memo=get_top_purpose(

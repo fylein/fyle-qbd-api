@@ -51,13 +51,15 @@ INSTALLED_APPS = [
     'fyle_rest_auth',
     'fyle_accounting_mappings',
     'django_q',
+    'django_filters',
 
     # Created Apps
     'apps.users',
     'apps.workspaces',
     'apps.fyle',
     'apps.tasks',
-    'apps.qbd'
+    'apps.qbd',
+    'apps.mappings'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +113,7 @@ REST_FRAMEWORK = {
         'fyle_rest_auth.authentication.FyleJWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'PAGE_SIZE': 100
 }
 
