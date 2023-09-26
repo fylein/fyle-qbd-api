@@ -405,7 +405,7 @@ class CreditCardPurchase(models.Model):
             name = expenses[0].employee_name
 
         credit_card_purchase = CreditCardPurchase.objects.create(
-            transaction_type='CREDIT CARD',
+            transaction_type='CREDIT CARD' if expenses[0].amount > 0 else 'CCARD REFUND',
             date=get_transaction_date(expenses, date_preference),
             account=corporate_card_name,
             name=name,
@@ -514,7 +514,7 @@ class CreditCardPurchaseLineitem(models.Model):
             )
 
             lineitem = CreditCardPurchaseLineitem.objects.create(
-                transaction_type='CREDIT CARD',
+                transaction_type='CREDIT CARD' if expense.amount > 0 else 'CCARD REFUND',
                 date=expense.spent_at,
                 account=expense.category,
                 name=project_name,
