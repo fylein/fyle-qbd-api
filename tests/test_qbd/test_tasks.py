@@ -62,6 +62,8 @@ def test_create_bills_iif_file_report(
 
     workspace_id = 1
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
     import_reimbursable_expenses(workspace_id, accounting_export)
 
     accounting_export = AccountingExport.objects.get(
@@ -126,6 +128,8 @@ def test_create_bills_iif_file_report_fail(
 
     workspace_id = 1
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
     import_reimbursable_expenses(workspace_id, accounting_export)
 
     accounting_export = AccountingExport.objects.get(
@@ -176,6 +180,8 @@ def test_create_bills_iif_file_report_fatal(
 
     workspace_id = 1
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
     import_reimbursable_expenses(workspace_id, accounting_export)
 
     accounting_export = AccountingExport.objects.get(
@@ -234,6 +240,8 @@ def test_create_bills_iif_file_expense(
 
     workspace_id = 3
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
     import_reimbursable_expenses(workspace_id, accounting_export)
 
     accounting_export = AccountingExport.objects.get(
@@ -293,6 +301,8 @@ def test_create_credit_card_purchases_iif_file_expense_vendor(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -354,6 +364,8 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
     workspace_id = 2
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -416,6 +428,8 @@ def test_create_credit_card_purchases_iif_file_expense_fail(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -464,6 +478,8 @@ def test_create_credit_card_purchases_iif_file_expense_fatal(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -520,6 +536,8 @@ def test_create_journals_iif_file_reimbursable_expense(
     workspace_id = 3
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_REIMBURSABLE_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_reimbursable_expenses(workspace_id, accounting_export)
 
@@ -582,6 +600,8 @@ def test_create_journals_iif_file_ccc_report_vendor(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -646,6 +666,8 @@ def test_create_journals_iif_file_ccc_report_employee(
     workspace_id = 2
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -709,6 +731,8 @@ def test_create_journals_iif_file_ccc_report_fail(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -760,6 +784,8 @@ def test_create_journals_iif_file_ccc_report_fatal(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
@@ -829,6 +855,8 @@ def test_email_failure(
     workspace_id = 1
 
     accounting_export = AccountingExport.objects.get(workspace_id=workspace_id, type='FETCHING_CREDIT_CARD_EXPENSES')
+    accounting_export.workspace.org_id = 'orNoatdUnm1w'
+    accounting_export.workspace.save()
 
     import_credit_card_expenses(workspace_id, accounting_export)
 
