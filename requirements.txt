@@ -29,7 +29,7 @@ fyle==0.34.0
 # Reusable Fyle Packages
 fyle-rest-auth==1.4.0
 fyle-accounting-mappings==1.26.0
-fyle-integrations-platform-connector==1.35.2
+fyle-integrations-platform-connector==1.35.3
 
 # Postgres Dependincies
 psycopg2-binary==2.8.4
