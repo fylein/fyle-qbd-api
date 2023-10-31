@@ -59,7 +59,7 @@ def test_run_import_export_journal_journal(
 
 
 @pytest.mark.django_db(databases=['default'])
-def test_async_update_workspace_name(mocker):
+def test_async_update_workspace_name(mocker, create_temp_workspace):
     mocker.patch(
         'apps.workspaces.tasks.get_fyle_admin',
         return_value={'data': {'org': {'name': 'Test Org'}}}
