@@ -1,6 +1,7 @@
 import pytest
 from apps.fyle.models import Expense
-from apps.workspaces.tasks import run_import_export
+from apps.workspaces.models import Workspace
+from apps.workspaces.tasks import async_update_workspace_name, run_import_export
 
 from tests.test_fyle.fixtures import fixtures as fyle_fixtures
 
@@ -55,3 +56,16 @@ def test_run_import_export_journal_journal(
     tasks = OrmQ.objects.all()
 
     assert tasks.count() == 2
+
+
+@pytest.mark.django_db(databases=['default'])
+def test_async_update_workspace_name(mocker, create_temp_workspace):
+    mocker.patch(
+        'apps.workspaces.tasks.get_fyle_admin',
+        return_value={'data': {'org': {'name': 'Test Org'}}}
+    )
+    workspace = Workspace.objects.get(id=1)
+    async_update_workspace_name(workspace, 'Bearer access_token')
+
+    workspace = Workspace.objects.get(id=1)
+    assert workspace.name == 'Test Org'

@@ -52,6 +52,8 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         if workspace:
             # Adding user relation to workspace
             workspace.user.add(User.objects.get(user_id=user))
+            workspace.org_id = org_id
+            workspace.save()
             cache.delete(str(workspace.id))
         else:
             workspace = Workspace.objects.create(
