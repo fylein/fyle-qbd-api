@@ -1,5 +1,7 @@
 import logging
 
+from fyle_rest_auth.helpers import get_fyle_admin
+
 from apps.fyle.queue import queue_import_credit_card_expenses, queue_import_reimbursable_expenses
 from apps.qbd.queue import (
     queue_create_bills_iif_file,
@@ -9,7 +11,7 @@ from apps.qbd.queue import (
 from apps.tasks.models import AccountingExport
 from apps.fyle.models import Expense
 
-from .models import ExportSettings 
+from .models import ExportSettings, Workspace 
 
 
 logger = logging.getLogger(__name__)
@@ -68,3 +70,17 @@ def run_import_export(workspace_id: int):
 
                 elif export_settings.credit_card_expense_export_type == 'JOURNAL_ENTRY':
                     queue_create_journals_iif_file('CCC', workspace_id)
+
+
+def async_update_workspace_name(workspace: Workspace, access_token: str):
+    """
+    Update Workspace Name
+
+    :param workspace: Workspace object
+    :param access_token: Fyle access token
+    """
+    fyle_user = get_fyle_admin(access_token.split(' ')[1], None)
+    org_name = fyle_user['data']['org']['name']
+
+    workspace.name = org_name
+    workspace.save()

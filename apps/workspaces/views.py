@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.views import Response, status
 from rest_framework.permissions import IsAuthenticated
 
+from django_q.tasks import async_task
+
 from quickbooks_desktop_api.utils import assert_valid
 
 from apps.fyle.models import Expense
@@ -42,6 +44,12 @@ class WorkspaceView(generics.CreateAPIView, generics.RetrieveAPIView):
         assert_valid(
             workspace is not None,
             'Workspace not found or the user does not have access to workspaces'
+        )
+
+        async_task(
+            'apps.workspaces.tasks.async_update_workspace_name',
+            workspace,
+            self.request.headers.get('Authorization')
         )
 
         return workspace
