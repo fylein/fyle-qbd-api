@@ -506,6 +506,7 @@ class CreditCardPurchaseLineitem(models.Model):
         :return: None
         """
         field_mappings: FieldMapping = FieldMapping.objects.get(workspace_id=workspace_id)
+        export_settings: ExportSettings = ExportSettings.objects.get(workspace_id=workspace_id)
 
         lineitems = []
         for expense in expenses:
@@ -515,7 +516,7 @@ class CreditCardPurchaseLineitem(models.Model):
 
             lineitem = CreditCardPurchaseLineitem.objects.create(
                 transaction_type='CREDIT CARD' if expense.amount > 0 else 'CCARD REFUND',
-                date=expense.spent_at,
+                date=get_transaction_date(expenses, date_preference=export_settings.credit_card_expense_date),
                 account=expense.category,
                 name=project_name,
                 class_name=class_name,
