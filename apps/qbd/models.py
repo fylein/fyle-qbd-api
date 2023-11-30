@@ -49,7 +49,7 @@ def get_transaction_date(expenses: List[Expense], date_preference: str) -> str:
 
     elif date_preference == 'spent_at':
         return expenses[0].spent_at
-    
+
     elif date_preference == 'posted_at' and expenses[0].posted_at != None:
         return expenses[0].posted_at
 
@@ -291,7 +291,7 @@ class BillLineitem(models.Model):
 
             lineitem = BillLineitem.objects.create(
                 transaction_type='BILL',
-                date=expense.spent_at,
+                date=get_transaction_date(expenses, export_settings.reimbursable_expense_date),
                 account=export_settings.mileage_account_name if expense.category == 'Mileage' and \
                     export_settings.mileage_account_name else expense.category,
                 name=project_name,
@@ -681,6 +681,7 @@ class JournalLineitem(models.Model):
         :return: None
         """
         field_mappings: FieldMapping = FieldMapping.objects.get(workspace_id=workspace_id)
+        date_preference = export_settings.credit_card_expense_date if fund_source == 'CCC' else export_settings.reimbursable_expense_date
 
         lineitems = []
         for expense in expenses:
@@ -690,7 +691,7 @@ class JournalLineitem(models.Model):
 
             lineitem = JournalLineitem.objects.create(
                 transaction_type='GENERAL JOURNAL',
-                date=expense.spent_at,
+                date=get_transaction_date(expenses, date_preference),
                 account=export_settings.mileage_account_name if fund_source != 'CCC' and expense.category == 'Mileage' \
                     and export_settings.mileage_account_name else expense.category,
                 name=journal.name,
