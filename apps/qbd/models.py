@@ -609,7 +609,7 @@ class Journal(models.Model):
             date=get_transaction_date(expenses, date_preference=date_preference),
             account=corporate_card_name if fund_source == 'CCC' else export_settings.bank_account_name,
             name=name,
-            amount=sum([expense.amount for expense in expenses]),
+            amount=sum([expense.amount for expense in expenses]) * -1,
             memo=get_top_purpose(
                 workspace_id=workspace_id,
                 expense=expenses[0],
@@ -696,7 +696,7 @@ class JournalLineitem(models.Model):
                     and export_settings.mileage_account_name else expense.category,
                 name=journal.name,
                 class_name=class_name,
-                amount=expense.amount * -1,
+                amount=expense.amount * 1,
                 memo=get_expense_purpose(workspace_id, expense),
                 journal=journal,
                 expense=expense,
