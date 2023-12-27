@@ -696,7 +696,7 @@ class JournalLineitem(models.Model):
                     and export_settings.mileage_account_name else expense.category,
                 name=journal.name,
                 class_name=class_name,
-                amount=expense.amount * 1,
+                amount=expense.amount,
                 memo=get_expense_purpose(workspace_id, expense),
                 journal=journal,
                 expense=expense,
