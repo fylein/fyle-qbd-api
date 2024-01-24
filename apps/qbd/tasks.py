@@ -47,7 +47,7 @@ def create_bills_iif_file(workspace_id: int, accounting_export: AccountingExport
 
         workspace_name = accounting_export.workspace.name
 
-        file_path = os.path.join('/tmp', '{}-{}-bills-{}.iif'.format(workspace_name, accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
+        file_path = os.path.join('/tmp', '{}-{}-bills-{}.iif'.format(workspace_name.replace('/', ''), accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
 
         expenses = Expense.objects.filter(
             workspace_id=workspace_id,
@@ -111,7 +111,7 @@ def create_credit_card_purchases_iif_file(workspace_id: int, accounting_export: 
 
         workspace_name = accounting_export.workspace.name
 
-        file_path = os.path.join('/tmp', '{}-{}-credit-card-purchases-{}.iif'.format(workspace_name, accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
+        file_path = os.path.join('/tmp', '{}-{}-credit-card-purchases-{}.iif'.format(workspace_name.replace('/', ''), accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
         
         expenses = Expense.objects.filter(
             workspace_id=workspace_id,
@@ -177,7 +177,7 @@ def create_journals_iif_file(workspace_id: int, accounting_export: AccountingExp
 
         workspace_name = accounting_export.workspace.name
 
-        file_path = os.path.join('/tmp', '{}-{}-journals-{}.iif'.format(workspace_name, accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
+        file_path = os.path.join('/tmp', '{}-{}-journals-{}.iif'.format(workspace_name.replace('/', ''), accounting_export.id, datetime.now().strftime('%Y-%m-%d')))
         
         expenses = Expense.objects.filter(
             workspace_id=workspace_id,
