@@ -11,8 +11,9 @@ import traceback
 from django.db import transaction
 
 from fyle_integrations_platform_connector import PlatformConnector
-from apps.tasks.models import AccountingExport
+from fyle.platform.exceptions import RetryException
 
+from apps.tasks.models import AccountingExport
 from apps.workspaces.models import Workspace, ExportSettings, FyleCredential
 
 from .models import Expense
@@ -62,6 +63,14 @@ def import_reimbursable_expenses(workspace_id, accounting_export: AccountingExpo
             'message': 'Fyle credentials do not exist in workspace'
         }
         accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except RetryException:
+        logger.info('Fyle Retry Exception occured in workspace_id %s', workspace_id)
+        accounting_export.detail = {
+            'message': 'Fyle Retry Exception occured'
+        }
+        accounting_export.status = 'FATAL'
         accounting_export.save()
 
     except Exception:
@@ -116,6 +125,14 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
             'message': 'Fyle credentials do not exist in workspace'
         }
         accounting_export.status = 'FAILED'
+        accounting_export.save()
+
+    except RetryException:
+        logger.info('Fyle Retry Exception occured in workspace_id %s', workspace_id)
+        accounting_export.detail = {
+            'message': 'Fyle Retry Exception occured'
+        }
+        accounting_export.status = 'FATAL'
         accounting_export.save()
 
     except Exception:
