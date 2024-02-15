@@ -22,7 +22,6 @@ class PlatformConnector:
 
         self.workspace_id = workspace_id
 
-    
     def sync_corporate_card(self):
         """
         Sync Cards will sync the corporate cards details from fyle to qbd db
