@@ -3,7 +3,7 @@ import pytest
 
 from apps.mappings.models import QBDMapping
 
-from .fixture import fixture
+from .fixtures import fixture
 
 @pytest.mark.django_db(databases=['default'])
 def test_qbd_mapping_view(api_client, test_connection):
@@ -28,8 +28,8 @@ def test_qbd_mapping_view(api_client, test_connection):
     response = api_client.get(url, {'attribute_type': 'CORPORATE_CARD', 'limit':10, 'offset':0})
 
     assert response.status_code == 200
-    assert len(response.data['results']) == len(fixture['get_qbd_CCC_mapping']['results'])
-    assert response.data['count'] == fixture['get_qbd_CCC_mapping']['count']
+    assert len(response.data['results']) == len(fixture['get_qbd_ccc_mapping']['results'])
+    assert response.data['count'] == fixture['get_qbd_ccc_mapping']['count']
 
     # post qbd mapping
     url = reverse(
@@ -50,6 +50,8 @@ def test_qbd_mapping_view(api_client, test_connection):
     post_value = QBDMapping.objects.filter(workspace_id=workspace_id,
         attribute_type = payload['attribute_type'],
         source_id = payload['source_id'])
+
+    print(response.data)
     assert response.status_code == 201
     assert post_value[0].destination_value == payload['destination_value']
 
@@ -59,9 +61,9 @@ def test_qbd_mapping_view(api_client, test_connection):
     response = api_client.get(url, param)
 
     assert response.status_code == 200
-    assert len(response.data['results']) == len(fixture['get_qbd_CCC_mapping']['results'])-1
-    assert response.data['count'] == fixture['get_qbd_CCC_mapping']['count']-1
-    assert response.data['results'][0]['source_value'] == fixture['get_qbd_CCC_mapping']['results'][0]['source_value']
+    assert len(response.data['results']) == len(fixture['get_qbd_ccc_mapping']['results'])-1
+    assert response.data['count'] == fixture['get_qbd_ccc_mapping']['count']-1
+    assert response.data['results'][0]['source_value'] == fixture['get_qbd_ccc_mapping']['results'][0]['source_value']
 
     # get all unmapped rows (destination_value__isnull is true)
 
@@ -69,9 +71,10 @@ def test_qbd_mapping_view(api_client, test_connection):
     response = api_client.get(url, param)
 
     assert response.status_code == 200
-    assert len(response.data['results']) == len(fixture['get_qbd_CCC_mapping']['results'])-1
-    assert response.data['count'] == fixture['get_qbd_CCC_mapping']['count']-1
-    assert response.data['results'][0]['source_value'] == fixture['get_qbd_CCC_mapping']['results'][1]['source_value']
+    assert len(response.data['results']) == len(fixture['get_qbd_ccc_mapping']['results'])-1
+    assert response.data['count'] == fixture['get_qbd_ccc_mapping']['count']-1
+    assert response.data['results'][0]['source_value'] == fixture['get_qbd_ccc_mapping']['results'][1]['source_value']
+
 
 @pytest.mark.django_db(databases=['default'])
 def test_qbd_mapping_stats_view(api_client, test_connection):
@@ -95,5 +98,5 @@ def test_qbd_mapping_stats_view(api_client, test_connection):
     response = api_client.get(url, {'source_type': 'CORPORATE_CARD'})
 
     assert response.status_code==200
-    assert response.data['all_attributes_count']==fixture['get_qbd_CCC_mapping_state']['all_attributes_count']
-    assert response.data['unmapped_attributes_count']==fixture['get_qbd_CCC_mapping_state']['unmapped_attributes_count']
+    assert response.data['all_attributes_count']==fixture['get_qbd_ccc_mapping_state']['all_attributes_count']
+    assert response.data['unmapped_attributes_count']==fixture['get_qbd_ccc_mapping_state']['unmapped_attributes_count']

@@ -1,7 +1,7 @@
 import pytest
 from apps.mappings.connector import PlatformConnector
 from apps.mappings.models import QBDMapping
-from .fixture import fixture
+from .fixtures import fixture
 
 
 @pytest.mark.django_db(databases=['default'], transaction=True)
@@ -17,7 +17,7 @@ def test_sync_corporate_card(create_temp_workspace,
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
     qbd_connection.sync_corporate_card()
     qbd_mappings = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type = 'CORPORATE_CARD')
-    assert len(qbd_mappings) == len(fixture['get_qbd_CCC_mapping']['results'])
-    for i, item in enumerate(qbd_mappings):
-        assert qbd_mappings[i].source_value == fixture['get_qbd_CCC_mapping']['results'][i]['source_value']
+    assert len(qbd_mappings) == len(fixture['get_qbd_ccc_mapping']['results'])
+    for i, _ in enumerate(qbd_mappings):
+        assert qbd_mappings[i].source_value == fixture['get_qbd_ccc_mapping']['results'][i]['source_value']
 

@@ -24,7 +24,7 @@ class QBDMappingView(LookupFieldMixin, generics.ListCreateAPIView):
     ordering_fields = ('source_value',)
 
 
-#mapping stats view
+# Mapping stats view
 class QBDMappingStatsView(generics.RetrieveAPIView):
     """
     Stats for total mapped and unmapped count for a given attribute type

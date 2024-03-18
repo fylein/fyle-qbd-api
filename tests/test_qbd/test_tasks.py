@@ -268,7 +268,7 @@ def test_create_credit_card_purchases_iif_file_expense_vendor(
     create_temp_workspace, add_accounting_export_bills,
     add_accounting_export_expenses, add_fyle_credentials,
     add_export_settings, add_field_mappings, add_advanced_settings,
-    add_ccc_mapping, mocker
+    mocker
 ):
     """
     Test create credit card purchases iif file
@@ -331,7 +331,7 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
     create_temp_workspace, add_accounting_export_bills,
     add_accounting_export_expenses, add_fyle_credentials,
     add_export_settings, add_field_mappings, add_advanced_settings,
-    add_ccc_mapping, mocker
+    mocker
 ):
     """
     Test create credit card purchases iif file
@@ -399,8 +399,7 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
 def test_create_credit_card_purchases_iif_file_expense_fail(
     create_temp_workspace, add_accounting_export_bills,
     add_accounting_export_expenses, add_fyle_credentials,
-    add_export_settings, add_advanced_settings,
-    add_ccc_mapping, mocker
+    add_export_settings, add_advanced_settings, mocker
 ):
     """
     Test create credit card purchases iif file
@@ -455,7 +454,7 @@ def test_create_credit_card_purchases_iif_file_expense_fatal(
     create_temp_workspace, add_accounting_export_bills, 
     add_accounting_export_expenses, add_fyle_credentials,
     add_export_settings, add_field_mappings, add_advanced_settings,
-    add_ccc_mapping, mocker
+    mocker
 ):
     """
     Test create credit card purchases iif file
@@ -822,7 +821,7 @@ def test_email_failure(
     create_temp_workspace, add_accounting_export_bills,
     add_accounting_export_expenses, add_fyle_credentials,
     add_export_settings, add_field_mappings, add_advanced_settings,
-    add_ccc_mapping, mocker
+    mocker
 ):
     """
     Test create journals iif file Failed for email failure
