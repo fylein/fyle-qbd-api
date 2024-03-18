@@ -3,7 +3,7 @@ import pytest
 
 from apps.mappings.models import QBDMapping
 
-from tests.test_mapping.fixture import fixture
+from tests.test_mapping.fixtures import fixture
 
 @pytest.mark.django_db(databases=['default'])
 def test_sync_fyle_dimension_view(api_client, test_connection, mocker):
@@ -31,5 +31,5 @@ def test_sync_fyle_dimension_view(api_client, test_connection, mocker):
     qbd_mapping = QBDMapping.objects.filter(workspace_id=workspace_id)
 
     assert response.status_code == 200
-    assert len(qbd_mapping) == fixture['get_qbd_CCC_mapping']['count']
-    assert qbd_mapping[0].source_value == fixture['get_qbd_CCC_mapping']['results'][0]['source_value']
+    assert len(qbd_mapping) == fixture['get_qbd_ccc_mapping']['count']
+    assert qbd_mapping[0].source_value == fixture['get_qbd_ccc_mapping']['results'][0]['source_value']

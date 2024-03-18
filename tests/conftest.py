@@ -22,7 +22,7 @@ from apps.mappings.models import QBDMapping
 from quickbooks_desktop_api.tests import settings
 
 from .test_fyle.fixtures import fixtures as fyle_fixtures
-from .test_mapping.fixture import fixture as mapping_fixtures
+from .test_mapping.fixtures import fixture as mapping_fixtures
 
 
 @pytest.fixture

@@ -20,7 +20,7 @@ fixture = {
             ]
         }
     ],
-    'post_qbd_CCC_mapping': {
+    'post_qbd_ccc_mapping': {
         "id": 1,
         "attribute_type": "CORPORATE_CARD",
         "source_value": "AMERICAN EXPRESS - 4818",
@@ -30,7 +30,7 @@ fixture = {
         "updated_at": "2023-08-28T10:07:30.524503Z",
         "workspace": 1
     },
-    'get_qbd_CCC_mapping_state': {
+    'get_qbd_ccc_mapping_state': {
         "all_attributes_count":2,
         "unmapped_attributes_count":2
     },
@@ -46,7 +46,7 @@ fixture = {
             'source_id': 'baccEg1AzugNxZ', 
         }
     ],
-    'get_qbd_CCC_mapping': {
+    'get_qbd_ccc_mapping': {
         "count": 2,
         "next": "http://localhost:8008/api/workspaces/1/qbd_mappings/?attribute_type=CORPORATE_CARD",
         "previous": '',
