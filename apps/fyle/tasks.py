@@ -11,7 +11,7 @@ import traceback
 from django.db import transaction
 
 from fyle_integrations_platform_connector import PlatformConnector
-from fyle.platform.exceptions import RetryException
+from fyle.platform.exceptions import RetryException, NoPrivilegeError
 
 from apps.tasks.models import AccountingExport
 from apps.workspaces.models import Workspace, ExportSettings, FyleCredential
@@ -133,6 +133,14 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
             'message': 'Fyle Retry Exception occured'
         }
         accounting_export.status = 'FATAL'
+        accounting_export.save()
+
+    except NoPrivilegeError:
+        logger.info('The user has insufficient privilege error in workspace_id %s', workspace_id)
+        accounting_export.errors = {
+            'message': 'Fyle No Privilege Error occured'
+        }
+        accounting_export.status = 'FAILED'
         accounting_export.save()
 
     except Exception:
