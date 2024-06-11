@@ -88,7 +88,7 @@ class Expense(models.Model):
                     'expense_number': expense['expense_number'],
                     'org_id': expense['org_id'],
                     'claim_number': expense['claim_number'],
-                    'amount': expense['amount'],
+                    'amount': round(expense['amount'], 2),
                     'currency': expense['currency'],
                     'foreign_amount': expense['foreign_amount'],
                     'foreign_currency': expense['foreign_currency'],
@@ -108,7 +108,7 @@ class Expense(models.Model):
                     'fund_source': SOURCE_ACCOUNT_MAP[expense['source_account_type']],
                     'verified_at': expense['verified_at'],
                     'custom_properties': expense['custom_properties'],
-                    'tax_amount': expense['tax_amount'], 
+                    'tax_amount': round(expense['tax_amount'], 2) if expense['tax_amount'] is not None else None,
                     'tax_group_id': expense['tax_group_id'],
                     'billable': expense['billable'] if expense['billable'] else False
                 }
