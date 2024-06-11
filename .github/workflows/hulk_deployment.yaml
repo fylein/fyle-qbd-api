@@ -1,9 +1,6 @@
 name: Deploy to Hulk
 
 on:
-  create:
-    branches: 
-      - 'qbd_api_release_*'
   push:
     branches: 
       - 'qbd_api_release_*'
