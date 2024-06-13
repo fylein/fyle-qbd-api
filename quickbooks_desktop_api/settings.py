@@ -208,15 +208,11 @@ WSGI_APPLICATION = 'quickbooks_desktop_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# Defaulting django engine for qcluster
-if len(sys.argv) > 0 and sys.argv[1] == 'qcluster':
-    DATABASES = {
-        'default': dj_database_url.config()
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(engine='django_db_geventpool.backends.postgresql_psycopg2')
-    }
+DATABASES = {
+    'default': dj_database_url.config()
+}
+
+DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 
 DATABASES['cache_db'] = {
     'ENGINE': 'django.db.backends.sqlite3',
