@@ -68,7 +68,7 @@ jobs:
         run: |
           NEW_TAG=${{ steps.generate-and-push-tag.outputs.new_tag }}
           cd ${{ vars.STAGING_DEPLOY_REPO }}/${{ vars.STAGING_DEPLOY_DIR }}/hulk/integrations
-          kustomize edit set image docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_in-api=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api:$NEW_TAG
+          kustomize edit set image docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api:$NEW_TAG
 
       - name: Commit and push changes
         run: |
