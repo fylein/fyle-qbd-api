@@ -2,7 +2,7 @@
 Workspace Serializers
 """
 from rest_framework import serializers
-
+from django_q.tasks import async_task
 from django.core.cache import cache
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
@@ -19,7 +19,6 @@ from .models import (
     FieldMapping,
     AdvancedSetting
 )
-
 
 
 class WorkspaceSerializer(serializers.ModelSerializer):
@@ -184,5 +183,6 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
         if workspace.onboarding_state == 'ADVANCED_SETTINGS':
             workspace.onboarding_state = 'COMPLETE'
             workspace.save()
+            async_task('apps.workspaces.tasks.async_create_admin_subcriptions', workspace_id)
 
         return advanced_setting
