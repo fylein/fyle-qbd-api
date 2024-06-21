@@ -8,7 +8,7 @@ from apps.fyle.tasks import (
     import_credit_card_expenses,
     import_reimbursable_expenses
 )
-
+from apps.workspaces.models import Workspace
 from apps.tasks.models import AccountingExport
 
 
@@ -58,3 +58,16 @@ def queue_import_credit_card_expenses(workspace_id: int, synchronous: bool = Fal
         return
 
     import_credit_card_expenses(workspace_id, accounting_export)
+
+
+def async_handle_webhook_callback(body: dict) -> None:
+    """
+    Async'ly import and export expenses
+    :param body: bodys
+    :return: None
+    """
+    if body.get('action') == 'ACCOUNTING_EXPORT_INITIATED' and body.get('data'):
+        org_id = body['data']['org_id']
+
+        workspace = Workspace.objects.get(org_id=org_id)
+        async_task('apps.workspaces.tasks.run_import_export', workspace.id)

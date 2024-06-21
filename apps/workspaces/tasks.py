@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from fyle_rest_auth.helpers import get_fyle_admin
 
 from apps.fyle.queue import queue_import_credit_card_expenses, queue_import_reimbursable_expenses
@@ -10,11 +11,11 @@ from apps.qbd.queue import (
 )
 from apps.tasks.models import AccountingExport
 from apps.fyle.models import Expense
-
-from .models import ExportSettings, Workspace 
-
+from apps.workspaces.models import FyleCredential, ExportSettings, Workspace
+from fyle_integrations_platform_connector import PlatformConnector
 
 logger = logging.getLogger(__name__)
+logger.level = logging.INFO
 
 
 def run_import_export(workspace_id: int):
@@ -84,3 +85,18 @@ def async_update_workspace_name(workspace: Workspace, access_token: str):
 
     workspace.name = org_name
     workspace.save()
+
+
+def async_create_admin_subcriptions(workspace_id: int) -> None:
+    """
+    Create admin subscriptions
+    :param workspace_id: workspace id
+    :return: None
+    """
+    fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
+    platform = PlatformConnector(fyle_credentials)
+    payload = {
+        'is_enabled': True,
+        'webhook_url': '{}/workspaces/{}/fyle/webhook_callback/'.format(settings.API_URL, workspace_id)
+    }
+    platform.subscriptions.post(payload)

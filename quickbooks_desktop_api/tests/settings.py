@@ -241,6 +241,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+API_URL = os.environ.get('API_URL')
 FYLE_BASE_URL = os.environ.get('FYLE_BASE_URL')
 FYLE_APP_URL = os.environ.get('FYLE_APP_URL')
 FYLE_TOKEN_URI = os.environ.get('FYLE_TOKEN_URI')
