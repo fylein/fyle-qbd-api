@@ -5,6 +5,7 @@ All Tasks from which involve Fyle APIs
 2. Import Credit Card Expenses from Fyle
 """
 import logging
+from typing import Dict
 from datetime import datetime
 import traceback
 
@@ -12,6 +13,7 @@ from django.db import transaction
 
 from fyle_integrations_platform_connector import PlatformConnector
 from fyle.platform.exceptions import RetryException, NoPrivilegeError
+from fyle_integrations_platform_connector.apis.expenses import Expenses as FyleExpenses
 
 from apps.tasks.models import AccountingExport
 from apps.workspaces.models import Workspace, ExportSettings, FyleCredential
@@ -151,3 +153,21 @@ def import_credit_card_expenses(workspace_id, accounting_export: AccountingExpor
         accounting_export.status = 'FATAL'
         accounting_export.save()
         logger.exception('Something unexpected happened workspace_id: %s %s', accounting_export.workspace_id, accounting_export.errors)
+
+
+def update_non_exported_expenses(data: Dict) -> None:
+    """
+    To update expenses not in COMPLETE, IN_PROGRESS state
+    """
+    org_id = data['org_id']
+    expense_id = data['id']
+    workspace = Workspace.objects.get(org_id=org_id)
+    expense = Expense.objects.filter(workspace_id=workspace.id, expense_id=expense_id).first()
+
+    if expense and not expense.exported:
+        expense_obj = []
+        expense_obj.append(data)
+        expense_objects = FyleExpenses().construct_expense_object(expense_obj, expense.workspace_id)
+        Expense.create_expense_objects(
+            expense_objects, expense.workspace_id
+        )
