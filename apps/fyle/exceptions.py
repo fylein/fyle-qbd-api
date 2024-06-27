@@ -3,6 +3,7 @@ import logging
 from fyle.platform.exceptions import NoPrivilegeError, RetryException, InvalidTokenError as FyleInvalidTokenError
 from rest_framework.response import Response
 from rest_framework.views import status
+from rest_framework.exceptions import ValidationError
 
 from apps.workspaces.models import FyleCredential, Workspace, ExportSettings, AdvancedSetting
 from apps.tasks.models import AccountingExport
@@ -42,6 +43,10 @@ def handle_view_exceptions():
 
             except ExportSettings.DoesNotExist:
                 return Response({'message': 'Export Settings does not exist in workspace'}, status=status.HTTP_400_BAD_REQUEST)
+
+            except ValidationError as e:
+                logger.exception(e)
+                return Response({"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
 
             except Exception as exception:
                 logger.exception(exception)

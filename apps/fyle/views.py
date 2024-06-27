@@ -31,6 +31,6 @@ class WebhookCallbackView(generics.CreateAPIView):
 
     @handle_view_exceptions()
     def post(self, request, *args, **kwargs):
-        async_handle_webhook_callback(request.data)
+        async_handle_webhook_callback(request.data, int(kwargs['workspace_id']))
 
         return Response(data={}, status=status.HTTP_200_OK)

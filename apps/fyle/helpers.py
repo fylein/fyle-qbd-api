@@ -5,8 +5,9 @@ import requests
 
 from django.conf import settings
 from fyle.platform import Platform
+from rest_framework.exceptions import ValidationError
 
-from apps.workspaces.models import FyleCredential
+from apps.workspaces.models import Workspace, FyleCredential
 
 
 def post_request(url, body, refresh_token=None):
@@ -142,3 +143,13 @@ def download_iif_file(file_id: str, workspace_id: int):
     )['data'][0]['download_url']
 
     return download_url
+
+
+def assert_valid_request(workspace_id:int, org_id:str):
+    """
+    Assert if the request is valid by checking
+    the url_workspace_id and fyle_org_id workspace
+    """
+    workspace = Workspace.objects.get(org_id=org_id)
+    if workspace.id != workspace_id:
+        raise ValidationError('Workspace mismatch')
