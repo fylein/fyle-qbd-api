@@ -69,49 +69,59 @@ class Expense(models.Model):
         db_table = 'expenses'
 
     @staticmethod
-    def create_expense_objects(expenses: List[Dict], workspace_id: int):
+    def create_expense_objects(expenses: List[Dict], workspace_id: int, skip_update: bool = True):
         """
         Bulk create expense objects
         """
         expense_objects = []
 
         for expense in expenses:
+            expense_data_to_append = None
+            if not skip_update:
+                expense_data_to_append = {
+                    'claim_number': expense['claim_number'],
+                    'approved_at': expense['approved_at'],
+                }
+
+            defaults = {
+                'employee_email': expense['employee_email'],
+                'employee_name': expense['employee_name'],
+                'category': expense['category'],
+                'sub_category': expense['sub_category'],
+                'project': expense['project'],
+                'expense_number': expense['expense_number'],
+                'org_id': expense['org_id'],
+                'amount': round(expense['amount'], 2),
+                'currency': expense['currency'],
+                'foreign_amount': expense['foreign_amount'],
+                'foreign_currency': expense['foreign_currency'],
+                'reimbursable': expense['reimbursable'],
+                'state': expense['state'],
+                'vendor': expense['vendor'][:250] if expense['vendor'] else None,
+                'cost_center': expense['cost_center'],
+                'corporate_card_id': expense['corporate_card_id'],
+                'purpose': expense['purpose'],
+                'report_id': expense['report_id'],
+                'file_ids': expense['file_ids'],
+                'spent_at': expense['spent_at'],
+                'posted_at': expense['posted_at'],
+                'expense_created_at': expense['expense_created_at'],
+                'expense_updated_at': expense['expense_updated_at'],
+                'fund_source': SOURCE_ACCOUNT_MAP[expense['source_account_type']],
+                'verified_at': expense['verified_at'],
+                'custom_properties': expense['custom_properties'],
+                'tax_amount': round(expense['tax_amount'], 2) if expense['tax_amount'] is not None else None,
+                'tax_group_id': expense['tax_group_id'],
+                'billable': expense['billable'] if expense['billable'] else False
+            }
+
+            if expense_data_to_append:
+                defaults.update(expense_data_to_append)
+
             expense_object, _ = Expense.objects.update_or_create(
                 expense_id=expense['id'],
                 workspace_id=workspace_id,
-                defaults={
-                    'employee_email': expense['employee_email'],
-                    'employee_name': expense['employee_name'],
-                    'category': expense['category'],
-                    'sub_category': expense['sub_category'],
-                    'project': expense['project'],
-                    'expense_number': expense['expense_number'],
-                    'org_id': expense['org_id'],
-                    'claim_number': expense['claim_number'],
-                    'amount': round(expense['amount'], 2),
-                    'currency': expense['currency'],
-                    'foreign_amount': expense['foreign_amount'],
-                    'foreign_currency': expense['foreign_currency'],
-                    'reimbursable': expense['reimbursable'],
-                    'state': expense['state'],
-                    'vendor': expense['vendor'][:250] if expense['vendor'] else None,
-                    'cost_center': expense['cost_center'],
-                    'corporate_card_id': expense['corporate_card_id'],
-                    'purpose': expense['purpose'],
-                    'report_id': expense['report_id'],
-                    'file_ids': expense['file_ids'],
-                    'spent_at': expense['spent_at'],
-                    'approved_at': expense['approved_at'],
-                    'posted_at': expense['posted_at'],
-                    'expense_created_at': expense['expense_created_at'],
-                    'expense_updated_at': expense['expense_updated_at'],
-                    'fund_source': SOURCE_ACCOUNT_MAP[expense['source_account_type']],
-                    'verified_at': expense['verified_at'],
-                    'custom_properties': expense['custom_properties'],
-                    'tax_amount': round(expense['tax_amount'], 2) if expense['tax_amount'] is not None else None,
-                    'tax_group_id': expense['tax_group_id'],
-                    'billable': expense['billable'] if expense['billable'] else False
-                }
+                defaults=defaults
             )
             expense_objects.append(expense_object)
 
