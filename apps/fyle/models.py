@@ -69,7 +69,7 @@ class Expense(models.Model):
         db_table = 'expenses'
 
     @staticmethod
-    def create_expense_objects(expenses: List[Dict], workspace_id: int, skip_update: bool = True):
+    def create_expense_objects(expenses: List[Dict], workspace_id: int, skip_update: bool = False):
         """
         Bulk create expense objects
         """
