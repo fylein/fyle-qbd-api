@@ -231,10 +231,6 @@ class FieldMapping(models.Model):
         max_length=255, help_text='Class Mapped to Fyle Field', null=True)
     project_type = models.CharField(
         max_length=255, help_text='Project Mapped to Fyle Field', null=True)
-    item_type = models.CharField(
-      max_length=255, help_text='Item Mapped to Fyle Field', null=True)
-    custom_fields = ArrayField(
-		  models.CharField(max_length=100), blank=True, default=list)
 
     class Meta:
         db_table = 'field_mapping'
