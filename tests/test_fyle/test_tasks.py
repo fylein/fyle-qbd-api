@@ -299,10 +299,11 @@ def test_update_non_exported_expenses(db, create_temp_workspace, mocker, api_cli
     except ValidationError as e:
         assert e.detail[0] == 'Workspace mismatch'
 
-    url = reverse('webhook-callback', kwargs={'workspace_id': 1})
-    response = api_client.post(url, data=payload, format='json')
-    assert response.status_code == status.HTTP_200_OK
+#     uncomment this while using the webhook callback for edit expense
+#     url = reverse('webhook-callback', kwargs={'workspace_id': 1})
+#     response = api_client.post(url, data=payload, format='json')
+#     assert response.status_code == status.HTTP_200_OK
 
-    url = reverse('webhook-callback', kwargs={'workspace_id': 2})
-    response = api_client.post(url, data=payload, format='json')
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
+#     url = reverse('webhook-callback', kwargs={'workspace_id': 2})
+#     response = api_client.post(url, data=payload, format='json')
+#     assert response.status_code == status.HTTP_400_BAD_REQUEST
