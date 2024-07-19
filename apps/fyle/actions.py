@@ -18,6 +18,6 @@ def sync_fyle_dimensions(workspace_id: int):
         qbd_connection.sync_cost_center(field_mapping.item_type)
     
     if field_mapping.item_type not in ['PROJECT', 'COST_CENTER']:
-        map_fields = True
+        sync_custom_field_options = True
     
-    qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, map_fields)
+    qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
