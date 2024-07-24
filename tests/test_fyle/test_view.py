@@ -66,7 +66,7 @@ def test_sync_fyle_dimension_projects(api_client, test_connection, mocker):
 
 def test_sync_fyle_dimension_cost_center(api_client, test_connection, mocker):
     mocker.patch(
-            'fyle.platform.apis.v1beta.admin.cost_center.list_all',
+            'fyle.platform.apis.v1beta.admin.cost_centers.list_all',
             return_value=fixture['cost_center_list']
         )
     url = reverse(
