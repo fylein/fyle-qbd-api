@@ -138,7 +138,7 @@ fixture = {
             },
         ]
     },
-        'get_qbd_ccc_mapping_project': {
+    'get_qbd_ccc_mapping_project': {
         "count": 2,
         "next": "http://localhost:8008/api/workspaces/1/qbd_mappings/?attribute_type=ITEMS",
         "previous": '',
