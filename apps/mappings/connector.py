@@ -96,3 +96,61 @@ def sync_custom_field(self, source_type: str, field_mapping: FieldMapping, sync_
                 })
 		if source_attributes:
 			QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
+
+
+def sync_projects(self, source_type: str):
+	""" 
+	Sync PROJECT as Item
+	"""
+	
+	query = {
+	   'order': 'updated_at.desc'
+	}
+	
+	projects_generator = self.platform.v1beta.admin.projects.list_all(query)
+	existing_projects = QBDMapping.objects.filter(attribute_type=source_type)
+	
+	source_attributes = []
+	
+	for projects in projects_generator:
+		for project in projects.get('data'):
+			if project['sub_project']:
+				project['name'] = '{0} / {1}'.format(project['name'], project['sub_project'])
+				if project['name'] not in existing_projects:
+					source_attributes.append({
+                        'attribute_type': source_type,
+                        'source_value': project['name'],
+                        'source_id': project['id']
+					})
+					
+					
+	if source_attributes:
+		QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
+		
+
+def sync_cost_center(self, source_type: str):
+	""" 
+	Sync PROJECT as Item
+	"""
+	
+	query = {
+	   'order': 'updated_at.desc'
+	}
+	
+	cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
+	existing_cost_centers = QBDMapping.objects.filter(attribute_type=source_type)
+	
+	source_attributes = []
+	
+	for cost_centers in cost_center_generator:
+		for cost_center in cost_centers.get('data'):
+			if cost_center['name'] not in existing_cost_centers:
+					source_attributes.append({
+						'attribute_type': source_type,
+						'source_value': cost_center['name'],
+						'source_id': cost_center['id']
+					})
+					
+					
+	if source_attributes:
+		QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
