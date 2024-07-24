@@ -13,6 +13,27 @@ from apps.workspaces.models import (
 from apps.mappings.models import QBDMapping
 
 
+def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense):
+    item_type = field_mapping.item_type
+    expense_item = None
+    expense_category = expense.get('category')
+
+    if item_type in ['PROJECT', 'COST_CENTER']:
+        expense_item = expense.get(item_type)
+    else:
+        # Modify item_type to match the format in custom_properties
+        modified_item_type = item_type.replace('_', ' ').title()
+        expense_item = expense.get('custom_properties', {}).get(item_type)
+        
+    if item_type and expense_item and expense_category:
+        item_mapped_account = QBDMapping.objects.filter(attribute_type=modified_item_type, source_value=expense_item).first()
+                                                    
+        if item_mapped_account:
+            return expense_item, item_mapped_account
+
+    return '', expense_category
+
+
 def get_class_and_project_name(field_mappings: FieldMapping, expense: Expense):
     """
     According to class_type, project_type return the value of project, class field
@@ -515,10 +536,14 @@ class CreditCardPurchaseLineitem(models.Model):
                 field_mappings, expense
             )
 
+            inv_item, account = get_item_and_account_name(
+                field_mappings, expense
+            )
+
             lineitem = CreditCardPurchaseLineitem.objects.create(
                 transaction_type='CREDIT CARD' if expense.amount > 0 else 'CCARD REFUND',
                 date=get_transaction_date(expenses, date_preference=export_settings.credit_card_expense_date),
-                account=expense.category,
+                account=account,
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
@@ -526,7 +551,8 @@ class CreditCardPurchaseLineitem(models.Model):
                 reimbursable_expense='No',
                 credit_card_purchase=credit_card_purchase,
                 expense=expense,
-                workspace_id=workspace_id
+                workspace_id=workspace_id,
+                inventory_item=inv_item
             )
 
             lineitems.append(lineitem)
