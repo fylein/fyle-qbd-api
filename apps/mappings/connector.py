@@ -68,9 +68,9 @@ def sync_custom_field(self, source_type: str, field_mapping: FieldMapping, sync_
 	   'type': 'eq.SELECT',
 	   'is_enabled': 'eq.true'
 	}
-	
+	workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
 	custom_fields = self.platform.v1beta.admin.expense_custom_fields.list_all(query)
-	query = QBDMapping.objects.filter(attribute_type=source_type)
+	query = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=source_type)
 	existing_source_attributes = query.values_list('value', flat=True)				
 	
 	distinct_custom_fields = []
@@ -106,9 +106,9 @@ def sync_projects(self, source_type: str):
 	query = {
 	   'order': 'updated_at.desc'
 	}
-	
+	workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
 	projects_generator = self.platform.v1beta.admin.projects.list_all(query)
-	existing_projects = QBDMapping.objects.filter(attribute_type=source_type)
+	existing_projects = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=source_type)
 	
 	source_attributes = []
 	
@@ -136,9 +136,9 @@ def sync_cost_center(self, source_type: str):
 	query = {
 	   'order': 'updated_at.desc'
 	}
-	
+	workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
 	cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
-	existing_cost_centers = QBDMapping.objects.filter(attribute_type=source_type)
+	existing_cost_centers = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=source_type)
 	
 	source_attributes = []
 	
