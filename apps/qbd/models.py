@@ -18,12 +18,12 @@ def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense):
     expense_item = None
     expense_category = expense.get('category')
 
-    if item_type in ['PROJECT', 'COST_CENTER']:
-        expense_item = expense.get(item_type)
+    if item_type.upper() in ['PROJECT', 'COST_CENTER']:
+        expense_item = expense.get(item_type.lower())
     else:
         # Modify item_type to match the format in custom_properties
         modified_item_type = item_type.replace('_', ' ').title()
-        expense_item = expense.get('custom_properties', {}).get(item_type)
+        expense_item = expense.get('custom_properties', {}).get(modified_item_type)
         
     if item_type and expense_item and expense_category:
         item_mapped_account = QBDMapping.objects.filter(attribute_type=modified_item_type, source_value=expense_item).first()
