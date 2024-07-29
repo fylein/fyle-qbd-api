@@ -211,8 +211,14 @@ def add_field_mappings():
             workspace_id=workspace_id,
             class_type='COST_CENTER' if workspace_id in [1, 2] else 'PROJECT',
             project_type='PROJECT' if workspace_id in [1, 2] else 'COST_CENTER',
-            item_type='ITEM_TYPE_1' if workspace_id == 1 else 'ITEM_TYPE_2' if workspace_id == 2 else 'ITEM_TYPE_3',
-            custom_fields=['custom_field_1', 'custom_field_2'] if workspace_id in [1, 2] else ['custom_field_3', 'custom_field_4'],
+            item_type='ITEM_TYPE_1' if workspace_id == 1 else (
+                'ITEM_TYPE_2' if workspace_id == 2 else 'ITEM_TYPE_3'
+            ),
+            custom_fields=(
+                ['custom_field_1', 'custom_field_2'] 
+                if workspace_id in [1, 2] 
+                else ['custom_field_3', 'custom_field_4']
+            ),
         )
 
 
