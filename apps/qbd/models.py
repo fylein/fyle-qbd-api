@@ -16,14 +16,14 @@ from apps.mappings.models import QBDMapping
 def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense):
     item_type = field_mapping.item_type
     expense_item = None
-    expense_category = expense.get('category')
+    expense_category = expense.category
 
     if item_type.upper() in ['PROJECT', 'COST_CENTER']:
-        expense_item = expense.get(item_type.lower())
+        expense_item = getattr(field_mapping, item_type.lower())
     else:
         # Modify item_type to match the format in custom_properties
         modified_item_type = item_type.replace('_', ' ').title()
-        expense_item = expense.get('custom_properties', {}).get(modified_item_type)
+        expense_item = getattr(expense, 'custom_properties', {}).get(modified_item_type)
         
     if item_type and expense_item and expense_category:
         item_mapped_account = QBDMapping.objects.filter(attribute_type=modified_item_type, source_value=expense_item).first()
