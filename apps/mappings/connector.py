@@ -68,7 +68,7 @@ class PlatformConnector:
         'type': 'eq.SELECT',
         'is_enabled': 'eq.true'
         }
-        custom_fields = self.platform.v1beta.admin.expense_custom_fields.list_all(query)
+        custom_fields = self.platform.v1beta.admin.expense_fields.list_all(query)
         query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
         existing_source_attributes = query.values_list('value', flat=True)
         
@@ -96,7 +96,6 @@ class PlatformConnector:
             if source_attributes:
                 QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
 
-
     def sync_projects(self, source_type: str):
         """ 
         Sync PROJECT as Item
@@ -117,18 +116,17 @@ class PlatformConnector:
                     if project['name'] not in existing_projects:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'source_value': project['name'],
+                            'value': project['name'],
                             'source_id': project['id']
                         })
                         
                         
         if source_attributes:
             QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
-        
 
     def sync_cost_center(self, source_type: str):
         """ 
-        Sync PROJECT as Item
+        Sync COST CENTER as Item
         """
         
         query = {
@@ -141,11 +139,11 @@ class PlatformConnector:
         
         for cost_centers in cost_center_generator:
             for cost_center in cost_centers.get('data'):
-                if cost_center['name'] not in existing_cost_centers:
+                if cost_center not in existing_cost_centers:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'source_value': cost_center['name'],
-                            'source_id': cost_center['id']
+                            'value': cost_center,
+                            'source_id': cost_center
                         })
                         
                         
