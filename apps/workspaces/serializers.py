@@ -5,13 +5,13 @@ from typing import Dict
 from rest_framework import serializers
 from django_q.tasks import async_task
 from django.core.cache import cache
+from apps.fyle import apps
 from apps.mappings.models import QBDMapping
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
 
 from apps.fyle.helpers import get_cluster_domain
 from quickbooks_desktop_api.utils import assert_valid
-from apps.fyle.actions import sync_fyle_dimensions
 
 from .schedule import schedule_run_import_export
 from .models import (
@@ -155,7 +155,7 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             """
             Sync dimension asyncly
             """
-            async_task('sync_fyle_dimensions', workspace.id)
+            async_task(apps.fyle.actions.sync_fyle_dimensions, workspace.id)
 
         return field_mapping
 
