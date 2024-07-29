@@ -215,8 +215,8 @@ def add_field_mappings():
                 'ITEM_TYPE_2' if workspace_id == 2 else 'ITEM_TYPE_3'
             ),
             custom_fields=(
-                ['custom_field_1', 'custom_field_2'] 
-                if workspace_id in [1, 2] 
+                ['custom_field_1', 'custom_field_2']
+                if workspace_id in [1, 2]
                 else ['custom_field_3', 'custom_field_4']
             ),
         )
