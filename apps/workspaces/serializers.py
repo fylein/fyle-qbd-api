@@ -1,14 +1,17 @@
 """
 Workspace Serializers
 """
+from typing import Dict
 from rest_framework import serializers
 from django_q.tasks import async_task
 from django.core.cache import cache
+from apps.mappings.models import QBDMapping
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
 
 from apps.fyle.helpers import get_cluster_domain
 from quickbooks_desktop_api.utils import assert_valid
+from apps.fyle.actions import sync_fyle_dimensions
 
 from .schedule import schedule_run_import_export
 from .models import (
@@ -19,6 +22,11 @@ from .models import (
     FieldMapping,
     AdvancedSetting
 )
+
+def pre_save_field_mapping_trigger(new_field_mapping: Dict, field_mapping: FieldMapping, workspace_id):
+    item_type = new_field_mapping.get('item_type')
+    if item_type and item_type != field_mapping.item_type and item_type in ['PROJECT', 'COST_CENTER']:
+        QBDMapping.objects.filter(attribute_type=field_mapping.item_type, workspace_id=workspace_id).delete()
 
 
 class WorkspaceSerializer(serializers.ModelSerializer):
@@ -133,6 +141,10 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             defaults=validated_data
         )
 
+        """
+        Remove the old mappings if the Item is mapped to some other field
+        """
+        pre_save_field_mapping_trigger(validated_data, field_mapping, workspace_id)
 
         # Update workspace onboarding state
         workspace = field_mapping.workspace
@@ -140,6 +152,10 @@ class FieldMappingSerializer(serializers.ModelSerializer):
         if workspace.onboarding_state == 'FIELD_MAPPINGS':
             workspace.onboarding_state = 'ADVANCED_SETTINGS'
             workspace.save()
+            """
+            Sync dimension asyncly
+            """
+            async_task('sync_fyle_dimensions', workspace.id)
 
         return field_mapping
 
