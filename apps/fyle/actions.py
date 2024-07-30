@@ -9,10 +9,9 @@ def sync_fyle_dimensions(workspace_id: int):
 
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
     qbd_connection.sync_corporate_card()
+    field_mapping = FieldMapping.objects.filter(workspace_id=workspace_id).first()
 
     if field_mapping:
-        field_mapping = FieldMapping.objects.filter(workspace_id=workspace_id).first()
-        
         sync_custom_field_options = False 
         
         if field_mapping:
@@ -22,7 +21,7 @@ def sync_fyle_dimensions(workspace_id: int):
                 qbd_connection.sync_cost_center(field_mapping.item_type)
             else:
                 sync_custom_field_options = True
-        
+
             qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
     else:
         return
