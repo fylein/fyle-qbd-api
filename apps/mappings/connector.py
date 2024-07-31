@@ -61,7 +61,7 @@ class PlatformConnector:
         :sync_custom_field_options: bool, when set to true, we create the QBDMapping 
                     else only update the values of custom_fields in field_mapping table
         """
-        
+
         query = {
         'order': 'updated_at.desc',
         'is_custom': 'eq.true',
@@ -70,7 +70,7 @@ class PlatformConnector:
         }
         custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
         query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
-        existing_source_attributes = query.values_list('value', flat=True)
+        existing_source_attributes = query.values_list('source_value', flat=True)
         
         distinct_custom_fields = []
         source_values = []
@@ -91,7 +91,7 @@ class PlatformConnector:
                 if source_value not in existing_source_attributes:
                     source_attributes.append({
                         'attribute_type': source_type,
-                        'source_value': source_value,
+                        'value': source_value,
                         'source_id': source_value
                     })
             if source_attributes:
@@ -117,7 +117,7 @@ class PlatformConnector:
                     if project['name'] not in existing_projects:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'source_value': project['name'],
+                            'value': project['name'],
                             'source_id': project['id']
                         })
                         
@@ -143,7 +143,7 @@ class PlatformConnector:
                 if cost_center not in existing_cost_centers:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'source_value': cost_center,
+                            'value': cost_center,
                             'source_id': cost_center
                         })
                         

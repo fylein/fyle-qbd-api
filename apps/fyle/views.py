@@ -46,23 +46,24 @@ class CustomFieldView(generics.RetrieveAPIView):
         """
         Get Custom Fields
         """
+        query = {
+        'order': 'updated_at.desc',
+        'is_custom': 'eq.true',
+        'type': 'eq.SELECT',
+        'is_enabled': 'eq.true'
+        }
+        
         workspace_id = self.kwargs['workspace_id']
-
-        fyle_credentails = FyleCredential.objects.get(workspace_id=workspace_id)
-
-        platform = PlatformConnector(fyle_credentails)
-
-        custom_fields = platform.expense_custom_fields.list_all()
-
-        response = []
-        for custom_field in custom_fields:
-            if custom_field['type'] in ('SELECT', 'NUMBER', 'TEXT', 'BOOLEAN'):
-                response.append({
-                    'label': custom_field['field_name'],
-                    'value': custom_field['field_name']
-                })
+        platform_connector = PlatformConnector(workspace_id)
+        custom_field_gen = platform_connector.platform.v1beta.admin.expense_fields.list_all(query)
+        
+        distinct_custom_fields = []
+        
+        for custom_fields in custom_field_gen:
+            for custom_field in custom_fields.get('data'):
+                distinct_custom_fields.append(custom_field['field_name'])
 
         return Response(
-            data=response,
+            data=distinct_custom_fields,
             status=status.HTTP_200_OK
         )
