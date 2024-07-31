@@ -68,18 +68,19 @@ class PlatformConnector:
         'type': 'eq.SELECT',
         'is_enabled': 'eq.true'
         }
-        custom_fields = self.platform.v1beta.admin.expense_fields.list_all(query)
+        custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
         query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
         existing_source_attributes = query.values_list('value', flat=True)
         
         distinct_custom_fields = []
         source_values = []
         
-        for custom_field in custom_fields:
-            distinct_custom_fields.append(custom_field['field_name'])
-            if source_type == custom_field['field_name']:
-                source_values.extend(custom_field['options'])
-        
+        for custom_fields in custom_field_gen:
+            for custom_field in custom_fields.get('data'):
+                distinct_custom_fields.append(custom_field['field_name'])
+                if source_type == custom_field['field_name']:
+                    source_values.extend(custom_field['options'])
+
         if distinct_custom_fields:
             field_mapping.custom_fields = distinct_custom_fields
             field_mapping.save()

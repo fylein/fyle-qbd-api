@@ -23,5 +23,3 @@ def sync_fyle_dimensions(workspace_id: int):
                 sync_custom_field_options = True
 
             qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
-    else:
-        return
