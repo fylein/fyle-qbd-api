@@ -117,7 +117,7 @@ class PlatformConnector:
                     if project['name'] not in existing_projects:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'value': project['name'],
+                            'source_value': project['name'],
                             'source_id': project['id']
                         })
                         
@@ -143,7 +143,7 @@ class PlatformConnector:
                 if cost_center not in existing_cost_centers:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'value': cost_center,
+                            'source_value': cost_center,
                             'source_id': cost_center
                         })
                         

@@ -14,12 +14,11 @@ def sync_fyle_dimensions(workspace_id: int):
     if field_mapping:
         sync_custom_field_options = False 
         
-        if field_mapping:
-            if field_mapping.item_type == 'PROJECT':
-                qbd_connection.sync_projects(field_mapping.item_type)
-            elif field_mapping.item_type == 'COST_CENTER':
-                qbd_connection.sync_cost_center(field_mapping.item_type)
-            else:
-                sync_custom_field_options = True
+        if field_mapping.item_type == 'PROJECT':
+            qbd_connection.sync_projects(field_mapping.item_type)
+        elif field_mapping.item_type == 'COST_CENTER':
+            qbd_connection.sync_cost_center(field_mapping.item_type)
+        else:
+            sync_custom_field_options = True
 
-            qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
+        qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
