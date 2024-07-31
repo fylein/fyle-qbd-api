@@ -4,6 +4,8 @@ from rest_framework.views import status
 
 from apps.fyle.exceptions import handle_view_exceptions
 from apps.fyle.queue import async_handle_webhook_callback
+from apps.mappings.connector import PlatformConnector
+from apps.workspaces.models import FyleCredential
 
 from .actions import sync_fyle_dimensions
 
@@ -34,3 +36,33 @@ class WebhookCallbackView(generics.CreateAPIView):
         async_handle_webhook_callback(request.data, int(kwargs['workspace_id']))
 
         return Response(data={}, status=status.HTTP_200_OK)
+
+
+class CustomFieldView(generics.RetrieveAPIView):
+    """
+    Custom Field view
+    """
+    def get(self, request, *args, **kwargs):
+        """
+        Get Custom Fields
+        """
+        workspace_id = self.kwargs['workspace_id']
+
+        fyle_credentails = FyleCredential.objects.get(workspace_id=workspace_id)
+
+        platform = PlatformConnector(fyle_credentails)
+
+        custom_fields = platform.expense_custom_fields.list_all()
+
+        response = []
+        for custom_field in custom_fields:
+            if custom_field['type'] in ('SELECT', 'NUMBER', 'TEXT', 'BOOLEAN'):
+                response.append({
+                    'label': custom_field['field_name'],
+                    'value': custom_field['field_name']
+                })
+
+        return Response(
+            data=response,
+            status=status.HTTP_200_OK
+        )
