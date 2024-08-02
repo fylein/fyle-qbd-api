@@ -56,8 +56,7 @@ class PlatformConnector:
     def sync_custom_field(
             self, source_type: str,
             field_mapping: FieldMapping,
-            sync_custom_field_options: bool = False,
-            sync_expense_custom_field_names: bool = True):
+            sync_expense_custom_field_names: bool = False):
         """ 
         Sync custom fields that are mapped to the Item in the FieldMapping
         :source_type: The Custom Field Items is mapped to
@@ -89,7 +88,7 @@ class PlatformConnector:
             field_mapping.custom_fields = distinct_custom_fields
             field_mapping.save()
             
-        if sync_custom_field_options:
+        if sync_expense_custom_field_names:
             source_attributes = []
             for source_value in source_values:
                 if source_value not in existing_source_attributes:

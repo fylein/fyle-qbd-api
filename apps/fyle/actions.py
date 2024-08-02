@@ -12,7 +12,7 @@ def sync_fyle_dimensions(workspace_id: int):
     field_mapping = FieldMapping.objects.filter(workspace_id=workspace_id).first()
 
     if field_mapping:
-        sync_custom_field_options = False 
+        sync_expense_custom_field_names = False 
         
         if field_mapping.item_type == 'PROJECT':
             qbd_connection.sync_projects(field_mapping.item_type)
@@ -20,8 +20,8 @@ def sync_fyle_dimensions(workspace_id: int):
             qbd_connection.sync_cost_center(field_mapping.item_type)
         
         if(field_mapping.item_type):
-            sync_custom_field_options = True
+            sync_expense_custom_field_names = True
         else:
-            sync_custom_field_options = False
+            sync_expense_custom_field_names = False
 
-        qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_custom_field_options)
+        qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_expense_custom_field_names)
