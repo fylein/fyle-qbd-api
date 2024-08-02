@@ -118,7 +118,7 @@ class ExportSettingsSerializer(serializers.ModelSerializer):
             workspace.onboarding_state = 'FIELD_MAPPINGS'
             workspace.save()
         
-        async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
+            async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
 
         return export_settings
 
