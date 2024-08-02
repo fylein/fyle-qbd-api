@@ -83,7 +83,8 @@ class WorkspaceSerializer(serializers.ModelSerializer):
             FieldMapping.objects.update_or_create(
                 workspace=workspace
             )
-
+        async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
+        
         return workspace
 
 
