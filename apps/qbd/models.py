@@ -32,7 +32,7 @@ def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, wor
     if item_type and expense_item and expense_category:
         item_mapped_account = QBDMapping.objects.filter(
             workspace_id=workspace_id,
-            attribute_type=modified_item_type,
+            attribute_type=item_type,
             source_value=expense_item).first()
                                                     
         if item_mapped_account:

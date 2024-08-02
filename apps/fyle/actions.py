@@ -11,9 +11,9 @@ def sync_fyle_dimensions(workspace_id: int):
     qbd_connection.sync_corporate_card()
     field_mapping = FieldMapping.objects.filter(workspace_id=workspace_id).first()
 
+    sync_expense_custom_field_names = False 
+
     if field_mapping:
-        sync_expense_custom_field_names = False 
-        
         if field_mapping.item_type == 'PROJECT':
             qbd_connection.sync_projects(field_mapping.item_type)
         elif field_mapping.item_type == 'COST_CENTER':
