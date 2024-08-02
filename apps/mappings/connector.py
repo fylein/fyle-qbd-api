@@ -53,7 +53,11 @@ class PlatformConnector:
             if len(card_attributes) > 0:
                 QBDMapping.update_or_create_mapping_objects(card_attributes, self.workspace_id)
 
-    def sync_custom_field(self, source_type: str, field_mapping: FieldMapping, sync_custom_field_options: bool = False, sync_expense_custom_field_names: bool = True):
+    def sync_custom_field(
+            self, source_type: str,
+            field_mapping: FieldMapping,
+            sync_custom_field_options: bool = False,
+            sync_expense_custom_field_names: bool = True):
         """ 
         Sync custom fields that are mapped to the Item in the FieldMapping
         :source_type: The Custom Field Items is mapped to

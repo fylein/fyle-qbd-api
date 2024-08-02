@@ -29,7 +29,10 @@ def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, wor
         expense_item = custom_properties.get(item_type.lower())
         
     if item_type and expense_item and expense_category:
-        item_mapped_account = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=item_type, source_value=expense_item).first()
+        item_mapped_account = QBDMapping.objects.filter(
+            workspace_id=workspace_id,
+            attribute_type=item_type,
+            source_value=expense_item).first()
                                                     
         if item_mapped_account:
             return expense_item, item_mapped_account
@@ -626,11 +629,11 @@ class Journal(models.Model):
                 name = expenses[0].employee_name
             else:
                 name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
-            
+
             date_preference = export_settings.credit_card_expense_date
-        
+
         corporate_card_name = get_corporate_card_name(expenses[0].corporate_card_id, workspace_id, export_settings)
-        
+
         default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
             if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
 

@@ -5,7 +5,6 @@ from typing import Dict
 from rest_framework import serializers
 from django_q.tasks import async_task
 from django.core.cache import cache
-from apps.fyle import apps
 from apps.mappings.models import QBDMapping
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
@@ -103,7 +102,7 @@ class ExportSettingsSerializer(serializers.ModelSerializer):
         """
         assert_valid(validated_data, 'Body cannot be null')
         workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
-    
+
         export_settings = ExportSettings.objects.filter(
             workspace_id=workspace_id).first()
 
@@ -162,7 +161,7 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
 
         return field_mapping
-    
+
     def validate(self, data):
         """
         Check that item_type is not already used in project_type or class_type
@@ -172,13 +171,13 @@ class FieldMappingSerializer(serializers.ModelSerializer):
         class_type = data.get('class_type')
 
         if item_type in ['COST_CENTER', 'PROJECT']:
-        # Checking if item_type is already used in project_type or class_type
-         if item_type == project_type or item_type == class_type:
-          raise serializers.ValidationError({
-            'item_type': 'This value is already used in project_type or class_type'
-          })
+            # Checking if item_type is already used in project_type or class_type
+            if item_type == project_type or item_type == class_type:
+                raise serializers.ValidationError({
+                    'item_type': 'This value is already used in project_type or class_type'
+                })
 
-        return data
+            return data
 
 
 class AdvancedSettingSerializer(serializers.ModelSerializer):
