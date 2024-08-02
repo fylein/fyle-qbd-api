@@ -160,7 +160,7 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             """
             Sync dimension asyncly
             """
-            async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
+        async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
 
         return field_mapping
 
