@@ -68,10 +68,10 @@ class PlatformConnector:
         """
 
         query = {
-        'order': 'updated_at.desc',
-        'is_custom': 'eq.true',
-        'type': 'eq.SELECT',
-        'is_enabled': 'eq.true'
+            'order': 'updated_at.desc',
+            'is_custom': 'eq.true',
+            'type': 'eq.SELECT',
+            'is_enabled': 'eq.true'
         }
         custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
         if source_type:
@@ -87,7 +87,7 @@ class PlatformConnector:
                 if source_type and source_type == custom_field['field_name']:
                     source_values.extend(custom_field['options'])
 
-        if distinct_custom_fields and sync_expense_custom_field_names:
+        if distinct_custom_fields:
             field_mapping.custom_fields = distinct_custom_fields
             field_mapping.save()
             
