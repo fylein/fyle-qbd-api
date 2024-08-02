@@ -1,9 +1,11 @@
 """
 Workspace Serializers
 """
+from typing import Dict
 from rest_framework import serializers
 from django_q.tasks import async_task
 from django.core.cache import cache
+from apps.mappings.models import QBDMapping
 from fyle_rest_auth.helpers import get_fyle_admin
 from fyle_rest_auth.models import AuthToken
 
@@ -19,6 +21,11 @@ from .models import (
     FieldMapping,
     AdvancedSetting
 )
+
+def pre_save_field_mapping_trigger(new_field_mapping: Dict, field_mapping: FieldMapping, workspace_id):
+    item_type = new_field_mapping.get('item_type')
+    if item_type and item_type != field_mapping.item_type and item_type in ['PROJECT', 'COST_CENTER']:
+        QBDMapping.objects.filter(attribute_type=field_mapping.item_type, workspace_id=workspace_id).delete()
 
 
 class WorkspaceSerializer(serializers.ModelSerializer):
@@ -73,6 +80,10 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 cluster_domain=cluster_domain
             )
 
+            FieldMapping.objects.update_or_create(
+                workspace=workspace
+            )
+
         return workspace
 
 
@@ -91,7 +102,7 @@ class ExportSettingsSerializer(serializers.ModelSerializer):
         """
         assert_valid(validated_data, 'Body cannot be null')
         workspace_id = self.context['request'].parser_context.get('kwargs').get('workspace_id')
-    
+
         export_settings = ExportSettings.objects.filter(
             workspace_id=workspace_id).first()
 
@@ -133,14 +144,40 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             defaults=validated_data
         )
 
+        """
+        Remove the old mappings if the Item is mapped to some other field
+        """
+        pre_save_field_mapping_trigger(validated_data, field_mapping, workspace_id)
+
         # Update workspace onboarding state
         workspace = field_mapping.workspace
 
         if workspace.onboarding_state == 'FIELD_MAPPINGS':
             workspace.onboarding_state = 'ADVANCED_SETTINGS'
             workspace.save()
+            """
+            Sync dimension asyncly
+            """
+            async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
 
         return field_mapping
+
+    def validate(self, data):
+        """
+        Check that item_type is not already used in project_type or class_type
+        """
+        item_type = data.get('item_type')
+        project_type = data.get('project_type')
+        class_type = data.get('class_type')
+
+        if item_type in ['COST_CENTER', 'PROJECT']:
+            # Checking if item_type is already used in project_type or class_type
+            if item_type == project_type or item_type == class_type:
+                raise serializers.ValidationError({
+                    'item_type': 'This value is already used in project_type or class_type'
+                })
+
+        return data
 
 
 class AdvancedSettingSerializer(serializers.ModelSerializer):

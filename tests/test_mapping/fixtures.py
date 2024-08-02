@@ -72,5 +72,78 @@ fixture = {
                 "workspace": 1
             },
         ]
-    }
+    },
+    'get_all_custom_fields':[
+        {
+            'data': [
+                {
+                    "category_ids": [
+                        142030,
+                        142031,
+                        142032,
+                        142033
+                    ],
+                    "code": None,
+                    "column_name": "text_column6",
+                    "created_at": "2021-10-22T07:50:04.613487+00:00",
+                    "default_value": None,
+                    "field_name": "Class",
+                    "id": 197380,
+                    "is_custom": True,
+                    "is_enabled": True,
+                    "is_mandatory": False,
+                    "options": [
+                        "Servers",
+                        "Home",
+                        "Office",
+                        "Hardware",
+                        "Furniture",
+                        "Other",
+                        "Racks",
+                        "Wood",
+                        "Non Wood",
+                        "Accessories",
+                        "Miscellaneous",
+                        "Merchandise",
+                        "Consumer Goods",
+                        "Services",
+                        "Internal",
+                        "R&D",
+                        "Materials",
+                        "Manufacturing"
+                    ],
+                    "org_id": "orGcBCVPijjO",
+                    "placeholder": "Select Class",
+                    "seq": 1,
+                    "type": "SELECT",
+                    "updated_at": "2023-01-01T05:35:26.345303+00:00"
+                },
+                {
+                    "category_ids": [
+                        201334,
+                        201335,
+                        201336,
+                        201337,
+                        224631,
+                        224632
+                    ],
+                    "code": None,
+                    "column_name": "text_column7",
+                    "created_at": "2022-09-22T06:42:41.008885+00:00",
+                    "default_value": None,
+                    "field_name": "Labhvam",
+                    "id": 211017,
+                    "is_custom": True,
+                    "is_enabled": True,
+                    "is_mandatory": False,
+                    "options": [],
+                    "org_id": "orGcBCVPijjO",
+                    "placeholder": "Select Labhvam",
+                    "seq": 1,
+                    "type": "SELECT",
+                    "updated_at": "2023-01-01T05:35:26.345303+00:00"
+                }
+            ]
+        }
+    ]
 }

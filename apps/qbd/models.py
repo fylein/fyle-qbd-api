@@ -13,6 +13,34 @@ from apps.workspaces.models import (
 from apps.mappings.models import QBDMapping
 
 
+def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, workspace_id: int):
+    item_type = field_mapping.item_type
+    expense_item = None
+    expense_category = expense.category
+
+    if item_type.upper() in ['PROJECT', 'COST_CENTER']:
+        expense_item = getattr(expense, item_type.lower())
+    else:
+        custom_properties = getattr(expense, 'custom_properties', {})
+        custom_properties = {
+            '_'.join(k.lower().split()).replace(' ', '_'): v 
+            for k, v in custom_properties.items()
+        }
+        modified_item_type = item_type = '_'.join(item_type.lower().split()).replace(' ', '_')
+        expense_item = custom_properties.get(modified_item_type)
+        
+    if item_type and expense_item and expense_category:
+        item_mapped_account = QBDMapping.objects.filter(
+            workspace_id=workspace_id,
+            attribute_type=item_type,
+            source_value=expense_item).first()
+                                                    
+        if item_mapped_account:
+            return expense_item, item_mapped_account
+
+    return '', expense_category
+
+
 def get_class_and_project_name(field_mappings: FieldMapping, expense: Expense):
     """
     According to class_type, project_type return the value of project, class field
@@ -515,10 +543,14 @@ class CreditCardPurchaseLineitem(models.Model):
                 field_mappings, expense
             )
 
+            inv_item, account = get_item_and_account_name(
+                field_mappings, expense, workspace_id
+            )
+
             lineitem = CreditCardPurchaseLineitem.objects.create(
                 transaction_type='CREDIT CARD' if expense.amount > 0 else 'CCARD REFUND',
                 date=get_transaction_date(expenses, date_preference=export_settings.credit_card_expense_date),
-                account=expense.category,
+                account=account,
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
@@ -526,7 +558,8 @@ class CreditCardPurchaseLineitem(models.Model):
                 reimbursable_expense='No',
                 credit_card_purchase=credit_card_purchase,
                 expense=expense,
-                workspace_id=workspace_id
+                workspace_id=workspace_id,
+                inventory_item=inv_item
             )
 
             lineitems.append(lineitem)
@@ -597,11 +630,11 @@ class Journal(models.Model):
                 name = expenses[0].employee_name
             else:
                 name = expenses[0].vendor if expenses[0].vendor else 'Credit Card Misc'
-            
+
             date_preference = export_settings.credit_card_expense_date
-        
+
         corporate_card_name = get_corporate_card_name(expenses[0].corporate_card_id, workspace_id, export_settings)
-        
+
         default_memo = f'Credit Card Expenses by {expenses[0].employee_email}' \
             if fund_source == 'CCC' else f'Reimbursable Expenses by {expenses[0].employee_email}'
 
