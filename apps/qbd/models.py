@@ -13,20 +13,23 @@ from apps.workspaces.models import (
 from apps.mappings.models import QBDMapping
 
 
-def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense):
+def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, workspace_id: int):
     item_type = field_mapping.item_type
     expense_item = None
     expense_category = expense.category
 
     if item_type.upper() in ['PROJECT', 'COST_CENTER']:
-        expense_item = getattr(field_mapping, item_type.lower())
+        expense_item = getattr(expense, item_type.lower())
     else:
-        # Modify item_type to match the format in custom_properties
-        modified_item_type = item_type.replace('_', ' ').title()
-        expense_item = getattr(expense, 'custom_properties', {}).get(modified_item_type)
+        custom_properties = getattr(expense, 'custom_properties', {})
+        custom_properties = {
+            '_'.join(k.lower().split()).replace(' ', '_'): v 
+            for k, v in custom_properties.items()
+        }
+        expense_item = custom_properties.get(item_type.lower())
         
     if item_type and expense_item and expense_category:
-        item_mapped_account = QBDMapping.objects.filter(attribute_type=modified_item_type, source_value=expense_item).first()
+        item_mapped_account = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=item_type, source_value=expense_item).first()
                                                     
         if item_mapped_account:
             return expense_item, item_mapped_account
@@ -537,7 +540,7 @@ class CreditCardPurchaseLineitem(models.Model):
             )
 
             inv_item, account = get_item_and_account_name(
-                field_mappings, expense
+                field_mappings, expense, workspace_id
             )
 
             lineitem = CreditCardPurchaseLineitem.objects.create(

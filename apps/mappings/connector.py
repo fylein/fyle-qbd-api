@@ -53,7 +53,7 @@ class PlatformConnector:
             if len(card_attributes) > 0:
                 QBDMapping.update_or_create_mapping_objects(card_attributes, self.workspace_id)
 
-    def sync_custom_field(self, source_type: str, field_mapping: FieldMapping, sync_custom_field_options: bool = False):
+    def sync_custom_field(self, source_type: str, field_mapping: FieldMapping, sync_custom_field_options: bool = False, sync_expense_custom_field_names: bool = True):
         """ 
         Sync custom fields that are mapped to the Item in the FieldMapping
         :source_type: The Custom Field Items is mapped to
@@ -68,7 +68,7 @@ class PlatformConnector:
         'type': 'eq.SELECT',
         'is_enabled': 'eq.true'
         }
-        custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
+        custom_field_gen = field_mapping.custom_fields
         query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
         existing_source_attributes = query.values_list('source_value', flat=True)
         
@@ -81,7 +81,7 @@ class PlatformConnector:
                 if source_type == custom_field['field_name']:
                     source_values.extend(custom_field['options'])
 
-        if distinct_custom_fields:
+        if distinct_custom_fields and sync_expense_custom_field_names:
             field_mapping.custom_fields = distinct_custom_fields
             field_mapping.save()
             

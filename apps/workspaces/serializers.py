@@ -80,6 +80,10 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 workspace_id=workspace.id,
                 cluster_domain=cluster_domain
             )
+        
+        FieldMapping.objects.create(
+            workspace=workspace
+        )
 
         return workspace
 
@@ -158,6 +162,23 @@ class FieldMappingSerializer(serializers.ModelSerializer):
             async_task('apps.fyle.actions.sync_fyle_dimensions', workspace.id)
 
         return field_mapping
+    
+    def validate(self, data):
+        """
+        Check that item_type is not already used in project_type or class_type
+        """
+        item_type = data.get('item_type')
+        project_type = data.get('project_type')
+        class_type = data.get('class_type')
+
+        if item_type in ['COST_CENTER', 'PROJECT']:
+        # Checking if item_type is already used in project_type or class_type
+         if item_type == project_type or item_type == class_type:
+          raise serializers.ValidationError({
+            'item_type': 'This value is already used in project_type or class_type'
+          })
+
+        return data
 
 
 class AdvancedSettingSerializer(serializers.ModelSerializer):

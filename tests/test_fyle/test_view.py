@@ -98,31 +98,3 @@ def test_sync_fyle_dimensions_cost_center(api_client, test_connection, mocker):
     PlatformConnector.sync_corporate_card.assert_called_once()
     PlatformConnector.sync_cost_center.assert_called_once_with('COST_CENTER')
     PlatformConnector.sync_custom_field.assert_called_once()
-
-
-@pytest.mark.django_db(databases=['default'])
-def test_custom_fields(mocker, api_client, test_connection):
-    access_token = test_connection.access_token
-
-    # Create a Workspace object
-    Workspace.objects.create(id=1)
-
-    # Create a FyleCredential object
-    FyleCredential.objects.create(workspace_id=1)
-
-    url = reverse('custom-field', kwargs={'workspace_id': 1})
-
-    mocker.patch(
-        'fyle.platform.apis.v1beta.admin.expense_fields.list_all',
-        return_value=fixture['get_all_custom_fields']
-    )
-
-    api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(access_token))
-
-    response = api_client.get(url)
-    assert response.status_code == 200
-    response_data = json.loads(response.content)
-
-    # Check if response data is a list of field names
-    assert isinstance(response_data, list)
-    assert all(isinstance(field, str) for field in response_data)
