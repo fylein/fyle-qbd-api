@@ -65,7 +65,7 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
         assert mapping.source_value == cost_center
 
 
-@pytest.mark.django_db(databases=['default'])
+@pytest.mark.django_db(databases=['default'], transaction=True)
 def test_sync_custom_field(mocker, api_client, test_connection):
     access_token = test_connection.access_token
 
@@ -97,7 +97,7 @@ def test_sync_custom_field(mocker, api_client, test_connection):
 
     # Check if custom fields are updated in FieldMapping
     field_mapping.refresh_from_db()
-    assert field_mapping.custom_fields == ['field1']
+    assert field_mapping.custom_fields == ['field1', 'field2']
 
     # Check if QBDMapping objects are created
     qbd_mappings = QBDMapping.objects.filter(workspace_id=1, attribute_type='field1')

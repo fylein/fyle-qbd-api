@@ -14,6 +14,9 @@ def test_sync_fyle_dimension_view(api_client, test_connection, mocker):
             'fyle.platform.apis.v1beta.admin.corporate_cards.list_all',
             return_value=fixture['credit_card_sdk']
         )
+    mocker.patch(
+        'fyle.platform.apis.v1beta.admin.expense_fields.list_all'
+    )
     url = reverse(
         'workspaces'
     )

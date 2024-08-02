@@ -73,7 +73,7 @@ class PlatformConnector:
         'type': 'eq.SELECT',
         'is_enabled': 'eq.true'
         }
-        custom_field_gen = self.platform.v1beta.admin.expense_custom_fields.list_all(query)
+        custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
         if source_type:
             query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
             existing_source_attributes = query.values_list('source_value', flat=True)
