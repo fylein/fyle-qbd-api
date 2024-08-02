@@ -68,12 +68,12 @@ class PlatformConnector:
         """
 
         query = {
-        'order': 'updated_at.desc',
-        'is_custom': 'eq.true',
-        'type': 'eq.SELECT',
-        'is_enabled': 'eq.true'
+            'order': 'updated_at.desc',
+            'is_custom': 'eq.true',
+            'type': 'eq.SELECT',
+            'is_enabled': 'eq.true'
         }
-        custom_field_gen = field_mapping.custom_fields
+        custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
         if source_type:
             query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
             existing_source_attributes = query.values_list('source_value', flat=True)
@@ -87,7 +87,7 @@ class PlatformConnector:
                 if source_type and source_type == custom_field['field_name']:
                     source_values.extend(custom_field['options'])
 
-        if distinct_custom_fields and sync_expense_custom_field_names:
+        if distinct_custom_fields:
             field_mapping.custom_fields = distinct_custom_fields
             field_mapping.save()
             

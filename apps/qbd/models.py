@@ -15,6 +15,12 @@ from apps.mappings.models import QBDMapping
 
 def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, workspace_id: int):
     item_type = field_mapping.item_type
+    
+    # Check if item_type is not None before proceeding
+    if item_type is None:
+        # Handle the case where item_type is None, e.g., return a default value or raise a custom error
+        return '', expense.category
+    
     expense_item = None
     expense_category = expense.category
 
