@@ -79,10 +79,10 @@ class WorkspaceSerializer(serializers.ModelSerializer):
                 workspace_id=workspace.id,
                 cluster_domain=cluster_domain
             )
-        
-        FieldMapping.objects.create(
-            workspace=workspace
-        )
+
+            FieldMapping.objects.update_or_create(
+                workspace=workspace
+            )
 
         return workspace
 
@@ -177,7 +177,7 @@ class FieldMappingSerializer(serializers.ModelSerializer):
                     'item_type': 'This value is already used in project_type or class_type'
                 })
 
-            return data
+        return data
 
 
 class AdvancedSettingSerializer(serializers.ModelSerializer):
