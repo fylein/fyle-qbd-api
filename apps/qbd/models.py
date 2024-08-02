@@ -26,12 +26,13 @@ def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, wor
             '_'.join(k.lower().split()).replace(' ', '_'): v 
             for k, v in custom_properties.items()
         }
-        expense_item = custom_properties.get(item_type.lower())
+        modified_item_type = item_type = '_'.join(item_type.lower().split()).replace(' ', '_')
+        expense_item = custom_properties.get(modified_item_type)
         
     if item_type and expense_item and expense_category:
         item_mapped_account = QBDMapping.objects.filter(
             workspace_id=workspace_id,
-            attribute_type=item_type,
+            attribute_type=modified_item_type,
             source_value=expense_item).first()
                                                     
         if item_mapped_account:

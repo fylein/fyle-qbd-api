@@ -93,7 +93,7 @@ def test_sync_custom_field(mocker, api_client, test_connection):
     platform_connector = PlatformConnector(workspace_id=1)
 
     # Call the sync_custom_field function
-    platform_connector.sync_custom_field('field1', field_mapping, sync_expense_custom_field_names=True)
+    platform_connector.sync_custom_field(field_mapping, 'field1', sync_expense_custom_field_names=True)
 
     # Check if custom fields are updated in FieldMapping
     field_mapping.refresh_from_db()

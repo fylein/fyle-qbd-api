@@ -21,7 +21,5 @@ def sync_fyle_dimensions(workspace_id: int):
         
         if(field_mapping.item_type):
             sync_expense_custom_field_names = True
-        else:
-            sync_expense_custom_field_names = False
 
-        qbd_connection.sync_custom_field(field_mapping.item_type, field_mapping, sync_expense_custom_field_names)
+        qbd_connection.sync_custom_field(field_mapping, field_mapping.item_type, sync_expense_custom_field_names)
