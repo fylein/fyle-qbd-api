@@ -41,7 +41,7 @@ def get_item_and_account_name(field_mapping: FieldMapping, expense: Expense, wor
             attribute_type=item_type,
             source_value=expense_item).first()
                                                     
-        if item_mapped_account:
+        if item_mapped_account and item_mapped_account.destination_value:
             return expense_item, item_mapped_account.destination_value
 
     return '', expense_category
