@@ -50,7 +50,7 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
     workspace_id = 1
     source_type = 'COST_CENTER'
     mock_response = [
-        {'data': ['Cost Center 1', 'Cost Center 2']}
+        {'data': [{'name': 'Cost Center 1', 'id': 1}]}
     ]
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.cost_centers.list_all',
@@ -62,7 +62,7 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
     assert len(qbd_mappings) == len(mock_response[0]['data'])
     for i, mapping in enumerate(qbd_mappings):
         cost_center = mock_response[0]['data'][i]
-        assert mapping.source_value == cost_center
+        assert mapping.source_value == 'Cost Center 1'
 
 
 @pytest.mark.django_db(databases=['default'], transaction=True)

@@ -113,7 +113,7 @@ class PlatformConnector:
         }
         projects_generator = self.platform.v1beta.admin.projects.list_all(query)
         existing_projects = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type).values_list('source_value', flat=True)
-        
+
         source_attributes = []
         
         for projects in projects_generator:
