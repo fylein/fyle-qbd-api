@@ -112,21 +112,22 @@ class PlatformConnector:
         'order': 'updated_at.desc'
         }
         projects_generator = self.platform.v1beta.admin.projects.list_all(query)
-        existing_projects = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
-        
+        existing_projects = QBDMapping.objects.filter(
+            workspace_id=self.workspace_id,
+            attribute_type=source_type).values_list('source_value', flat=True)
+
         source_attributes = []
         
         for projects in projects_generator:
             for project in projects.get('data'):
                 if project['sub_project']:
                     project['name'] = '{0} / {1}'.format(project['name'], project['sub_project'])
-                    if project['name'] not in existing_projects:
-                        source_attributes.append({
-                            'attribute_type': source_type,
-                            'value': project['name'],
-                            'source_id': project['id']
-                        })
-                        
+                if project['name'] not in existing_projects:
+                    source_attributes.append({
+                        'attribute_type': source_type,
+                        'value': project['name'],
+                        'source_id': project['id']
+                    })
                         
         if source_attributes:
             QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
@@ -139,20 +140,21 @@ class PlatformConnector:
         query = {
         'order': 'updated_at.desc'
         }
+        
         cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
-        existing_cost_centers = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
+        existing_cost_centers = QBDMapping.objects.filter(
+            workspace_id=self.workspace_id,
+            attribute_type=source_type).values_list('source_value', flat=True)
         
         source_attributes = []
-        
         for cost_centers in cost_center_generator:
             for cost_center in cost_centers.get('data'):
-                if cost_center not in existing_cost_centers:
+                if cost_center['name'] not in existing_cost_centers:
                         source_attributes.append({
                             'attribute_type': source_type,
-                            'value': cost_center,
-                            'source_id': cost_center
+                            'value': cost_center['name'],
+                            'source_id': cost_center['id']
                         })
-                        
                         
         if source_attributes:
             QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)
