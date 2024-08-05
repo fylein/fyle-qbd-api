@@ -147,15 +147,15 @@ class PlatformConnector:
             attribute_type=source_type).values_list('source_value', flat=True)
         
         source_attributes = []
-        
         for cost_centers in cost_center_generator:
-            for cost_center in cost_centers.get('data'):
-                if cost_center['name'] not in existing_cost_centers:
-                        source_attributes.append({
-                            'attribute_type': source_type,
-                            'value': cost_center['name'],
-                            'source_id': cost_center['id']
-                        })
+            for cost_center_dict in cost_centers:
+                for cost_center in cost_center_dict.get('data', []):
+                    if cost_center['name'] not in existing_cost_centers:
+                            source_attributes.append({
+                                'attribute_type': source_type,
+                                'value': cost_center['name'],
+                                'source_id': cost_center['id']
+                            })
                         
         if source_attributes:
             QBDMapping.update_or_create_mapping_objects(source_attributes, self.workspace_id)

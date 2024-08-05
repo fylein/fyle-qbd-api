@@ -50,7 +50,23 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
     workspace_id = 1
     source_type = 'COST_CENTER'
     mock_response = [
-        {'data': [{'name': 'Cost Center 1', 'id': 1}]}
+        [
+            {
+                'data': [
+                    {
+                        'code': None,
+                        'created_at': '2024-07-29T12:30:58.972642+00:00',
+                        'description': 'Cost Center - RENT, Id - 1',
+                        'id': 24714,
+                        'is_enabled': True,
+                        'name': 'RENT',
+                        'org_id': 'orU77Fyqx0YH',
+                        'restricted_spender_user_ids': None,
+                        'updated_at': '2024-07-29T12:30:58.972644+00:00'
+                    }
+                ]
+            }
+        ]
     ]
     mocker.patch(
         'fyle.platform.apis.v1beta.admin.cost_centers.list_all',
@@ -59,10 +75,9 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
     qbd_connection.sync_cost_center(source_type)
     qbd_mappings = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=source_type)
-    assert len(qbd_mappings) == len(mock_response[0]['data'])
+    assert len(qbd_mappings) == len(mock_response[0][0])
     for i, mapping in enumerate(qbd_mappings):
-        assert mapping.source_value == 'Cost Center 1'
-
+        assert mapping.source_value == mock_response[0][0]['data'][i]['name']
 
 @pytest.mark.django_db(databases=['default'], transaction=True)
 def test_sync_custom_field(mocker, api_client, test_connection):
