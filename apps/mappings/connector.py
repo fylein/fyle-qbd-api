@@ -146,7 +146,6 @@ class PlatformConnector:
         for cost_centers in cost_center_generator:
             for cost_center in cost_centers.get('data'):
                 if cost_center not in existing_cost_centers:
-                        print(cost_center, 'anish268807')
                         source_attributes.append({
                             'attribute_type': source_type,
                             'value': cost_center['name'],
