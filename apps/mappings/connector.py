@@ -118,7 +118,8 @@ class PlatformConnector:
         
         for projects in projects_generator:
             for project in projects.get('data'):
-                project['name'] = '{0} / {1}'.format(project['name'], project['sub_project'])
+                if project['sub_project']:
+                    project['name'] = '{0} / {1}'.format(project['name'], project['sub_project'])
                 if project['name'] not in existing_projects:
                     source_attributes.append({
                         'attribute_type': source_type,
@@ -139,7 +140,7 @@ class PlatformConnector:
         }
         
         cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
-        existing_cost_centers = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
+        existing_cost_centers = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type).values_list('source_value', flat=True)
         
         source_attributes = []
         
