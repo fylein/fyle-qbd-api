@@ -112,7 +112,7 @@ class PlatformConnector:
         'order': 'updated_at.desc'
         }
         projects_generator = self.platform.v1beta.admin.projects.list_all(query)
-        existing_projects = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
+        existing_projects = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type).values_list('source_value', flat=True)
         
         source_attributes = []
         
@@ -146,7 +146,7 @@ class PlatformConnector:
         
         for cost_centers in cost_center_generator:
             for cost_center in cost_centers.get('data'):
-                if cost_center not in existing_cost_centers:
+                if cost_center['name'] not in existing_cost_centers:
                         source_attributes.append({
                             'attribute_type': source_type,
                             'value': cost_center['name'],
