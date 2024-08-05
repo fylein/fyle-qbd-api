@@ -112,7 +112,9 @@ class PlatformConnector:
         'order': 'updated_at.desc'
         }
         projects_generator = self.platform.v1beta.admin.projects.list_all(query)
-        existing_projects = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type).values_list('source_value', flat=True)
+        existing_projects = QBDMapping.objects.filter(
+            workspace_id=self.workspace_id,
+            attribute_type=source_type).values_list('source_value', flat=True)
 
         source_attributes = []
         
@@ -140,7 +142,9 @@ class PlatformConnector:
         }
         
         cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
-        existing_cost_centers = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type).values_list('source_value', flat=True)
+        existing_cost_centers = QBDMapping.objects.filter(
+            workspace_id=self.workspace_id,
+            attribute_type=source_type).values_list('source_value', flat=True)
         
         source_attributes = []
         

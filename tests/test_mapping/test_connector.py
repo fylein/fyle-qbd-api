@@ -61,7 +61,6 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
     qbd_mappings = QBDMapping.objects.filter(workspace_id=workspace_id, attribute_type=source_type)
     assert len(qbd_mappings) == len(mock_response[0]['data'])
     for i, mapping in enumerate(qbd_mappings):
-        cost_center = mock_response[0]['data'][i]
         assert mapping.source_value == 'Cost Center 1'
 
 
