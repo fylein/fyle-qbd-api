@@ -91,7 +91,7 @@ def get_transaction_date(expenses: List[Expense], date_preference: str) -> str:
     return datetime.now()
 
 
-def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
+def get_expense_purpose(workspace_id: str, expense: Expense, account: str = None) -> str:
     """
     Get Expense Purpose
     :param workspace_id: Workspace ID
@@ -105,11 +105,13 @@ def get_expense_purpose(workspace_id: str, expense: Expense) -> str:
 
     expense_memo_structure = advanced_settings.expense_memo_structure
 
+    category = account if account is not None and not isinstance(account, str) or not account.strip() else expense.category
+
     details = {
         'employee_name': expense.employee_name,
         'employee_email': expense.employee_email,
         'merchant': '{0}'.format(expense.vendor) if expense.vendor else '',
-        'category': '{0}'.format(expense.category) if expense.category else '',
+        'category': '{0}'.format(category) if category else '',
         'purpose': '{0}'.format(expense.purpose) if expense.purpose else '',
         'report_number': '{0}'.format(expense.claim_number),
         'spent_on': '{0}'.format(expense.spent_at.date()) if expense.spent_at else '',
@@ -560,7 +562,7 @@ class CreditCardPurchaseLineitem(models.Model):
                 name=project_name,
                 class_name=class_name,
                 amount=expense.amount,
-                memo=get_expense_purpose(workspace_id, expense),
+                memo=get_expense_purpose(workspace_id, expense, account),
                 reimbursable_expense='No',
                 credit_card_purchase=credit_card_purchase,
                 expense=expense,
