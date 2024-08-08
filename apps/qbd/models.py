@@ -105,7 +105,7 @@ def get_expense_purpose(workspace_id: str, expense: Expense, account: str = None
 
     expense_memo_structure = advanced_settings.expense_memo_structure
 
-    category = account if account is not None and account != '' else expense.category
+    category = account if account else expense.category
 
     details = {
         'employee_name': expense.employee_name,
