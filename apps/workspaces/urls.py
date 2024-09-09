@@ -34,4 +34,5 @@ urlpatterns = [
     path('<int:workspace_id>/accounting_exports/', include('apps.tasks.urls')),
     path('<int:workspace_id>/qbd_mappings/', include('apps.mappings.urls')),
     path('<int:workspace_id>/fyle/', include('apps.fyle.urls')),
+    path('<int:workspace_id>/integration_helper/', include('apps.integration_helper.urls'))
 ]
