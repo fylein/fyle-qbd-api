@@ -25,6 +25,11 @@ services:
       DB_PASSWORD: postgres
       DB_HOST: db
       DB_PORT: 5432
+      AWS_REGION: ''
+      AWS_ACCESS_KEY_ID: ''
+      AWS_SECRET_ACCESS_KEY: ''
+      OPENAI_API_KEY: ''
+      KNOWLEDGE_BASE_ID: ''
   worker:
     entrypoint: python manage.py qcluster
     restart: unless-stopped
