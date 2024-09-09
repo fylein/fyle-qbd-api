@@ -18,6 +18,7 @@ class ConversationViewSet(viewsets.ViewSet):
         Create a new conversation and get the first OpenAI response.
         """
         content = request.data.get('content')
+        workspace_id = kwargs['workspace_id']
 
         if not content:
             return Response({"error": "content are required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -25,17 +26,17 @@ class ConversationViewSet(viewsets.ViewSet):
         conversation_id = str(uuid.uuid4())
 
         conversation = Conversation.objects.create(
-            conversation_id=conversation_id, role='system', content=PROMPT
+            conversation_id=conversation_id, workspace_id=workspace_id, role='system', content=PROMPT
         )
 
         conversation = Conversation.objects.create(
-            conversation_id=conversation_id, role='user', content=content
+            conversation_id=conversation_id, workspace_id=workspace_id, role='user', content=content
         )
         messages = [{"role": "system", "content": PROMPT}, {"role": "user", "content": content}]
 
         assistant_response = get_openai_response(messages)
 
-        Conversation.objects.create(conversation_id=conversation_id, role="assistant", content=assistant_response)
+        Conversation.objects.create(conversation_id=conversation_id, workspace_id=workspace_id, role="assistant", content=assistant_response)
 
         return Response({
             'conversation_id': conversation.conversation_id,
@@ -50,6 +51,7 @@ class ConversationViewSet(viewsets.ViewSet):
         """
         content = request.data.get("content")
         conversation_id = pk
+        workspace_id = kwargs['workspace_id']
 
         if not content:
             return Response(
@@ -62,14 +64,14 @@ class ConversationViewSet(viewsets.ViewSet):
                 {"error": "Conversation id doesn't exists!"}
             )
         
-        messages = list(Conversation.objects.filter(conversation_id=conversation_id).values("role", "content").order_by('created_at'))
+        messages = list(Conversation.objects.filter(conversation_id=conversation_id, workspace_id=workspace_id).values("role", "content").order_by('created_at'))
 
         messages.append({"role": "user", "content": content})
-        Conversation.objects.create(conversation_id=conversation_id, role="user", content=content)
+        Conversation.objects.create(conversation_id=conversation_id, workspace_id=workspace_id, role="user", content=content)
 
 
         assistant_response = get_openai_response(messages)
-        Conversation.objects.create(conversation_id=conversation_id, role="assistant", content=assistant_response)
+        Conversation.objects.create(conversation_id=conversation_id, workspace_id=workspace_id, role="assistant", content=assistant_response)
         
         return Response(
             {"assistant_response": assistant_response}, status=status.HTTP_201_CREATED
@@ -77,13 +79,14 @@ class ConversationViewSet(viewsets.ViewSet):
     
 
     @action(detail=True, methods=["delete"])
-    def clear(self, request, pk=None):
+    def clear(self, request, pk=None, *args, **kwargs):
         """
         Clear the conversation history by deleting it using conversation_id.
         """
-        conversation = Conversation.objects.filter(conversation_id=pk)
-        if conversation.exists():
-            conversation.delete()
+        workspace_id = kwargs['workspace_id']
+        conversations = Conversation.objects.filter(conversation_id=pk, workspace_id=workspace_id)
+        if conversations.exists():
+            conversations.delete()
             return Response(
                 {"message": "Conversation cleared"}, status=status.HTTP_200_OK
             )
