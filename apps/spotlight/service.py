@@ -1,6 +1,8 @@
-import llm
 from typing import Dict
-from prompts.support_genie import PROMPT as SUPPORT_GENIE_PROMPT
+from .prompts.support_genie import PROMPT as SUPPORT_GENIE_PROMPT
+from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
+
+from . import llm
 
 class HelpService:
     @classmethod
@@ -31,3 +33,12 @@ class HelpService:
         )
 
         return cls.format_response(response=response)
+
+
+class QueryService:
+    @classmethod
+    def get_suggestions(cls, *, user_query: str) -> str:
+        formatted_prompt = SPOTLIGHT_PROMPT.format(
+            user_query=user_query
+        )
+        return llm.get_openai_response(system_prompt=formatted_prompt)
