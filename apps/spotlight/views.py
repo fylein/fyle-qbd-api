@@ -6,7 +6,7 @@ from rest_framework import generics
 from apps.spotlight.models import Query
 from apps.spotlight.serializers import QuerySerializer
 
-from .service import QueryService
+from .service import HelpService, QueryService
 
 
 # Create your views here.
@@ -69,3 +69,11 @@ class QueryView(generics.CreateAPIView):
                 user_id=1
             )
         return JsonResponse(data=suggestions["suggestions"])
+
+
+class HelpQueryView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        payload = json.loads(request.body)
+        user_query = payload["query"]
+        support_response = HelpService.get_support_response(user_query=user_query)
+        return JsonResponse(data={"message": support_response})
