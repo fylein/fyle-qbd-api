@@ -18,6 +18,5 @@ from django.urls import include, path
 urlpatterns = [
     path('api/auth/', include('fyle_rest_auth.urls')),
     path('api/workspaces/', include('apps.workspaces.urls')),
-    path('api/user/', include('apps.users.urls')),
-    path('api/spotlight/', include('apps.spotlight.urls'))
+    path('api/user/', include('apps.users.urls'))
 ]

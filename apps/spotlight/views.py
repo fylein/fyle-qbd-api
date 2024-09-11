@@ -30,15 +30,13 @@ from .service import HelpService, QueryService
 
 class RecentQueryView(generics.ListAPIView):
     serializer_class = QuerySerializer
-    # lookup_field = 'workspace_id'
-    # lookup_url_kwarg = 'workspace_id'
+    lookup_field = 'workspace_id'
+    lookup_url_kwarg = 'workspace_id'
 
     def get(self, request, *args, **kwargs):
         filters = {
-            # 'workspace_id': self.kwargs.get('workspace_id'),
-            # 'user': self.request.user,
-            'workspace_id': 1,
-            'user_id': 1,
+            'workspace_id': self.kwargs.get('workspace_id'),
+            'user': self.request.user,
         }
 
         _recent_queries =  Query.objects.filter(
@@ -57,16 +55,19 @@ class RecentQueryView(generics.ListAPIView):
 
 class QueryView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
+        workspace_id = self.kwargs.get('workspace_id')
+        user = self.request.user
         with transaction.atomic():
             payload = json.loads(request.body)
             user_query = payload["query"]
             suggestions = QueryService.get_suggestions(user_query=user_query)
+            print("suggestions", suggestions)
 
             Query.objects.create(
                 query=user_query,
-                workspace_id=1,
+                workspace_id=workspace_id,
                 _llm_response=suggestions,
-                user_id=1
+                user_id=user.id
             )
         return JsonResponse(data=suggestions["suggestions"])
 
