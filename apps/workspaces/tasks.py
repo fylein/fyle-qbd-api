@@ -100,3 +100,11 @@ def async_create_admin_subcriptions(workspace_id: int) -> None:
         'webhook_url': '{}/workspaces/{}/fyle/webhook_callback/'.format(settings.API_URL, workspace_id)
     }
     platform.subscriptions.post(payload)
+
+
+def trigger_export(workspace_id):
+    run_import_export(workspace_id=workspace_id)
+    new_expenses_imported = Expense.objects.filter(
+        workspace_id=workspace_id, exported=False
+    ).exists()
+    return new_expenses_imported

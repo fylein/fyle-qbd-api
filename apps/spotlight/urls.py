@@ -14,7 +14,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from apps.spotlight.views import HelpQueryView, QueryView, RecentQueryView
+from apps.spotlight.views import HelpQueryView, QueryView, RecentQueryView, ActionQueryView
 
 
 
@@ -22,4 +22,5 @@ urlpatterns = [
     path('recent_queries/', RecentQueryView.as_view(), name='recent-queries'),
     path('query/', QueryView.as_view(), name='query'),
     path('help/', HelpQueryView.as_view(), name='help'),
+    path('action/', ActionQueryView.as_view(), name='action')
 ]

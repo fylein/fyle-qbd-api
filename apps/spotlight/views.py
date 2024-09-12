@@ -2,12 +2,19 @@ import json
 from django.http import JsonResponse
 from django.db import transaction
 from rest_framework import generics
+import requests
+from django_q.tasks import async_task
 
 from apps.spotlight.models import Query
 from apps.spotlight.serializers import QuerySerializer
 
 from .service import HelpService, QueryService
+from apps.workspaces.models import FyleCredential
+from apps.fyle.helpers import get_access_token
 
+code_action_map = {
+    "trigger_export": 'http://localhost:8000/api/workspaces/2/trigger_export/'
+}
 
 # Create your views here.
 # class RecentQueryView(generics.ListAPIView):
@@ -61,7 +68,6 @@ class QueryView(generics.CreateAPIView):
             payload = json.loads(request.body)
             user_query = payload["query"]
             suggestions = QueryService.get_suggestions(user_query=user_query)
-            print("suggestions", suggestions)
 
             Query.objects.create(
                 query=user_query,
@@ -78,3 +84,26 @@ class HelpQueryView(generics.CreateAPIView):
         user_query = payload["query"]
         support_response = HelpService.get_support_response(user_query=user_query)
         return JsonResponse(data={"message": support_response})
+
+
+class ActionQueryView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        workspace_id = self.kwargs.get('workspace_id')
+        payload = json.loads(request.body)
+        code = payload["code"]
+        
+        creds = FyleCredential.objects.get(workspace_id=workspace_id)
+
+        access_token = get_access_token(creds.refresh_token)
+
+        try:
+            headers = {
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json"
+            }
+            action_response = requests.post(code_action_map[code], json={}, headers=headers)
+            print(action_response)
+        except Exception as e:
+            print(e)
+
+        return JsonResponse(data={"message": "Action triggered successfully"})
