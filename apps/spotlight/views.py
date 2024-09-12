@@ -94,7 +94,7 @@ class ActionQueryView(generics.CreateAPIView):
 
         try:
             ActionService.action(code=code, workspace_id=workspace_id)
-            return JsonResponse(data={"message": "Action triggered successfully"}, status_code=200)
+            return JsonResponse(data={"message": "Action triggered successfully"}, status=200)
         except Exception as e:
             print(e)
-            return JsonResponse(data={"message": "Action failed"}, status_code=500)
+            return JsonResponse(data={"message": "Action failed"}, status=500)
