@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'apps.tasks',
     'apps.qbd',
     'apps.mappings',
-    'apps.integration_helper'
+    'apps.integration_helper',
     'apps.spotlight'
 ]
 
