@@ -6,6 +6,7 @@ import json
 import requests
 
 from apps.fyle.helpers import get_access_token
+from apps.spotlight.models import CopyExportSettings
 from apps.workspaces.models import ExportSettings, FyleCredential
 from .prompts.support_genie import PROMPT as SUPPORT_GENIE_PROMPT
 from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
@@ -88,6 +89,10 @@ class ActionService:
             "set_corporate_credit_card_expenses_export_journal_entry": cls.set_cc_export_to_journal_entry,
             "set_corporate_credit_card_expenses_export_grouping_report": cls.set_cc_grouping_to_report,
             "set_corporate_credit_card_expenses_export_grouping_expense": cls.set_cc_grouping_to_expense,
+            "disable_reimbursable_expenses_export": cls.disable_reimbursable_expenses_export,
+            "enable_reimbursable_expenses_export": cls.enable_reimbursable_expenses_export,
+            "disable_corporate_card_expenses_export": cls.disable_corporate_card_expenses_export,
+            "enable_corporate_card_expenses_export": cls.enable_corporate_card_expenses_export
         }
         return code_to_function_map[code]
 
@@ -323,6 +328,104 @@ class ActionService:
             post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
             return ActionResponse(message="Field mapping updated successfully", is_success=True)
         return ActionResponse(message="Field mapping already exists", is_success=False)
+
+    @classmethod
+    def enable_reimbursable_expenses_export(cls, *, workspace_id: int):
+        fields_for_reimbursable = ['reimbursable_expenses_export_type', 'reimbursable_expense_state', 'reimbursable_expense_date', 
+                                'reimbursable_expense_grouped_by', 'bank_account_name']
+        
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.reimbursable_expenses_export_type is None:
+                    copied_export_settings = CopyExportSettings.objects.filter(workspace_id=workspace_id).first()
+                    if copied_export_settings:
+                        for field in fields_for_reimbursable:
+                            setattr(export_settings, field, copied_export_settings.reimbursable_export_setting[field])
+
+                        export_settings.save()
+                        return ActionResponse(message='Successfully enabled reimbursable expense', is_success=True)
+                else:
+                    return ActionResponse(message='Reimbursable Expense is already enabled', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists", is_success=False)
+
+    @classmethod
+    def disable_reimbursable_expenses_export(cls, *, workspace_id: int):
+        fields_for_reimbursable = ['reimbursable_expenses_export_type', 'reimbursable_expense_state', 'reimbursable_expense_date', 
+                                'reimbursable_expense_grouped_by', 'bank_account_name']
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.reimbursable_expenses_export_type is not None:
+                    copied_export_settings, _  = CopyExportSettings.objects.get_or_create(workspace_id=workspace_id,
+                                                            defaults={'reimbursable_export_setting': {}, 'ccc_export_setting': {}})
+                    reimbursable_export_setting = copied_export_settings.reimbursable_export_setting or {}
+
+                    for field in fields_for_reimbursable:
+                        reimbursable_export_setting[field] = getattr(export_settings, field, None)
+                        setattr(export_settings, field, None)
+                    
+                    copied_export_settings.reimbursable_export_setting = reimbursable_export_setting
+                    
+                    export_settings.save()
+                    copied_export_settings.save()
+
+                    return ActionResponse(message='Reimbursable Expense successfully disabled!', is_success=True)
+
+                else:
+                    return ActionResponse(message='Reimbursable Expense is already disabled', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists", is_success=False)
+    
+    @classmethod
+    def enable_corporate_card_expenses_export(cls, *, workspace_id: int):
+        fields_for_ccc = ['credit_card_expense_export_type', 'credit_card_expense_state', 'credit_card_entity_name_preference', 
+                                'credit_card_account_name', 'credit_card_expense_grouped_by', 'credit_card_expense_date']
+        
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.credit_card_expense_export_type is None:
+                    copied_export_settings = CopyExportSettings.objects.filter(workspace_id=workspace_id).first()
+                    if copied_export_settings:
+                        for field in fields_for_ccc:
+                            setattr(export_settings, field, copied_export_settings.ccc_export_setting[field])
+
+                        export_settings.save()
+                        return ActionResponse(message='Successfully enabled Corporate expense', is_success=True)
+                else:
+                    return ActionResponse(message='Corporate Expense is already enabled', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists", is_success=False)
+    
+    @classmethod
+    def disable_corporate_card_expenses_export(cls, *, workspace_id: int):
+        fields_for_ccc = ['credit_card_expense_export_type', 'credit_card_expense_state', 'credit_card_entity_name_preference', 
+                                'credit_card_account_name', 'credit_card_expense_grouped_by', 'credit_card_expense_date']
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.credit_card_expense_export_type is not None:
+                    copied_export_settings, _  = CopyExportSettings.objects.get_or_create(workspace_id=workspace_id,
+                                                            defaults={'reimbursable_export_setting': {}, 'ccc_export_setting': {}})
+                    ccc_export_setting = copied_export_settings.ccc_export_setting or {}
+
+                    for field in fields_for_ccc:
+                        ccc_export_setting[field] = getattr(export_settings, field, None)
+                        setattr(export_settings, field, None)
+                    
+                    copied_export_settings.ccc_export_setting = ccc_export_setting
+                    
+                    export_settings.save()
+                    copied_export_settings.save()
+
+                    return ActionResponse(message='Corporate Expense successfully disabled!', is_success=True)
+
+                else:
+                    return ActionResponse(message='Corporate Expense is already disabled', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists", is_success=False)
 
     @classmethod
     def action(cls, *, code: str, workspace_id: str):
