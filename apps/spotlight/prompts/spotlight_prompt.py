@@ -191,88 +191,103 @@ Navigations Intructions:
                 "code": "go_to_dashboard",
                 "title": "Go to Dashboard",
                 "description": "Navigate to the IIF file management section for import/export options.",
-                "url": "https://example.com/dashboard"
+                "url": "/dashboard"
             }},
             {{
                 "code": "go_to_settings",
                 "title": "Go to Export Settings",
                 "description": "Navigate to the export settings section to manage export configurations.",
-                "url": "https://example.com/settings"
+                "url": "/configuration/export_settings"
             }},
             {{
                 "code": "go_to_field_mappings",
                 "title": "Go to Field Mappings",
                 "description": "Navigate to the Field Mapping Settings Section to manage Field Mapping Settings.",
-                "url": "https://example.com/field_mappings"
+                "url": "/configuration/field_mapping"
             }},
             {{
                 "code": "go_to_advanced_settings",
                 "title": "Go to Advanced Settings",
                 "description": "Navigate to the advanced settings section to manage automatic export settings.",
-                "url": "https://example.com/advanced_settings"
+                "url": "/configuration/advanced_settings"
             }},
             {{
                 "code": "go_to_mappings",
                 "title": "Go to Mappings Page",
                 "description": "Navigate to the field mapping section to configure mappings.",
-                "url": "https://example.com/mappings"
+                "url": "/mapping/corporate_card"
             }}
         ]
 
 --------------------
 
-Help Intructions:
-    1. Provide specific help suggestions based on the user's search query.
-    2. Each help suggestion should have a unique code, title, and a brief description.
+Help Instructions:
+    1. Formulate a question based on the user's search query in description.
+    2. The question should be formulated to QBD as a context of question.
     3. The help suggestion should offer guidance or explanations related to the user's search query.
-    4. IMPORTANT: Only choose help suggestions from the examples given below.
-    5. Interpret the user's search query to suggest relevant help options.
-    6. Ignore spelling errors and variations in the user's search query.
-    7. Suggest the best help that matches the user's search query.
+    4. Ignore spelling errors and variations in the user's search query.
 
-    Help Map:
-        "help": [
-            {{
-                "code": "learn_export",
-                "title": "Learn more about IIF export",
-                "description": "How to export IIF File?."
-            }},
-            {{
-                "code": "date_filter_help",
-                "title": "How to filter IIF files by date",
-                "description": "How to filter by date in QBD?"
-            }},
-            {{
-                "code": "learn_export_settings",
-                "title": "Learn more about export settings",
-                "description": "how to manage and configure export settings."
-            }},
-            {{
-                "code": "configure_credit_card_mapping",
-                "title": "How to configure credit card mapping",
-                "description": "how to set up field mappings for credit card transactions."
-            }},
-            {{
-                "code": "field_mapping_help",
-                "title": "How to create field mappings",
-                "description": "how to create new field mappings for import/export."
-            }},
-            {{
-                "code": "automatic_export_help",
-                "title": "How to set up automatic export",
-                "description": "how to configure automatic export settings for your data."
-            }},
-            {{
-                "code": "memo_field_help",
-                "title": "How to use memo field in export",
-                "description": "how to properly set and use the memo field in data exports."
-            }},
-            {{
-                "code": "map_fields_help",
-                "title": "How to map fields",
-                "description": "how to map fields for accurate data handling and export."
-            }}
-        ]
+    Examples:
+    1. User Query Inputs: ["How to export IIF files?", "export IIF files", "IIF export", "learn how to export IIF files", "export to IIF", "how to export data to IIF", "IIF file export", "guide to exporting IIF files", "learn export", "IIF file", "how to export", "export instructions", "IIF export process"]
+
+         Output:
+        {{
+            "code": "learn_export",
+            "title": "Learn more about IIF export",
+            "description": "How to export IIF File in QBD?."
+        }}
+    2. User Query Inputs: ["Disable reimbursable expenses", "disable reimbursable export", "turn off reimbursable export", "stop exporting reimbursable expenses", "disable reimbursable expenses export", "disable export settings for reimbursable expenses", "deactivate reimbursable export", "disable reimbursable export settings", "turn off export for reimbursable expenses", "stop reimbursable export"]
+
+        Output:
+        {{
+            "code": "disable_reimbursable_expenses_export",
+            "title": "Disable reimbursable export settings",
+            "description": "Disable the option to export reimbursable expenses in Export Configuration in QBD."
+        }}
+    3. User Query: ["How to manage IIF files?", "manage IIF files", "IIF file management", "how to filter IIF files", "filter IIF files by date", "manage files in QBD", "IIF file filters", "filter IIF data", "how to filter by date in QuickBooks Desktop", "date filters in IIF files", "QBD IIF file management", "file management in QuickBooks Desktop", "IIF file organization"]
+
+        Output:
+        {{
+            "code": "date_filter_help",
+            "title": "How to filter IIF files by date",
+            "description": "How to filter by date in QBD?"
+        }}
+    4. User Query: "How to map fields?"
+        {{
+            "code": "configure_credit_card_mapping",
+            "title": "How to configure credit card mapping",
+            "description": "how to set up field mappings for credit card transactions in QBD."
+        }}
+    5. User Query: "How to create field mappings?"
+        {{
+            "code": "field_mapping_help",
+            "title": "How to create field mappings",
+            "description": "how to create new field mappings for import/export in QBD."
+        }}
+    6. User Query: "How to set up automatic export?"
+        {{
+            "code": "automatic_export_help",
+            "title": "How to set up automatic export",
+            "description": "how to configure automatic export settings for your data in QBD."
+        }}
+    7. User Query: "How to use memo field in export?"
+        {{
+            "code": "memo_field_help",
+            "title": "How to use memo field in export",
+            "description": "how to properly set and use the memo field in data exports in QBD."
+        }}
+    8. User Query: "How to map fields?"
+        {{
+            "code": "map_fields_help",
+            "title": "How to map fields",
+            "description": "how to map fields for accurate data handling and export in QBD."
+        }}
+    9. User Query: "How to create new field mappings?"
+        {{
+            "code": "set_automatic_export",
+            "title": "Set/Update automatic export settings",
+            "description": "how to create new field mappings for import/export in QBD."
+        }}
 
 ---------------------------
 User Query: {user_query}
@@ -295,7 +310,7 @@ Examples:
             {{
                 "code": "go_to_dashboard",
                 "title": "Go to Dashboard",
-                "url": "https://example.com/dashboard",
+                "url": "/dashboard",
                 "description": "Navigate to the IIF file management section for import/export options."
             }}
             ],
@@ -303,7 +318,7 @@ Examples:
             {{
                 "code": "learn_export",
                 "title": "Learn more about IIF export",
-                "description": "How to export IIF files?"
+                "description": "How to export IIF files in QBD?"
             }}
             ]
         }}
@@ -359,8 +374,8 @@ Examples:
             "help": [
             {{
                 "code": "learn_export_settings",
-                "title": "Learn more about export settings",
-                "description": "How to manage and configure export settings?"
+                "title": "Learn more about reimbursable expenses export settings",
+                "description": "How to enable or disable reimbursable export settings in QBD?"
             }}
             ],
             "navigations": [
@@ -368,7 +383,7 @@ Examples:
                 "code": "go_to_settings",
                 "title": "Go to Export Settings",
                 "description": "Navigate to the export settings section to manage export configurations.",
-                "url": "https://example.com/settings"
+                "url": "/configuration/export_settings"
             }}
             ]
         }}
@@ -406,14 +421,14 @@ Examples:
                 "code": "go_to_field_mappings",
                 "title": "Go to Field Mappings",
                 "description": "Navigate to the Field Mapping Settings Section to manage Field Mapping Settings.",
-                "url": "https://example.com/field_mappings"
+                "url": "/configuration/field_mapping"
             }}
             ],
             "help": [
             {{
                 "code": "field_mapping_help",
                 "title": "How to create field mappings",
-                "description": "How to create new field mappings for import/export."
+                "description": "How to create new field mappings for import/export in QBD?"
             }}
             ]
         }}
@@ -436,14 +451,14 @@ Examples:
                     "code": "go_to_advanced_settings",
                     "title": "Go to Advanced Settings",
                     "description": "Navigate to the advanced settings section to manage automatic export settings.",
-                    "url": "https://example.com/advanced_settings
+                    "url": "/configuration/advanced_settings"
                 }}
             ],
             "help": [
                 {{
                     "code": "automatic_export_help",
                     "title": "How to set up automatic export",
-                    "description": "how to configure automatic export settings for your data?"
+                    "description": "how to configure automatic export settings for your data in QBD?"
                 }}
             ]
         }}
@@ -465,7 +480,7 @@ Examples:
                 {{
                     "code": "memo_field_help",
                     "title": "How to use memo field in export",
-                    "description": "how to properly set and use the memo field in data exports?"
+                    "description": "how to properly set and use the memo field in data exports in QBD?"
                 }}
             ],
             "navigations": [
@@ -473,7 +488,7 @@ Examples:
                     "code": "go_to_advanced_settings",
                     "title": "Go to Advanced Settings",
                     "description": "Navigate to the advanced settings section to configure memo field settings.",
-                    "url": "https://example.com/advanced_settings"
+                    "url": "/configuration/advanced_settings"
                 }}
             ]
         }}
@@ -494,15 +509,21 @@ Examples:
                 {{
                     "code": "map_fields_help",
                     "title": "How to map fields",
-                    "description": "how to map fields for accurate data handling and export?"
+                    "description": "how to map fields for accurate data handling and export in QBD?"
                 }}
             ],
             "navigations": [
                 {{
-                    "code": "go_to_mappings",
-                    "title": "Go to Mappings Page",
-                    "description": "Navigate to the field mapping section to configure mappings.",
-                    url: "https://example.com/mappings"
+                    "code": "go_to_corporate_cards_mappings",
+                    "title": "Go to Corporate Card Mappings Page",
+                    "description": "Navigate to the corporate card field mapping section to configure mappings.",
+                    url: "/mapping/corporate_card"
+                }},
+                {{
+                    "code": "go_to_items_mappings",
+                    "title": "Go to Items Mappings Page",
+                    "description": "Navigate to the items field mapping section to configure mappings.",
+                    url: "/mapping/item"
                 }}
             ]
         }}
