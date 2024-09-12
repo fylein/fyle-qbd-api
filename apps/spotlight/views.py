@@ -8,7 +8,7 @@ from django_q.tasks import async_task
 from apps.spotlight.models import Query
 from apps.spotlight.serializers import QuerySerializer
 
-from .service import HelpService, QueryService
+from .service import ActionService, HelpService, QueryService
 from apps.workspaces.models import FyleCredential
 from apps.fyle.helpers import get_access_token
 
@@ -91,19 +91,10 @@ class ActionQueryView(generics.CreateAPIView):
         workspace_id = self.kwargs.get('workspace_id')
         payload = json.loads(request.body)
         code = payload["code"]
-        
-        creds = FyleCredential.objects.get(workspace_id=workspace_id)
-
-        access_token = get_access_token(creds.refresh_token)
 
         try:
-            headers = {
-                "Authorization": f"Bearer {access_token}",
-                "Content-Type": "application/json"
-            }
-            action_response = requests.post(code_action_map[code], json={}, headers=headers)
-            print(action_response)
+            ActionService.action(code=code, workspace_id=workspace_id)
+            return JsonResponse(data={"message": "Action triggered successfully"}, status_code=200)
         except Exception as e:
             print(e)
-
-        return JsonResponse(data={"message": "Action triggered successfully"})
+            return JsonResponse(data={"message": "Action failed"}, status_code=500)
