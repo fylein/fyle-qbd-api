@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable, Dict
 from django.db import transaction
+import json
 
 import requests
 
@@ -11,9 +12,6 @@ from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
 
 from . import llm
 
-code_action_map = {
-    "trigger_export": 'http://localhost:8000/api/workspaces/2/trigger_export/'
-}
 
 
 @dataclass
@@ -68,7 +66,11 @@ class ActionService:
     def _get_action_function_from_code(cls, *, code: str) -> Callable:
         code_to_function_map = {
             "trigger_export": cls.trigger_export,
-            "set_reimbursable_expenses_export_module_bill": cls.set_reimbursable_expenses_export_module_bill
+            "set_reimbursable_expenses_export_module_bill": cls.set_reimbursable_expenses_export_module_bill,
+            "set_customer_field_mapping_to_project": cls.set_customer_field_mapping_to_project,
+            "set_customer_field_mapping_to_cost_center": cls.set_customer_field_mapping_to_cost_center,
+            "set_class_field_mapping_to_project": cls.set_class_field_mapping_to_project,
+            "set_class_field_mapping_to_cost_center": cls.set_class_field_mapping_to_cost_center
         }
         return code_to_function_map[code]
 
@@ -112,6 +114,81 @@ class ActionService:
         return ActionResponse(message="Export triggered failed", is_success=False)
 
     @classmethod
-    def action(cls, *, code: str, workspace_id: str) -> ActionResponse:
+    def set_customer_field_mapping_to_project(cls, *, workspace_id: int):
+        access_token = cls.get_access_token(workspace_id=workspace_id)
+        headers = cls.get_headers(access_token=access_token)
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        url = f'http://localhost:8000/api/workspaces/{workspace_id}/field_mappings/'
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        action_response = requests.get(url, headers=headers)
+        action_response= action_response.json()
+        if action_response.get('project_type') != 'PROJECT' and action_response.get('class_type') != 'COST_CENTER':
+            action_response['project_type'] = 'PROJECT'
+            post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
+            return ActionResponse(message="Field mapping updated successfully", is_success=True)
+        return ActionResponse(message="Field mapping already exists", is_success=False)
+    
+    @classmethod
+    def set_customer_field_mapping_to_cost_center(cls, *, workspace_id: int):
+        access_token = cls.get_access_token(workspace_id=workspace_id)
+        headers = cls.get_headers(access_token=access_token)
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        url = f'http://localhost:8000/api/workspaces/{workspace_id}/field_mappings/'
+
+        action_response = requests.get(url, headers=headers)
+        action_response= action_response.json()
+        if action_response.get('project_type') != 'COST_CENTER' and action_response.get('class_type') != 'PROJECT':
+            action_response['project_type'] = 'COST_CENTER'
+            post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
+            return ActionResponse(message="Field mapping updated successfully", is_success=True)
+        return ActionResponse(message="Field mapping already exists", is_success=False)
+    
+    @classmethod
+    def set_class_field_mapping_to_project(cls, *, workspace_id: int):
+        access_token = cls.get_access_token(workspace_id=workspace_id)
+        headers = cls.get_headers(access_token=access_token)
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        url = f'http://localhost:8000/api/workspaces/{workspace_id}/field_mappings/'
+
+        action_response = requests.get(url, headers=headers)
+        action_response= action_response.json()
+        if action_response.get('project_type') != 'PROJECT' and action_response.get('class_type') != 'COST_CENTER':
+            action_response['class_type'] = 'PROJECT'
+            post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
+            return ActionResponse(message="Field mapping updated successfully", is_success=True)
+        return ActionResponse(message="Field mapping already exists", is_success=False)
+    
+    @classmethod
+    def set_class_field_mapping_to_cost_center(cls, *, workspace_id: int):
+        access_token = cls.get_access_token(workspace_id=workspace_id)
+        headers = cls.get_headers(access_token=access_token)
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json"
+        }
+        url = f'http://localhost:8000/api/workspaces/{workspace_id}/field_mappings/'
+
+        action_response = requests.get(url, headers=headers)
+        action_response= action_response.json()
+        if action_response.get('project_type') != 'COST_CENTER' and action_response.get('class_type') != 'PROJECT':
+            action_response['class_type'] = 'COST_CENTER'
+            post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
+            return ActionResponse(message="Field mapping updated successfully", is_success=True)
+        return ActionResponse(message="Field mapping already exists", is_success=False)
+
+    @classmethod
+    def action(cls, *, code: str, workspace_id: str):
         action_function = cls._get_action_function_from_code(code=code)
         return action_function(workspace_id=workspace_id)
