@@ -21,3 +21,12 @@ class Query(models.Model):
 
     class Meta:
         db_table = 'queries'
+
+class CopyExportSettings(models.Model):
+
+    workspace_id = models.IntegerField(help_text="Workspace id of the organization")
+    reimbursable_export_setting = models.JSONField(null=True)
+    ccc_export_setting = models.JSONField(null=True)
+
+    class Meta:
+        db_table = 'copy_export_settings'

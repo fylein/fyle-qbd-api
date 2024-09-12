@@ -5,12 +5,12 @@ import json
 from typing import Dict
 
 
-AWS_REGION = os.environ["AWS_REGION"]
-AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+AWS_REGION = os.environ.get("AWS_REGION")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-KNOWLEDGE_BASE_ID = os.environ["KNOWLEDGE_BASE_ID"]
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+KNOWLEDGE_BASE_ID = os.environ.get("KNOWLEDGE_BASE_ID")
 
 
 bedrock_session = boto3.Session(
@@ -37,7 +37,7 @@ def get_openai_response(*, system_prompt: str) -> dict:
                 {"role": "system", "content": system_prompt}
             ],
             temperature=0,
-            max_tokens=256,
+            max_tokens=1000,
             top_p=0,
             frequency_penalty=0,
             presence_penalty=0
