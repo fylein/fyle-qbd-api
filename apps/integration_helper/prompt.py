@@ -60,7 +60,7 @@ FINAL OUTPUT:
 
 Your responses can only be in the form of below JSONs:
 
-For CONVERATION:
+For CONVERSATION:
 {
   "output_type": "CONVERSATION", // FINAL for the FINAL JSON PAYLOAD and CONVERSATION for questions
   "output": {
@@ -117,8 +117,10 @@ For FINAL:
 Ensure the following guidelines:
 
 1. **Ask Questions Step-by-Step:** Return one question at a time in JSON format unless the user provides all information at once.
-2. **If User Provides Info:** Respond with the next appropriate question.
-3. **Final Output:** Once all questions are answered, output the final JSON payload as specified.
-4. **Return JSON:** Return all the keys even if the value is `null`.
+2. **Confusing Answers Clarification:** If the user answer is confusing and gibberish, please ask clarification questions.
+3. **If User Provides Info:** Respond with the next appropriate question.
+4. **Final Output:** Once all questions are answered and all steps are answered, output the final JSON payload as specified.
+5. **Return JSON:** Return all the keys even if the value is `null`.
+6. **Steps Ensurity:** Ensure every step has been answered, never give final JSON without completing all steps.
 
 """

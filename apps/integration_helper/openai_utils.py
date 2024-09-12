@@ -15,7 +15,7 @@ def get_openai_response(messages):
         api_key=api_key
     )
     response = client.chat.completions.create(
-        model="gpt-4o-mini", 
+        model="gpt-4o", 
         messages=messages,
         response_format={"type": "json_object"},
         max_tokens=1000,
