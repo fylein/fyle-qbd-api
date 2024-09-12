@@ -69,6 +69,8 @@ class ActionService:
             "set_reimbursable_expenses_export_module_journal_entry": cls.set_reimbursable_expenses_export_module_journal_entry,
             "set_reimbursable_expenses_export_grouping_expense": cls.set_reimbursable_expenses_export_grouping_expense,
             "set_reimbursable_expenses_export_grouping_report": cls.set_reimbursable_expenses_export_grouping_report,
+            "set_reimbursable_expenses_export_state_processing": cls.set_reimbursable_expenses_export_state_processing,
+            "set_reimbursable_expenses_export_state_paid": cls.set_reimbursable_expenses_export_state_paid,
             "set_customer_field_mapping_to_project": cls.set_customer_field_mapping_to_project,
             "set_customer_field_mapping_to_cost_center": cls.set_customer_field_mapping_to_cost_center,
             "set_class_field_mapping_to_project": cls.set_class_field_mapping_to_project,
@@ -143,6 +145,32 @@ class ActionService:
                 export_settings.reimbursable_expense_grouped_by = 'REPORT'
                 export_settings.save()
                 return ActionResponse(message="Reimbursable expense export group set to Report", is_success=True)
+
+    @classmethod
+    def set_reimbursable_expenses_export_state_processing(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(
+                workspace_id=workspace_id
+            ).first()
+            if export_settings is None:
+                return ActionResponse(message="Failed to set reimbursable expense export state to Processing", is_success=False)
+            else:
+                export_settings.reimbursable_expense_state = 'PAYMENT_PROCESSING'
+                export_settings.save()
+                return ActionResponse(message="Reimbursable expense export state set to Processing", is_success=True)
+
+    @classmethod
+    def set_reimbursable_expenses_export_state_paid(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(
+                workspace_id=workspace_id
+            ).first()
+            if export_settings is None:
+                return ActionResponse(message="Failed to set reimbursable expense export state to Paid", is_success=False)
+            else:
+                export_settings.reimbursable_expense_state = 'PAID'
+                export_settings.save()
+                return ActionResponse(message="Reimbursable expense export state set to Paid", is_success=True)
 
     @classmethod
     def trigger_export(cls, *, workspace_id: int):
