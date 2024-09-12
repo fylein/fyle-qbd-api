@@ -1,10 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import ConversationViewSet
+from django.urls import path
+from .views import CoversationsView
 
-router = DefaultRouter()
-router.register(r'conversation', ConversationViewSet, basename='conversation')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path(route='', view=CoversationsView.as_view(), name='conversations')
 ]
