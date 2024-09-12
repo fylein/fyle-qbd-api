@@ -88,8 +88,8 @@ Actions Intructions:
                 "description": "Set grouping to expense, this grouping reflects how the expense entries are posted in QuickBooks Desktop."
             }},
             {{
-                "code": "set_reimbursable_expenses_export_grouping_expense_report",
-                "title": "Group reimbursable expenses export by expense report",
+                "code": "set_reimbursable_expenses_export_grouping_report",
+                "title": "Group reimbursable expenses export by report",
                 "description": "Set grouping to expense_report, this grouping reflects how the expense entries are posted in QuickBooks Desktop."
             }},
             {{
