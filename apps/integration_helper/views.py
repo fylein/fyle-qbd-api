@@ -1,7 +1,6 @@
 import uuid
 from rest_framework import status, generics
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from apps.integration_helper.models import Conversation
 from apps.integration_helper.openai_utils import get_openai_response
 from apps.integration_helper.prompt import PROMPT
