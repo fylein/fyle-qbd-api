@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'apps.qbd',
     'apps.mappings',
     'apps.integration_helper'
+    'apps.spotlight'
 ]
 
 MIDDLEWARE = [

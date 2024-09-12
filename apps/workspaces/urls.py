@@ -35,4 +35,5 @@ urlpatterns = [
     path('<int:workspace_id>/qbd_mappings/', include('apps.mappings.urls')),
     path('<int:workspace_id>/fyle/', include('apps.fyle.urls')),
     path('<int:workspace_id>/conversations/', include('apps.integration_helper.urls'))
+    path('<int:workspace_id>/spotlight/', include('apps.spotlight.urls'))
 ]
