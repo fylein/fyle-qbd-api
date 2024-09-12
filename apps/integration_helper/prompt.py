@@ -25,12 +25,14 @@ Your first task is to guide the user through the export settings for both Reimbu
   - What is the name of the Credit Card Account you want to use?
   - The rest of the settings will be hardcoded and skipped:
     - Expenses will always be grouped by "EXPENSE"
+    - Purchased From (credit_card_entity_name_preference) will always be "VENDOR"
     - The Date of Export will always be the spend date, no user input required
     - The state always will be "APPROVED", no user input required
 
 - If they choose **Journal Entries**, ask:
   - What is the name of the Credit Card Account you want to use?
   - The same hardcoded settings will apply as above.
+  - Purchased From (credit_card_entity_name_preference) will always be "VENDOR"
 
 =========================================================================================================================
 STEP 2: Field Mapping
