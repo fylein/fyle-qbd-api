@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Callable, Dict
 
 import requests
@@ -12,6 +13,12 @@ from . import llm
 code_action_map = {
     "trigger_export": 'http://localhost:8000/api/workspaces/2/trigger_export/'
 }
+
+
+@dataclass
+class ActionResponse:
+    message: str = None
+    is_success: bool = None
 
 
 class HelpService:
@@ -85,8 +92,11 @@ class ActionService:
         }
         url = f'http://localhost:8000/api/workspaces/{workspace_id}/trigger_export/'
         action_response = requests.post(url, json={}, headers=headers)
+        if action_response.status_code == 200:
+            return ActionResponse(message="Export triggered successfully", is_success=True)
+        return ActionResponse(message="Export triggered failed", is_success=False)
 
     @classmethod
-    def action(cls, *, code: str, workspace_id: str):
+    def action(cls, *, code: str, workspace_id: str) -> ActionResponse:
         action_function = cls._get_action_function_from_code(code=code)
-        action_function(workspace_id=workspace_id)
+        return action_function(workspace_id=workspace_id)
