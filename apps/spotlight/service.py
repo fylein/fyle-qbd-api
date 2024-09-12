@@ -13,7 +13,6 @@ from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
 from . import llm
 
 
-
 @dataclass
 class ActionResponse:
     message: str = None
@@ -71,7 +70,11 @@ class ActionService:
             "set_customer_field_mapping_to_project": cls.set_customer_field_mapping_to_project,
             "set_customer_field_mapping_to_cost_center": cls.set_customer_field_mapping_to_cost_center,
             "set_class_field_mapping_to_project": cls.set_class_field_mapping_to_project,
-            "set_class_field_mapping_to_cost_center": cls.set_class_field_mapping_to_cost_center
+            "set_class_field_mapping_to_cost_center": cls.set_class_field_mapping_to_cost_center,
+            "set_corporate_credit_card_expenses_export_credit_card_purchase": cls.set_cc_export_to_corporate_card_purchase,
+            "set_corporate_credit_card_expenses_export_journal_entry": cls.set_cc_export_to_journal_entry,
+            "set_corporate_credit_card_expenses_export_grouping_report": cls.set_cc_grouping_to_report,
+            "set_corporate_credit_card_expenses_export_grouping_expense": cls.set_cc_grouping_to_expense,
         }
         return code_to_function_map[code]
 
@@ -126,6 +129,60 @@ class ActionService:
         if action_response.status_code == 200:
             return ActionResponse(message="Export triggered successfully", is_success=True)
         return ActionResponse(message="Export triggered failed", is_success=False)
+
+
+    @classmethod
+    def set_cc_export_to_corporate_card_purchase(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                export_settings.credit_card_expense_export_type = 'CREDIT_CARD_PURCHASE'
+                export_settings.save()
+                return ActionResponse(message="Successfully set corporate card expense as Credit Card Purchase", is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists!", is_success=False)
+
+
+    @classmethod
+    def set_cc_export_to_journal_entry(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                export_settings.credit_card_expense_export_type = 'JOURNAL_ENTRY'
+                export_settings.save()
+                return ActionResponse(message="Successfully set corporate card expense as JOURNAL ENTRY", is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists!", is_success=False)
+
+    @classmethod
+    def set_cc_grouping_to_report(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.credit_card_expense_export_type == 'CREDIT_CARD_PURCHASE':
+                    return ActionResponse(message='For Corporate Credit Purchase Export type expenses cannot be grouped by report', is_success=False)
+                else:
+                    export_settings.credit_card_expense_grouped_by = 'REPORT'
+                    export_settings.save()
+                    return ActionResponse(message='Succesfully set corporate card group by to Report', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists!", is_success=False)
+
+
+    @classmethod
+    def set_cc_grouping_to_expense(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(workspace_id=workspace_id).first()
+            if export_settings:
+                if export_settings.credit_card_expense_export_type == 'CREDIT_CARD_PURCHASE':
+                    return ActionResponse(message='Already set to expense', is_success=True)
+                else:
+                    export_settings.credit_card_expense_grouped_by = 'EXPENSE'
+                    export_settings.save()
+                    return ActionResponse(message='Succesfully set corporate card group by to EXPENSE', is_success=True)
+            
+            return ActionResponse(message="Export settings doesn't exists!", is_success=False)
+
 
     @classmethod
     def set_customer_field_mapping_to_project(cls, *, workspace_id: int):
