@@ -83,7 +83,7 @@ class ActionService:
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json"
         }
-        url = 'http://localhost:8000/api/workspaces/2/trigger_export/'
+        url = f'http://localhost:8000/api/workspaces/{workspace_id}/trigger_export/'
         action_response = requests.post(url, json={}, headers=headers)
 
     @classmethod
