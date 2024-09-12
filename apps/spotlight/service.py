@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable, Dict
+from django.db import transaction
 
 import requests
 
@@ -85,15 +86,16 @@ class ActionService:
 
     @classmethod
     def set_reimbursable_expenses_export_module_bill(cls, *, workspace_id: int):
-        export_settings = ExportSettings.objects.filter(
-            workspace_id=workspace_id
-        ).first()
-        if export_settings is None:
-            return ActionResponse(message="Failed to set reimbursable expense export type set to Bill", is_success=False)
-        else:
-            export_settings.reimbursable_expenses_export_type = 'BILL'
-            export_settings.save()
-            return ActionResponse(message="Reimbursable expense export type set to Bill", is_success=True)
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(
+                workspace_id=workspace_id
+            ).first()
+            if export_settings is None:
+                return ActionResponse(message="Failed to set reimbursable expense export type set to Bill", is_success=False)
+            else:
+                export_settings.reimbursable_expenses_export_type = 'BILL'
+                export_settings.save()
+                return ActionResponse(message="Reimbursable expense export type set to Bill", is_success=True)
 
     @classmethod
     def trigger_export(cls, *, workspace_id: int):
