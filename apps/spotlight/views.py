@@ -8,9 +8,11 @@ from django_q.tasks import async_task
 from apps.spotlight.models import Query
 from apps.spotlight.serializers import QuerySerializer
 
-from .service import ActionService, HelpService, QueryService
+from .service import ActionService, HelpService, QueryService, SuggestionService
 from apps.workspaces.models import FyleCredential
 from apps.fyle.helpers import get_access_token
+from rest_framework.response import Response
+
 
 code_action_map = {
     "trigger_export": 'http://localhost:8000/api/workspaces/2/trigger_export/'
@@ -101,3 +103,11 @@ class ActionQueryView(generics.CreateAPIView):
         except Exception as e:
             print(e)
             return JsonResponse(data={"message": "Action failed"}, status=500)
+
+class SuggestionForPage(generics.CreateAPIView):
+
+    def post(self, request, *args, **kwargs):
+        user_query = request.data['user_query']
+        
+        support_response = SuggestionService.get_suggestions(user_query=user_query)
+        return JsonResponse(data={"message": support_response})

@@ -9,6 +9,7 @@ from apps.fyle.helpers import get_access_token
 from apps.workspaces.models import ExportSettings, FyleCredential
 from .prompts.support_genie import PROMPT as SUPPORT_GENIE_PROMPT
 from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
+from .prompts.suggestion_context_page_prompt import SUGGESTION_PROMPT
 
 from . import llm
 
@@ -58,6 +59,14 @@ class QueryService:
         )
         return llm.get_openai_response(system_prompt=formatted_prompt)
 
+class SuggestionService:
+    @classmethod
+    def get_suggestions(cls, *, user_query: str) -> str:
+        formatted_prompt = SUGGESTION_PROMPT.format(
+            user_query=user_query
+        )
+
+        return llm.get_openai_response(system_prompt=formatted_prompt)
 
 class ActionService:
 
