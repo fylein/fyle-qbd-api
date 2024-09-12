@@ -4,7 +4,7 @@ from typing import Callable, Dict
 import requests
 
 from apps.fyle.helpers import get_access_token
-from apps.workspaces.models import FyleCredential
+from apps.workspaces.models import ExportSettings, FyleCredential
 from .prompts.support_genie import PROMPT as SUPPORT_GENIE_PROMPT
 from .prompts.spotlight_prompt import PROMPT as SPOTLIGHT_PROMPT
 
@@ -66,7 +66,8 @@ class ActionService:
     @classmethod
     def _get_action_function_from_code(cls, *, code: str) -> Callable:
         code_to_function_map = {
-            "trigger_export": cls.trigger_export
+            "trigger_export": cls.trigger_export,
+            "set_reimbursable_expenses_export_module_bill": cls.set_reimbursable_expenses_export_module_bill
         }
         return code_to_function_map[code]
 
@@ -81,6 +82,18 @@ class ActionService:
     def get_access_token(cls, *, workspace_id: int) -> str:
         creds = FyleCredential.objects.get(workspace_id=workspace_id)
         return get_access_token(creds.refresh_token)
+
+    @classmethod
+    def set_reimbursable_expenses_export_module_bill(cls, *, workspace_id: int):
+        export_settings = ExportSettings.objects.filter(
+            workspace_id=workspace_id
+        ).first()
+        if export_settings is None:
+            return ActionResponse(message="Failed to set reimbursable expense export type set to Bill", is_success=False)
+        else:
+            export_settings.reimbursable_expenses_export_type = 'BILL'
+            export_settings.save()
+            return ActionResponse(message="Reimbursable expense export type set to Bill", is_success=True)
 
     @classmethod
     def trigger_export(cls, *, workspace_id: int):
