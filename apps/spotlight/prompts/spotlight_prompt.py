@@ -221,58 +221,70 @@ Navigations Intructions:
 
 --------------------
 
-Help Intructions:
-    1. Provide specific help suggestions based on the user's search query.
-    2. Each help suggestion should have a unique code, title, and a brief description.
-    3. The help suggestion should offer guidance or explanations related to the user's search query.
-    4. IMPORTANT: Only choose help suggestions from the examples given below.
-    5. Interpret the user's search query to suggest relevant help options.
-    6. Ignore spelling errors and variations in the user's search query.
-    7. Suggest the best help that matches the user's search query.
+Help Instructions:
+    1. Formulate a question based on the user's search query in description.
 
-    Help Map:
-        "help": [
-            {{
-                "code": "learn_export",
-                "title": "Learn more about IIF export",
-                "description": "How to export IIF File?."
-            }},
-            {{
-                "code": "date_filter_help",
-                "title": "How to filter IIF files by date",
-                "description": "How to filter by date in QBD?"
-            }},
-            {{
-                "code": "learn_export_settings",
-                "title": "Learn more about export settings",
-                "description": "how to manage and configure export settings."
-            }},
-            {{
-                "code": "configure_credit_card_mapping",
-                "title": "How to configure credit card mapping",
-                "description": "how to set up field mappings for credit card transactions."
-            }},
-            {{
-                "code": "field_mapping_help",
-                "title": "How to create field mappings",
-                "description": "how to create new field mappings for import/export."
-            }},
-            {{
-                "code": "automatic_export_help",
-                "title": "How to set up automatic export",
-                "description": "how to configure automatic export settings for your data."
-            }},
-            {{
-                "code": "memo_field_help",
-                "title": "How to use memo field in export",
-                "description": "how to properly set and use the memo field in data exports."
-            }},
-            {{
-                "code": "map_fields_help",
-                "title": "How to map fields",
-                "description": "how to map fields for accurate data handling and export."
-            }}
-        ]
+    Examples:
+    1. User Query Inputs: ["How to export IIF files?", "export IIF files", "IIF export", "learn how to export IIF files", "export to IIF", "how to export data to IIF", "IIF file export", "guide to exporting IIF files", "learn export", "IIF file", "how to export", "export instructions", "IIF export process"]
+
+         Output:
+        {{
+            "code": "learn_export",
+            "title": "Learn more about IIF export",
+            "description": "How to export IIF File?."
+        }}
+    2. User Query Inputs: ["Disable reimbursable expenses", "disable reimbursable export", "turn off reimbursable export", "stop exporting reimbursable expenses", "disable reimbursable expenses export", "disable export settings for reimbursable expenses", "deactivate reimbursable export", "disable reimbursable export settings", "turn off export for reimbursable expenses", "stop reimbursable export"]
+
+        Output:
+        {{
+            "code": "disable_reimbursable_expenses_export",
+            "title": "Disable reimbursable export settings",
+            "description": "Disable the option to export reimbursable expenses in Export Configuration."
+        }}
+    3. User Query: ["How to manage IIF files?", "manage IIF files", "IIF file management", "how to filter IIF files", "filter IIF files by date", "manage files in QBD", "IIF file filters", "filter IIF data", "how to filter by date in QuickBooks Desktop", "date filters in IIF files", "QBD IIF file management", "file management in QuickBooks Desktop", "IIF file organization"]
+
+        Output:
+        {{
+            "code": "date_filter_help",
+            "title": "How to filter IIF files by date",
+            "description": "How to filter by date in QBD?"
+        }}
+    4. User Query: "How to map fields?"
+        {{
+            "code": "configure_credit_card_mapping",
+            "title": "How to configure credit card mapping",
+            "description": "how to set up field mappings for credit card transactions."
+        }}
+    5. User Query: "How to create field mappings?"
+        {{
+            "code": "field_mapping_help",
+            "title": "How to create field mappings",
+            "description": "how to create new field mappings for import/export."
+        }}
+    6. User Query: "How to set up automatic export?"
+        {{
+            "code": "automatic_export_help",
+            "title": "How to set up automatic export",
+            "description": "how to configure automatic export settings for your data."
+        }}
+    7. User Query: "How to use memo field in export?"
+        {{
+            "code": "memo_field_help",
+            "title": "How to use memo field in export",
+            "description": "how to properly set and use the memo field in data exports."
+        }}
+    8. User Query: "How to map fields?"
+        {{
+            "code": "map_fields_help",
+            "title": "How to map fields",
+            "description": "how to map fields for accurate data handling and export."
+        }}
+    9. User Query: "How to create new field mappings?"
+        {{
+            "code": "set_automatic_export",
+            "title": "Set/Update automatic export settings",
+            "description": "how to create new field mappings for import/export."
+        }}
 
 ---------------------------
 User Query: {user_query}
