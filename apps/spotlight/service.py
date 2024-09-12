@@ -67,6 +67,7 @@ class ActionService:
         code_to_function_map = {
             "trigger_export": cls.trigger_export,
             "set_reimbursable_expenses_export_module_bill": cls.set_reimbursable_expenses_export_module_bill,
+            "set_reimbursable_expenses_export_module_journal_entry": cls.set_reimbursable_expenses_export_module_journal_entry,
             "set_customer_field_mapping_to_project": cls.set_customer_field_mapping_to_project,
             "set_customer_field_mapping_to_cost_center": cls.set_customer_field_mapping_to_cost_center,
             "set_class_field_mapping_to_project": cls.set_class_field_mapping_to_project,
@@ -98,6 +99,19 @@ class ActionService:
                 export_settings.reimbursable_expenses_export_type = 'BILL'
                 export_settings.save()
                 return ActionResponse(message="Reimbursable expense export type set to Bill", is_success=True)
+
+    @classmethod
+    def set_reimbursable_expenses_export_module_journal_entry(cls, *, workspace_id: int):
+        with transaction.atomic():
+            export_settings = ExportSettings.objects.filter(
+                workspace_id=workspace_id
+            ).first()
+            if export_settings is None:
+                return ActionResponse(message="Failed to set reimbursable expense export type set to Journal Entry", is_success=False)
+            else:
+                export_settings.reimbursable_expenses_export_type = 'JOURNAL_ENTRY'
+                export_settings.save()
+                return ActionResponse(message="Reimbursable expense export type set to Journal Entry", is_success=True)
 
     @classmethod
     def trigger_export(cls, *, workspace_id: int):
