@@ -108,7 +108,7 @@ For FINAL:
     "schedule_is_enabled": true,
     "emails_selected": [],
     "day_of_month": null,
-    "day_of_week": null,
+    "day_of_week": null, // If not null should always be CAPITALIZED (MONDAY, TUESDAY, etc.)
     "frequency": "DAILY",
     "time_of_day": "12:00:00"
   }
