@@ -273,7 +273,7 @@ class ActionService:
             action_response['project_type'] = 'PROJECT'
             post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
             return ActionResponse(message="Field mapping updated successfully", is_success=True)
-        return ActionResponse(message="Field mapping already exists", is_success=False)
+        return ActionResponse(message="Field mapping is already set to project", is_success=True)
     
     @classmethod
     def set_customer_field_mapping_to_cost_center(cls, *, workspace_id: int):
@@ -291,7 +291,7 @@ class ActionService:
             action_response['project_type'] = 'COST_CENTER'
             post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
             return ActionResponse(message="Field mapping updated successfully", is_success=True)
-        return ActionResponse(message="Field mapping already exists", is_success=False)
+        return ActionResponse(message="Field mapping is already set to cost center", is_success=True)
     
     @classmethod
     def set_class_field_mapping_to_project(cls, *, workspace_id: int):
@@ -309,7 +309,7 @@ class ActionService:
             action_response['class_type'] = 'PROJECT'
             post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
             return ActionResponse(message="Field mapping updated successfully", is_success=True)
-        return ActionResponse(message="Field mapping already exists", is_success=False)
+        return ActionResponse(message="Field mapping is already set to Project", is_success=True)
     
     @classmethod
     def set_class_field_mapping_to_cost_center(cls, *, workspace_id: int):
@@ -327,7 +327,7 @@ class ActionService:
             action_response['class_type'] = 'COST_CENTER'
             post_response = requests.post(url, headers=headers, data=json.dumps(action_response))
             return ActionResponse(message="Field mapping updated successfully", is_success=True)
-        return ActionResponse(message="Field mapping already exists", is_success=False)
+        return ActionResponse(message="Field mapping is already set to Cost center", is_success=True)
 
     @classmethod
     def enable_reimbursable_expenses_export(cls, *, workspace_id: int):
