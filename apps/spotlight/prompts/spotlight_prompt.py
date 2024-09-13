@@ -109,7 +109,7 @@ Actions Intructions:
                 "type": "action",
                 "code": "set_reimbursable_expenses_export_grouping_report",
                 "title": "Group reimbursable expenses export by report",
-                "description": "Set grouping to expense_report, this grouping reflects how the expense entries are posted in QuickBooks Desktop.",
+                "description": "Set grouping to expense report, this grouping reflects how the expense entries are posted in QuickBooks Desktop.",
                 "icon": "pi-list-check"
             }},
             {{
@@ -129,7 +129,7 @@ Actions Intructions:
             {{
                 "type": "action",
                 "code": "enable_corporate_card_expenses_export",
-                "title": "Enable option corporate card expenses export",
+                "title": "Enable corporate card expenses export",
                 "description": "Enable the option to export of credit card expenses from Fyle to QuickBooks Desktop.",
                 "icon": "pi-list-check"
             }},
@@ -454,7 +454,7 @@ Examples:
                 "type": "action",
                 "code": "set_reimbursable_expenses_export_grouping_expense_report",
                 "title": "Group reimbursable expenses export by expense report",
-                "description": "Set grouping to expense_report, this grouping reflects how the expense entries are posted in QuickBooks Desktop.",
+                "description": "Set grouping to expense report, this grouping reflects how the expense entries are posted in QuickBooks Desktop.",
                 "icon": "pi-list-check"
             }},
             {{
