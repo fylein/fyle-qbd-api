@@ -16,7 +16,7 @@ from apps.workspaces.serializers import (
     WorkspaceSerializer, ExportSettingsSerializer,
     FieldMappingSerializer, AdvancedSettingSerializer
 )
-from .tasks import run_import_export
+from .tasks import trigger_export
 
 
 class WorkspaceView(generics.CreateAPIView, generics.RetrieveAPIView):
@@ -98,10 +98,7 @@ class TriggerExportView(generics.CreateAPIView):
         """
         workspace_id = self.kwargs.get('workspace_id')
 
-        run_import_export(workspace_id=workspace_id)
-        new_expenses_imported = Expense.objects.filter(
-            workspace_id=workspace_id, exported=False
-        ).exists()
+        new_expenses_imported = trigger_export(workspace_id)
 
         return Response(
             status=status.HTTP_200_OK,
