@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'apps.fyle',
     'apps.tasks',
     'apps.qbd',
-    'apps.mappings'
+    'apps.mappings',
+    'apps.integration_helper'
 ]
 
 MIDDLEWARE = [
