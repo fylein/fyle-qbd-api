@@ -20,13 +20,15 @@ from .views import (
     AdvancedSettingView,
     FieldMappingView,
     TriggerExportView,
-    ReadyView
+    ReadyView,
+    WebhookCallbackView
 )
 
 
 urlpatterns = [
     path('', WorkspaceView.as_view(), name='workspaces'),
     path('ready/', ReadyView.as_view(), name='ready'),
+    path('webhook_callback/', WebhookCallbackView.as_view(), name='qbd_direct_webhook_callback'),
     path('<int:workspace_id>/export_settings/', ExportSettingView.as_view(), name='export-settings'),
     path('<int:workspace_id>/advanced_settings/', AdvancedSettingView.as_view(), name='advanced-settings'),
     path('<int:workspace_id>/field_mappings/', FieldMappingView.as_view(), name='field-mappings'),

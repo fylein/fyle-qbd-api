@@ -1,7 +1,12 @@
 import pytest
+
+from rest_framework.exceptions import ValidationError
+
 from apps.fyle.models import Expense
 from apps.workspaces.models import Workspace
 from apps.workspaces.tasks import (
+    async_handle_webhook_callback,
+    async_update_timestamp_in_qbd_direct,
     run_import_export,
     async_update_workspace_name,
     async_create_admin_subcriptions
@@ -35,7 +40,7 @@ def test_run_import_export_bill_ccp(
 
     tasks = OrmQ.objects.all()
 
-    assert tasks.count() == 2
+    assert tasks.count() == 3
 
 
 @pytest.mark.django_db(databases=['default'], transaction=True)
@@ -61,7 +66,7 @@ def test_run_import_export_journal_journal(
 
     tasks = OrmQ.objects.all()
 
-    assert tasks.count() == 2
+    assert tasks.count() == 3
 
 
 @pytest.mark.django_db(databases=['default'])
@@ -126,3 +131,101 @@ def test_async_create_admin_subcriptions_2(
 
     mock_api.side_effect = Exception('Error')
     reverse('webhook-callback', kwargs={'workspace_id': workspace_id})
+
+
+def test_handle_webhook_callback_case_1(db, create_temp_workspace):
+    """
+    Test handle webhook callback
+    Case: Valid Payload
+    """
+    workspace = Workspace.objects.first()
+
+    assert workspace.migrated_to_qbd_direct is False
+
+    payload = {
+        'data': {
+            'org_id': workspace.org_id
+        },
+        'action': 'DISABLE_EXPORT'
+    }
+
+    async_handle_webhook_callback(payload=payload)
+
+    workspace.refresh_from_db()
+
+    assert workspace.migrated_to_qbd_direct is True
+
+
+def test_handle_webhook_callback_case_2(db, create_temp_workspace):
+    """
+    Test handle webhook callback
+    Case: Invalid Payload, org_id not present
+    """
+    workspace = Workspace.objects.first()
+
+    assert workspace.migrated_to_qbd_direct is False
+
+    payload = {
+        'data': {
+            'org_id': None
+        },
+        'action': 'DISABLE_EXPORT'
+    }
+
+    try:
+        async_handle_webhook_callback(payload=payload)
+    except ValidationError as e:
+        assert str(e.detail[0]) == 'Org Id not found'
+
+
+def test_handle_webhook_callback_case_3(db, create_temp_workspace):
+    """
+    Test handle webhook callback
+    Case: Invalid Payload, org_id does not match in workspace
+    """
+    workspace = Workspace.objects.first()
+
+    assert workspace.migrated_to_qbd_direct is False
+
+    payload = {
+        'data': {
+            'org_id': 'org123'
+        },
+        'action': 'DISABLE_EXPORT'
+    }
+
+    try:
+        async_handle_webhook_callback(payload=payload)
+    except ValidationError as e:
+        assert str(e.detail[0]) == 'Workspace not found for the given Org Id'
+
+
+def test_async_update_timestamp_in_qbd_direct_case_1(
+    db,
+    mocker,
+    create_temp_workspace,
+    add_fyle_credentials
+):
+    """
+    Test update_timestamp_in_qbd_direct
+    Case: Valid Payload and token
+    """
+    workspace = Workspace.objects.first()
+    post_request = mocker.patch('apps.workspaces.tasks.post_request')
+
+    async_update_timestamp_in_qbd_direct(workspace.id)
+
+    post_request.assert_called_once()
+
+
+def test_async_update_timestamp_in_qbd_direct_case_2(db, create_temp_workspace):
+    """
+    Test update_timestamp_in_qbd_direct
+    Case: Token not present
+    """
+    workspace = Workspace.objects.first()
+
+    try:
+        async_update_timestamp_in_qbd_direct(workspace.id)
+    except Exception as e:
+        assert str(e.detail[0]) == 'Auth Token not present for workspace id {}'.format(workspace.id)

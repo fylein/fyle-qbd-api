@@ -1,3 +1,4 @@
+from apps.fyle.exceptions import handle_view_exceptions
 from rest_framework import generics
 from rest_framework.views import Response, status
 from rest_framework.permissions import IsAuthenticated
@@ -111,6 +112,7 @@ class TriggerExportView(generics.CreateAPIView):
             }
         )
 
+
 class ReadyView(generics.RetrieveAPIView):
     """
     Ready call to check if the api is ready
@@ -128,5 +130,26 @@ class ReadyView(generics.RetrieveAPIView):
             data={
                 'message': 'Ready'
             },
+            status=status.HTTP_200_OK
+        )
+
+
+class WebhookCallbackView(generics.CreateAPIView):
+    """
+    Webhook View
+    """
+    permission_classes = []
+
+    @handle_view_exceptions()
+    def post(self, request, *args, **kwargs):
+        """
+        Webhook post call
+        """
+        async_task(
+            'apps.workspaces.tasks.async_handle_webhook_callback',
+            payload=request.data
+        )
+
+        return Response(
             status=status.HTTP_200_OK
         )
