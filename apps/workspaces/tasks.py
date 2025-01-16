@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from django.conf import settings
 from django_q.tasks import async_task
+from django_q.models import Schedule
 from fyle_rest_auth.helpers import get_fyle_admin
 
 from apps.fyle.queue import queue_import_credit_card_expenses, queue_import_reimbursable_expenses
@@ -13,7 +14,7 @@ from apps.qbd.queue import (
 )
 from apps.tasks.models import AccountingExport
 from apps.fyle.models import Expense
-from apps.workspaces.models import FyleCredential, ExportSettings, Workspace
+from apps.workspaces.models import FyleCredential, ExportSettings, Workspace, AdvancedSetting
 from fyle_integrations_platform_connector import PlatformConnector
 from apps.fyle.helpers import post_request, validate_webhook_request
 
@@ -29,7 +30,7 @@ def run_import_export(workspace_id: int):
     """
     workspace = Workspace.objects.get(id=workspace_id)
     if workspace.migrated_to_qbd_direct:
-        logger.info("Import Export not running since the workspace with id {} is migrated to QBD Connector".format(workspace.id))
+        logger.error("Import Export not running since the workspace with id {} is migrated to QBD Connector".format(workspace.id))
         return
 
     export_settings = ExportSettings.objects.get(workspace_id=workspace_id)
@@ -125,10 +126,16 @@ def async_handle_webhook_callback(payload: dict) -> None:
     validate_webhook_request(org_id=org_id)
 
     if action == 'DISABLE_EXPORT':
-        Workspace.objects.filter(org_id=org_id).update(
-            migrated_to_qbd_direct=True,
-            updated_at=datetime.now(timezone.utc)
-        )
+        workspace = Workspace.objects.filter(org_id=org_id).first()
+        workspace.migrated_to_qbd_direct = True
+        workspace.updated = datetime.now(timezone.utc)
+        workspace.save(update_fields=['migrated_to_qbd_direct', 'updated_at'])
+
+        Schedule.objects.filter(args=str(workspace.id)).all().delete()
+        adv_settings = AdvancedSetting.objects.filter(workspace_id=workspace.id, schedule_id__isnull=False).first()
+        if adv_settings:
+            adv_settings.schedule_id = None
+            adv_settings.save(update_fields=['schedule_id'])
 
 
 def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
