@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime, timezone
 
@@ -161,7 +162,7 @@ def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
 
         if fyle_creds:
             refresh_token = fyle_creds.refresh_token
-            post_request(url=api_url, body=payload, refresh_token=refresh_token)
+            post_request(url=api_url, body=json.dumps(payload), refresh_token=refresh_token)
         else:
             raise Exception('Auth Token not present for workspace id {}'.format(workspace.id))
     except Exception as e:
