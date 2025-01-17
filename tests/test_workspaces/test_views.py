@@ -342,3 +342,22 @@ def test_ready_view(api_client, test_connection):
     response = api_client.get(url)
 
     assert response.status_code == 200
+
+
+def test_webhook_callback_view(
+    db,
+    mocker,
+    api_client,
+    test_connection,
+    create_temp_workspace
+):
+    """
+    Test post webhook callback
+    """
+    async_task = mocker.patch('apps.workspaces.views.async_task')
+    url = reverse('workspace_webhook_callback')
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(test_connection.access_token))
+    response = api_client.post(url)
+
+    assert response.status_code == 200
+    async_task.assert_called_once()

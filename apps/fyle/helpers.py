@@ -153,3 +153,15 @@ def assert_valid_request(workspace_id:int, org_id:str):
     workspace = Workspace.objects.get(org_id=org_id)
     if workspace.id != workspace_id:
         raise ValidationError('Workspace mismatch')
+
+
+def validate_webhook_request(org_id: str):
+    """
+    Validate the webhook request by checking the fyle_org_id workspace.
+    """
+    if not org_id:
+        raise ValidationError('Org Id not found')
+
+    workspace = Workspace.objects.filter(org_id=org_id).first()
+    if not workspace:
+        raise ValidationError('Workspace not found for the given Org Id')
