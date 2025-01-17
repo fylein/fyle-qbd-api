@@ -147,8 +147,8 @@ def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
     payload = {
         'data': {
             'org_id': workspace.org_id,
-            'reimbursable_last_synced_at': workspace.reimbursable_last_synced_at,
-            'ccc_last_synced_at': workspace.ccc_last_synced_at
+            'reimbursable_last_synced_at': workspace.reimbursable_last_synced_at.isoformat() if workspace.reimbursable_last_synced_at else None,
+            'ccc_last_synced_at': workspace.ccc_last_synced_at.isoformat() if workspace.ccc_last_synced_at else None
         },
         'action': 'UPDATE_LAST_SYNCED_TIMESTAMP'
     }
@@ -157,7 +157,7 @@ def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
 
     try:
         logger.info('Posting Timestamp Update to QBD Connector with payload: {}'.format(payload))
-        fyle_creds = FyleCredential.objects.filter(workspace=workspace.id).first()
+        fyle_creds = FyleCredential.objects.filter(workspace_id=workspace.id).first()
 
         if fyle_creds:
             refresh_token = fyle_creds.refresh_token

@@ -151,5 +151,8 @@ class WebhookCallbackView(generics.CreateAPIView):
         )
 
         return Response(
-            status=status.HTTP_200_OK
+            status=status.HTTP_200_OK,
+            data={
+                'message': 'Webhook callback received'
+            }
         )
