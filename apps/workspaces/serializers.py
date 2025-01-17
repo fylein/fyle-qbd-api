@@ -214,7 +214,9 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
         )
 
         # Schedule run import export or delete
-        schedule_run_import_export(workspace_id)
+
+        if not advanced_setting.workspace.migrated_to_qbd_direct:
+            schedule_run_import_export(workspace_id)
 
         # Update workspace onboarding state
         workspace = advanced_setting.workspace

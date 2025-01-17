@@ -27,7 +27,7 @@ class Workspace(models.Model):
     user = models.ManyToManyField(User, help_text='Reference to users table')
     org_id = models.CharField(max_length=255, help_text='org id', unique=True)
     currency = models.CharField(max_length=255, help_text='fyle currency', null=True)
-    
+
     reimbursable_last_synced_at = models.DateTimeField(
         help_text='Datetime when reimbursable expenses were pulled last', 
         null=True
@@ -41,6 +41,12 @@ class Workspace(models.Model):
         max_length=50, choices=ONBOARDING_STATE_CHOICES, default=get_default_onboarding_state,
         help_text='Onboarding status of the workspace', null=True
     )
+
+    migrated_to_qbd_direct = models.BooleanField(
+        default=False,
+        help_text='Migrated to QBD Direct'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, help_text='Created at datetime')
     updated_at = models.DateTimeField(auto_now=True, help_text='Updated at datetime')
 
