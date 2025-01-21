@@ -194,10 +194,31 @@ def test_handle_webhook_callback_case_3(db, create_temp_workspace):
         'action': 'DISABLE_EXPORT'
     }
 
+    async_handle_webhook_callback(payload=payload)
+    assert workspace.migrated_to_qbd_direct is False
+
+
+def test_handle_webhook_callback_case_4(db, create_temp_workspace):
+    """
+    Test handle webhook callback
+    Case: Invalid Payload, action not present
+    """
+    workspace = Workspace.objects.first()
+
+    assert workspace.migrated_to_qbd_direct is False
+
+    payload = {
+        'data': {
+            'org_id': workspace.org_id
+        }
+    }
+
     try:
         async_handle_webhook_callback(payload=payload)
     except ValidationError as e:
-        assert str(e.detail[0]) == 'Workspace not found for the given Org Id'
+        assert str(e.detail[0]) == 'Action not found in the webhook callback payload'
+
+    assert workspace.migrated_to_qbd_direct is False
 
 
 def test_async_update_timestamp_in_qbd_direct_case_1(

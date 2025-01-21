@@ -124,19 +124,22 @@ def async_handle_webhook_callback(payload: dict) -> None:
 
     org_id = payload.get('data', {}).get('org_id')
     action = payload.get('action')
-    validate_webhook_request(org_id=org_id)
+    validate_webhook_request(org_id=org_id, action=action)
 
     if action == 'DISABLE_EXPORT':
         workspace = Workspace.objects.filter(org_id=org_id).first()
-        workspace.migrated_to_qbd_direct = True
-        workspace.updated = datetime.now(timezone.utc)
-        workspace.save(update_fields=['migrated_to_qbd_direct', 'updated_at'])
+        if workspace:
+            workspace.migrated_to_qbd_direct = True
+            workspace.updated = datetime.now(timezone.utc)
+            workspace.save(update_fields=['migrated_to_qbd_direct', 'updated_at'])
 
-        Schedule.objects.filter(args=str(workspace.id)).all().delete()
-        adv_settings = AdvancedSetting.objects.filter(workspace_id=workspace.id, schedule_id__isnull=False).first()
-        if adv_settings:
-            adv_settings.schedule_id = None
-            adv_settings.save(update_fields=['schedule_id'])
+            Schedule.objects.filter(args=str(workspace.id)).all().delete()
+            adv_settings = AdvancedSetting.objects.filter(workspace_id=workspace.id, schedule_id__isnull=False).first()
+            if adv_settings:
+                adv_settings.schedule_id = None
+                adv_settings.save(update_fields=['schedule_id'])
+        else:
+            logger.warning('Webhook Callback: Workspace not found for org_id: {}'.format(org_id))
 
 
 def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
