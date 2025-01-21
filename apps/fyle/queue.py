@@ -71,11 +71,12 @@ def async_handle_webhook_callback(body: dict, workspace_id: int) -> None:
     :param body: body
     :return: None
     """
-    if body.get('action') == 'ACCOUNTING_EXPORT_INITIATED' and body.get('data'):
-        org_id = body['data']['org_id']
-        assert_valid_request(workspace_id=workspace_id, org_id=org_id)
-        workspace = Workspace.objects.get(org_id=org_id)
-        async_task('apps.workspaces.tasks.run_import_export', workspace.id)
+    return
+    # if body.get('action') == 'ACCOUNTING_EXPORT_INITIATED' and body.get('data'):
+    #     org_id = body['data']['org_id']
+    #     assert_valid_request(workspace_id=workspace_id, org_id=org_id)
+    #     workspace = Workspace.objects.get(org_id=org_id)
+    #     async_task('apps.workspaces.tasks.run_import_export', workspace.id)
 
     """for allowing expense edit, uncomment the below code and relevant test if required in future"""
     # elif body.get('action') == 'UPDATED_AFTER_APPROVAL' and body.get('data') and body.get('resource') == 'EXPENSE':
