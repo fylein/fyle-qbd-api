@@ -3,6 +3,7 @@ Workspace Serializers
 """
 from typing import Dict
 from rest_framework import serializers
+from apps.workspaces.tasks import post_to_integration_settings
 from django_q.tasks import async_task
 from django.core.cache import cache
 from apps.mappings.models import QBDMapping
@@ -225,5 +226,5 @@ class AdvancedSettingSerializer(serializers.ModelSerializer):
             workspace.onboarding_state = 'COMPLETE'
             workspace.save()
             async_task('apps.workspaces.tasks.async_create_admin_subcriptions', workspace_id)
-
+            post_to_integration_settings(workspace_id, True)
         return advanced_setting
