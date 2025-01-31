@@ -170,26 +170,3 @@ def async_update_timestamp_in_qbd_direct(workspace_id: int) -> None:
             raise Exception('Auth Token not present for workspace id {}'.format(workspace.id))
     except Exception as e:
         logger.error("Failed to sync timestamp to QBD Connector: {}".format(e))
-
-
-def post_to_integration_settings(workspace_id: int, active: bool):
-    """
-    Post to integration settings
-    """
-    refresh_token = FyleCredential.objects.get(workspace_id=workspace_id).refresh_token
-    url = '{}/integrations/'.format(settings.INTEGRATIONS_SETTINGS_API)
-    payload = {
-        'tpa_id': settings.FYLE_CLIENT_ID,
-        'tpa_name': 'Fyle Quickbooks Desktop (IIF) Integration',
-        'type': 'ACCOUNTING',
-        'is_active': active,
-        'connected_at': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-    }
-
-    try:
-        post_request(url, json.dumps(payload), refresh_token)
-        org_id = Workspace.objects.get(id=workspace_id).org_id
-        logger.info(f'New integration record: Fyle Quickbooks Desktop (IIF) Integration (ACCOUNTING) | {workspace_id = } | {org_id = }')
-
-    except Exception as error:
-        logger.error(error)
