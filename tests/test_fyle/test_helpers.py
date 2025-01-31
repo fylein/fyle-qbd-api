@@ -20,4 +20,4 @@ def test_post_request(mocker):
         'established': '1990'
     }
     mocker.patch('requests.post', return_value=(MockResponse("""{"data": "Airline Posted"}""", 200)))
-    post_request(url, body=json.dumps(body))
+    post_request(url, body=body)
