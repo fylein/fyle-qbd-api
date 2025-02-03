@@ -187,7 +187,7 @@ def post_to_integration_settings(workspace_id: int, active: bool):
     }
 
     try:
-        post_request(url, json.dumps(payload), refresh_token)
+        post_request(url, payload, refresh_token)
         org_id = Workspace.objects.get(id=workspace_id).org_id
         logger.info(f'New integration record: Fyle Quickbooks Desktop (IIF) Integration (ACCOUNTING) | {workspace_id = } | {org_id = }')
 
