@@ -65,7 +65,7 @@ class Sentry:
         """Filter sensitive data before sending to Sentry."""
         # Handle exceptions that should not be sent
         if 'exc_info' in hint:
-            exc_type, exc_value, tb = hint['exc_info']
+            _, exc_value, _ = hint['exc_info']
             if isinstance(exc_value, gevent.GreenletExit):
                 return None
             elif getattr(exc_value, 'args', [None])[0] in ['Error: 502']:
