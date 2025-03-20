@@ -22,6 +22,16 @@ WORKDIR /fyle-qbd-api
 # Do linting checks
 RUN pylint --load-plugins pylint_django --rcfile=.pylintrc **/**.py
 
+#================================================================
+# Setup non-root user and permissions
+#================================================================
+RUN groupadd -r -g 1001 qbd_api_service && \
+    useradd -r -g qbd_api_service qbd_api_user && \
+    chown -R qbd_api_user:qbd_api_service /fyle-qbd-api
+
+# Switch to non-root user
+USER qbd_api_user
+
 # Expose development port
 EXPOSE 8000
 
