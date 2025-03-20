@@ -9,7 +9,7 @@ services:
     entrypoint: bash run.sh
     restart: unless-stopped
     volumes:
-    - ./:/fyle-qbd-api
+    - api-volume:/fyle-qbd-api
     - /tmp:/tmp
     ports:
     - 8000:8000
@@ -41,5 +41,5 @@ services:
     volumes:
       - data:/var/lib/postgresql/data/
 volumes:
-  api:
+  api-volume:
   data:
