@@ -24,6 +24,13 @@ logger = logging.getLogger(__name__)
 logger.level = logging.INFO
 
 
+def async_update_fyle_credentials(fyle_org_id: str, refresh_token: str):
+    fyle_credentials = FyleCredential.objects.filter(workspace__org_id=fyle_org_id).first()
+    if fyle_credentials and refresh_token:
+        fyle_credentials.refresh_token = refresh_token
+        fyle_credentials.save()
+
+
 def run_import_export(workspace_id: int):
     """
     Run Processes to Generate IIF File
