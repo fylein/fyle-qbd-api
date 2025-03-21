@@ -100,7 +100,7 @@ FYLE_REST_AUTH_SERIALIZERS = {
 }
 
 FYLE_REST_AUTH_SETTINGS = {
-    'async_update_user': False
+    'async_update_user': True
 }
 
 REST_FRAMEWORK = {
