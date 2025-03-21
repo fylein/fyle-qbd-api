@@ -3,8 +3,9 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from apps.fyle.models import Expense
-from apps.workspaces.models import Workspace
+from apps.workspaces.models import Workspace, FyleCredential
 from apps.workspaces.tasks import (
+    async_update_fyle_credentials,
     async_handle_webhook_callback,
     async_update_timestamp_in_qbd_direct,
     run_import_export,
@@ -17,6 +18,24 @@ from tests.test_fyle.fixtures import fixtures as fyle_fixtures
 from django_q.models import OrmQ
 from django.conf import settings
 from django.urls import reverse
+
+
+def test_async_update_fyle_credentials(
+    db,
+    mocker,
+    create_temp_workspace,
+    add_fyle_credentials
+):
+    workspace_id = 1
+    org_id = "riseabovehate1"
+
+    async_update_fyle_credentials(
+        fyle_org_id=org_id,
+        refresh_token="refresh_token"
+    )
+
+    fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
+    assert fyle_credentials.refresh_token == "refresh_token"
 
 
 @pytest.mark.django_db(databases=['default'], transaction=True)
