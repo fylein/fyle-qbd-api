@@ -8,8 +8,9 @@ services:
         CI: ENABLED
     entrypoint: bash run.sh
     restart: unless-stopped
+    user: root
     volumes:
-    - api-volume:/fyle-qbd-api
+    - ./:/fyle-qbd-api
     - /tmp:/tmp
     ports:
     - 8000:8000
@@ -41,5 +42,4 @@ services:
     volumes:
       - data:/var/lib/postgresql/data/
 volumes:
-  api-volume:
   data:
