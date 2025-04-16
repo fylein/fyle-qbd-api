@@ -49,7 +49,7 @@ def test_run_import_export_bill_ccp(
     Test run import export
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
@@ -75,7 +75,7 @@ def test_run_import_export_journal_journal(
     workspace_id = 3
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
@@ -108,7 +108,7 @@ def test_async_create_admin_subcriptions(
     add_fyle_credentials
 ):
     mock_api = mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Subscriptions.post',
+        'fyle.platform.apis.v1.admin.Subscriptions.post',
         return_value={}
     )
     workspace_id = 1
@@ -135,7 +135,7 @@ def test_async_create_admin_subcriptions_2(
     add_fyle_credentials
 ):
     mock_api = mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Subscriptions.post',
+        'fyle.platform.apis.v1.admin.Subscriptions.post',
         return_value={}
     )
     workspace_id = 1

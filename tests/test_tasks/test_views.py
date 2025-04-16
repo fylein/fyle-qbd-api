@@ -103,7 +103,7 @@ def test_accounting_export_download(api_client, test_connection, mocker):
     Test post of workspace
     '''
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 

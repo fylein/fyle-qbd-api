@@ -36,22 +36,22 @@ def test_create_bills_iif_file_report(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -102,22 +102,22 @@ def test_create_bills_iif_file_report_fail(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -164,12 +164,12 @@ def test_create_bills_iif_file_report_fatal(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
@@ -214,22 +214,22 @@ def test_create_bills_iif_file_expense(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -274,22 +274,22 @@ def test_create_credit_card_purchases_iif_file_expense_vendor(
     Test create credit card purchases iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -337,22 +337,22 @@ def test_create_credit_card_purchases_iif_file_expense_employee(
     Test create credit card purchases iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -405,22 +405,22 @@ def test_create_credit_card_purchases_iif_file_expense_fail(
     Test create credit card purchases iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -460,17 +460,17 @@ def test_create_credit_card_purchases_iif_file_expense_fatal(
     Test create credit card purchases iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -507,22 +507,22 @@ def test_create_journals_iif_file_reimbursable_expense(
     Test create journals iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -572,22 +572,22 @@ def test_create_journals_iif_file_ccc_report_vendor(
     Test create journals iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -638,22 +638,22 @@ def test_create_journals_iif_file_ccc_report_employee(
     Test create journals iif file
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -708,22 +708,22 @@ def test_create_journals_iif_file_ccc_report_fail(
     Test create journals iif file Fail
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -766,17 +766,17 @@ def test_create_journals_iif_file_ccc_report_fatal(
     Test create journals iif file Fatal
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -827,22 +827,22 @@ def test_email_failure(
     Test create journals iif file Failed for email failure
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['credit_card_expenses']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.create_file',
+        'fyle.platform.apis.v1.admin.Files.create_file',
         return_value=fyle_fixtures['create_file']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.bulk_generate_file_urls',
+        'fyle.platform.apis.v1.admin.Files.bulk_generate_file_urls',
         return_value=fyle_fixtures['generate_file_urls']
     )
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Files.upload_file_to_aws',
+        'fyle.platform.apis.v1.admin.Files.upload_file_to_aws',
         return_value=None
     )
 
@@ -871,7 +871,7 @@ def test_email_failure(
 
 
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fyle_fixtures['reimbursable_expenses']
     )
     import_reimbursable_expenses(workspace_id, accounting_export)

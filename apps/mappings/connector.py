@@ -13,7 +13,7 @@ class PlatformConnector:
         fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
     
         self.platform = Platform(
-            server_url='{}/platform/v1beta'.format(fyle_credentials.cluster_domain),
+            server_url='{}/platform/v1'.format(fyle_credentials.cluster_domain),
             token_url=settings.FYLE_TOKEN_URI,
             client_id=settings.FYLE_CLIENT_ID,
             client_secret=settings.FYLE_CLIENT_SECRET,
@@ -31,7 +31,7 @@ class PlatformConnector:
             'order': 'updated_at.desc',
         }
 
-        generator = self.platform.v1beta.admin.corporate_cards.list_all(query)
+        generator = self.platform.v1.admin.corporate_cards.list_all(query)
 
         for items in generator:
             card_attributes = []
@@ -73,7 +73,7 @@ class PlatformConnector:
             'type': 'eq.SELECT',
             'is_enabled': 'eq.true'
         }
-        custom_field_gen = self.platform.v1beta.admin.expense_fields.list_all(query)
+        custom_field_gen = self.platform.v1.admin.expense_fields.list_all(query)
         if source_type:
             query = QBDMapping.objects.filter(workspace_id=self.workspace_id, attribute_type=source_type)
             existing_source_attributes = query.values_list('source_value', flat=True)
@@ -111,7 +111,7 @@ class PlatformConnector:
         query = {
         'order': 'updated_at.desc'
         }
-        projects_generator = self.platform.v1beta.admin.projects.list_all(query)
+        projects_generator = self.platform.v1.admin.projects.list_all(query)
         existing_projects = QBDMapping.objects.filter(
             workspace_id=self.workspace_id,
             attribute_type=source_type).values_list('source_value', flat=True)
@@ -141,7 +141,7 @@ class PlatformConnector:
         'order': 'updated_at.desc'
         }
         
-        cost_center_generator = self.platform.v1beta.admin.cost_centers.list_all(query)
+        cost_center_generator = self.platform.v1.admin.cost_centers.list_all(query)
         existing_cost_centers = QBDMapping.objects.filter(
             workspace_id=self.workspace_id,
             attribute_type=source_type).values_list('source_value', flat=True)

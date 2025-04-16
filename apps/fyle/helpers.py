@@ -69,14 +69,14 @@ def upload_iif_to_fyle(file_path: str, workspace_id: int):
     fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
     
     platform = Platform(
-        server_url='{}/platform/v1beta'.format(fyle_credentials.cluster_domain),
+        server_url='{}/platform/v1'.format(fyle_credentials.cluster_domain),
         token_url=settings.FYLE_TOKEN_URI,
         client_id=settings.FYLE_CLIENT_ID,
         client_secret=settings.FYLE_CLIENT_SECRET,
         refresh_token=fyle_credentials.refresh_token,
      )
 
-    user_id = platform.v1beta.spender.my_profile.get()['data']['user']['id']
+    user_id = platform.v1.spender.my_profile.get()['data']['user']['id']
 
     file_payload = {
         'data': {
@@ -87,7 +87,7 @@ def upload_iif_to_fyle(file_path: str, workspace_id: int):
         }
     }
 
-    file = platform.v1beta.admin.files.create_file(file_payload)['data']
+    file = platform.v1.admin.files.create_file(file_payload)['data']
 
     bulk_generate_file_urls_payload = {
         'data': [
@@ -97,14 +97,14 @@ def upload_iif_to_fyle(file_path: str, workspace_id: int):
         ]
     }
 
-    upload_url = platform.v1beta.admin.files.bulk_generate_file_urls(
+    upload_url = platform.v1.admin.files.bulk_generate_file_urls(
         bulk_generate_file_urls_payload
     )['data'][0]['upload_url']
 
     file_data = open(file_path, 'rb')
     file_data = base64.b64encode(file_data.read())
 
-    platform.v1beta.admin.files.upload_file_to_aws(
+    platform.v1.admin.files.upload_file_to_aws(
         content_type='application/vnd.shana.informed.interchange', # Took the content type from Postman
         url=upload_url,
         data=file_data
@@ -123,7 +123,7 @@ def download_iif_file(file_id: str, workspace_id: int):
     fyle_credentials = FyleCredential.objects.get(workspace_id=workspace_id)
     
     platform = Platform(
-        server_url='{}/platform/v1beta'.format(fyle_credentials.cluster_domain),
+        server_url='{}/platform/v1'.format(fyle_credentials.cluster_domain),
         token_url=settings.FYLE_TOKEN_URI,
         client_id=settings.FYLE_CLIENT_ID,
         client_secret=settings.FYLE_CLIENT_SECRET,
@@ -138,7 +138,7 @@ def download_iif_file(file_id: str, workspace_id: int):
         ]
     }
 
-    download_url = platform.v1beta.admin.files.bulk_generate_file_urls(
+    download_url = platform.v1.admin.files.bulk_generate_file_urls(
         bulk_generate_file_urls_payload
     )['data'][0]['download_url']
 
