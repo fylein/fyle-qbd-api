@@ -14,7 +14,7 @@ def test_sync_corporate_card(create_temp_workspace,
 
     workspace_id = 1
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.corporate_cards.list_all',
+        'fyle.platform.apis.v1.admin.corporate_cards.list_all',
         return_value=fixture['credit_card_sdk']
     )
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
@@ -35,7 +35,7 @@ def test_sync_projects(create_temp_workspace, add_fyle_credentials, mocker):
         ]}
     ]
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.projects.list_all',
+        'fyle.platform.apis.v1.admin.projects.list_all',
         return_value=mock_response
     )
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
@@ -65,7 +65,7 @@ def test_sync_cost_center(create_temp_workspace, add_fyle_credentials, mocker):
         ]}
     ]
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.cost_centers.list_all',
+        'fyle.platform.apis.v1.admin.cost_centers.list_all',
         return_value=mock_response
     )
     qbd_connection = PlatformConnector(workspace_id=workspace_id)
@@ -95,7 +95,7 @@ def test_sync_custom_field(mocker, api_client, test_connection):
         {'data': [{'field_name': 'field2', 'options': ['option3', 'option4']}]}
     ]
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.expense_fields.list_all',
+        'fyle.platform.apis.v1.admin.expense_fields.list_all',
         return_value=custom_fields_response
     )
 

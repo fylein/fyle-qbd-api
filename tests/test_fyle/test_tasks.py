@@ -33,7 +33,7 @@ def test_import_reimbursable_expenses(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['reimbursable_expenses']
     )
 
@@ -69,7 +69,7 @@ def test_import_reimbursable_expenses_fatal(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['reimbursable_expenses']
     )
 
@@ -97,7 +97,7 @@ def test_import_reimbursable_expenses_fail(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['reimbursable_expenses']
     )
 
@@ -128,7 +128,7 @@ def test_import_credit_card_expenses(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['credit_card_expenses']
     )
 
@@ -164,7 +164,7 @@ def test_import_credit_card_expenses_failed(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['credit_card_expenses']
     )
 
@@ -193,7 +193,7 @@ def test_import_credit_card_expenses_fatal(
     * apps.tasks.models.AccountingExport
     """
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.Expenses.list_all',
+        'fyle.platform.apis.v1.admin.Expenses.list_all',
         return_value=fixtures['credit_card_expenses']
     )
 
