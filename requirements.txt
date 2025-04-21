@@ -20,12 +20,12 @@ gevent==24.11.1
 gunicorn==23.0.0
 
 # Platform SDK
-fyle==0.37.0
+fyle==1.0.0
 
 # Reusable Fyle Packages
 fyle-rest-auth==1.8.2
 fyle-accounting-mappings==1.33.1
-fyle-integrations-platform-connector==1.38.4
+fyle-integrations-platform-connector==2.0.0
 
 # Postgres Dependincies
 psycopg2-binary==2.9.10

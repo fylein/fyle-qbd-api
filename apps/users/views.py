@@ -33,7 +33,7 @@ class UserProfileView(generics.RetrieveAPIView):
 
         platform = PlatformConnector(fyle_credentials)
 
-        employee_profile = platform.connection.v1beta.spender.my_profile.get()
+        employee_profile = platform.connection.v1.spender.my_profile.get()
 
         return Response(
             data=employee_profile,

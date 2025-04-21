@@ -11,11 +11,11 @@ from tests.test_mapping.fixtures import fixture
 @pytest.mark.django_db(databases=['default'])
 def test_sync_fyle_dimension_view(api_client, test_connection, mocker):
     mocker.patch(
-            'fyle.platform.apis.v1beta.admin.corporate_cards.list_all',
+            'fyle.platform.apis.v1.admin.corporate_cards.list_all',
             return_value=fixture['credit_card_sdk']
         )
     mocker.patch(
-        'fyle.platform.apis.v1beta.admin.expense_fields.list_all'
+        'fyle.platform.apis.v1.admin.expense_fields.list_all'
     )
     url = reverse(
         'workspaces'
