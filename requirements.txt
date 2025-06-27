@@ -20,7 +20,7 @@ gevent==24.11.1
 gunicorn==23.0.0
 
 # Platform SDK
-fyle==1.0.0
+fyle==1.0.2
 
 # Reusable Fyle Packages
 fyle-rest-auth==1.8.2
