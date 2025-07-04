@@ -115,12 +115,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'PAGE_SIZE': 100,
     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
+        'quickbooks_desktop_api.throttles.PerUserPathThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '10/second',
-        'user': '10/second'
+        'per_user_path': '30/second'
     }
 }
 
