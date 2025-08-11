@@ -6,7 +6,7 @@ on:
 
 jobs:
   private_deploy:
-    if: github.event_name == 'pull_request' && github.event.action == 'labeled' && (github.event.label.name == 'staging_deploy' || github.event.label.name == 'drstrange_deploy' || github.event.label.name == 'c1_qa_deploy' || github.event.label.name == 'c1_staging_deploy')
+    if: github.event_name == 'pull_request' && github.event.action == 'labeled' && (github.event.label.name == 'staging_deploy' || github.event.label.name == 'drstrange_deploy')
     runs-on: ubuntu-latest
     environment: ${{
       github.event.label.name == 'staging_deploy' && 'Staging' ||
@@ -57,10 +57,6 @@ jobs:
             git commit -m "Deployed fyle_qbd-api-staging:$NEW_TAG to staging"
           elif [[ "${{ github.event.label.name }}" == "drstrange_deploy" ]]; then
             git commit -m "Deployed fyle_qbd-api-drstrange:$NEW_TAG to drstrange"
-          elif [[ "${{ github.event.label.name }}" == "c1_qa_deploy" ]]; then
-            git commit -m "Deployed fyle_qbd-api-c1-qa:$NEW_TAG to c1-qa"
-          elif [[ "${{ github.event.label.name }}" == "c1_staging_deploy" ]]; then
-            git commit -m "Deployed fyle_qbd-api-c1-staging:$NEW_TAG to c1-staging"
           fi
           git remote set-url origin https://x-access-token:${{ secrets.DEPLOY_GIT_ACCESS_TOKEN }}@github.com/${{ vars.STAGING_DEPLOY_REPO }}
           git pull origin master
