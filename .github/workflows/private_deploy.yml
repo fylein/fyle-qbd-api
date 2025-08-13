@@ -1,16 +1,21 @@
-name: Deploy to Staging
+name: Deploy Private Branch to Any Environment
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [labeled]
 
 jobs:
-  staging_deploy:
+  private_deploy:
+    if: github.event_name == 'pull_request' && github.event.action == 'labeled' && (github.event.label.name == 'staging_deploy' || github.event.label.name == 'drstrange_deploy')
     runs-on: ubuntu-latest
-    environment: Staging
+    environment: ${{
+      github.event.label.name == 'staging_deploy' && 'Staging' ||
+      github.event.label.name == 'drstrange_deploy' && 'Staging'
+    }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: push to dockerhub
         uses: fylein/docker-release-action@master
         env:
@@ -22,6 +27,7 @@ jobs:
         run: |
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           sudo mv kustomize /usr/local/bin/
+
       - name: Clone another repository
         uses: actions/checkout@v2
         with:
@@ -34,12 +40,11 @@ jobs:
       - name: Update Image Tag
         run: |
           NEW_TAG="v$(git rev-parse --short HEAD)"
-          cd ${{ vars.STAGING_DEPLOY_REPO }}/${{ vars.STAGING_DEPLOY_DIR }}/staging/integrations
-          kustomize edit set image docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api:$NEW_TAG
-
-      - name: Update Image Tag - drstrange staging
-        run: |
-          cd ${{ vars.STAGING_DEPLOY_REPO }}/${{ vars.STAGING_DEPLOY_DIR }}/drstrange/integrations
+          if [[ "${{ github.event.label.name }}" == "staging_deploy" ]]; then
+            cd ${{ vars.STAGING_DEPLOY_REPO }}/${{ vars.STAGING_DEPLOY_DIR }}/staging/integrations
+          elif [[ "${{ github.event.label.name }}" == "drstrange_deploy" ]]; then
+            cd ${{ vars.STAGING_DEPLOY_REPO }}/${{ vars.STAGING_DEPLOY_DIR }}/drstrange/integrations
+          fi
           kustomize edit set image docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/fyle_qbd-api:$NEW_TAG
 
       - name: Commit and push changes
@@ -48,26 +53,11 @@ jobs:
           git config --global user.email "integrations@fylehq.com"
           git config --global user.name "GitHub Actions"
           git add .
-          git commit -m "Deployed quickbooks-desktop-api:$NEW_TAG to staging"
+          if [[ "${{ github.event.label.name }}" == "staging_deploy" ]]; then
+            git commit -m "Deployed fyle_qbd-api:$NEW_TAG to staging"
+          elif [[ "${{ github.event.label.name }}" == "drstrange_deploy" ]]; then
+            git commit -m "Deployed fyle_qbd-api:$NEW_TAG to drstrange"
+          fi
           git remote set-url origin https://x-access-token:${{ secrets.DEPLOY_GIT_ACCESS_TOKEN }}@github.com/${{ vars.STAGING_DEPLOY_REPO }}
           git pull origin master
           git push origin master
-
-      - name: Create new Sentry release
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: fyle-technologies-private-limi
-          SENTRY_PROJECT: qbd-api
-          SENTRY_DEPLOY_ENVIRONMENT: staging
-        run: |
-          # Install Sentry CLI
-          curl -sL https://sentry.io/get-cli/ | bash
-
-          # Create new Sentry release
-          export SENTRY_RELEASE=$(sentry-cli releases propose-version)
-          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
-          sentry-cli releases set-commits --auto $SENTRY_RELEASE
-          sentry-cli releases finalize $SENTRY_RELEASE
-
-          # Create new deploy for this Sentry release
-          sentry-cli releases deploys $SENTRY_RELEASE new -e $SENTRY_DEPLOY_ENVIRONMENT
