@@ -54,9 +54,9 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add .
           if [[ "${{ github.event.label.name }}" == "staging_deploy" ]]; then
-            git commit -m "Deployed fyle_qbd-api-staging:$NEW_TAG to staging"
+            git commit -m "Deployed fyle_qbd-api:$NEW_TAG to staging"
           elif [[ "${{ github.event.label.name }}" == "drstrange_deploy" ]]; then
-            git commit -m "Deployed fyle_qbd-api-drstrange:$NEW_TAG to drstrange"
+            git commit -m "Deployed fyle_qbd-api:$NEW_TAG to drstrange"
           fi
           git remote set-url origin https://x-access-token:${{ secrets.DEPLOY_GIT_ACCESS_TOKEN }}@github.com/${{ vars.STAGING_DEPLOY_REPO }}
           git pull origin master
