@@ -115,7 +115,7 @@ def get_expense_purpose(workspace_id: str, expense: Expense, account: str = None
         'purpose': '{0}'.format(expense.purpose) if expense.purpose else '',
         'report_number': '{0}'.format(expense.claim_number),
         'spent_on': '{0}'.format(expense.spent_at.date()) if expense.spent_at else '',
-        'expense_link': '{0}/app/admin/#/view_expense/{1}/?org_id={2}'.format(
+        'expense_link': '{0}/app/admin/#/company_expenses?txnId={1}&org_id={2}'.format(
             settings.FYLE_APP_URL, expense.expense_id, org_id
         )
     }
