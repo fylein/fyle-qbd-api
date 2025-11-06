@@ -84,3 +84,4 @@ Django Rest Framework API for Fyle Quickbooks Desktop Integration
     1. docker-compose -f docker-compose-pipeline.yml build
     2. docker-compose -f docker-compose-pipeline.yml up -d
     3. docker-compose -f docker-compose-pipeline.yml exec api pytest tests/
+# Django 4.2.26 security update
