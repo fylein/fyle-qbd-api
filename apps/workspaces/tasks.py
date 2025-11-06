@@ -119,16 +119,7 @@ def async_create_admin_subcriptions(workspace_id: int) -> None:
         'webhook_url': '{}/workspaces/{}/fyle/webhook_callback/'.format(settings.API_URL, workspace_id),
         'subscribed_resources': [
             'EXPENSE',
-            'REPORT',
-            'CATEGORY',
-            'PROJECT',
-            'COST_CENTER',
-            'EXPENSE_FIELD',
-            'DEPENDENT_EXPENSE_FIELD',
-            'CORPORATE_CARD',
-            'EMPLOYEE',
-            'TAX_GROUP',
-            'ORG_SETTING'
+            'REPORT'
         ]
     }
     platform.subscriptions.post(payload)
