@@ -1,3 +1,6 @@
+# boto client for using bedrock
+boto3==1.35.14
+
 # Croniter package for djangoq
 croniter==6.0.0
 
